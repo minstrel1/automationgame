@@ -1,0 +1,45 @@
+[gd_scene load_steps=2 format=3 uid="uid://c1020ajrrx8h7"]
+
+[ext_resource type="Script" uid="uid://lo3jmf6vhqp3" path="res://scripts/InventoryGUI.cs" id="1_1uhre"]
+
+[node name="InventoryGUI" type="Control"]
+custom_minimum_size = Vector2(460, 500)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -230.0
+offset_top = -250.0
+offset_right = 230.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1uhre")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(460, 500)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -230.0
+offset_top = -250.0
+offset_right = 230.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+custom_minimum_size = Vector2(460, 500)
+layout_mode = 2
+offset_right = 460.0
+offset_bottom = 500.0
+
+[node name="InventoryGrid" type="GridContainer" parent="ScrollContainer"]
+custom_minimum_size = Vector2(460, 500)
+layout_mode = 2
+columns = 10

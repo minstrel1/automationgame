@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=3 uid="uid://cli36mqbwq1jg"]
+
+[ext_resource type="Script" uid="uid://ydh1pbse6wrn" path="res://scripts/ChestGUI.cs" id="1_7mu04"]
+[ext_resource type="Script" uid="uid://ctow5yvnwds2l" path="res://scripts/GUI.cs" id="2_enqt0"]
+
+[node name="growing_plot_gui" type="PanelContainer"]
+custom_minimum_size = Vector2(920, 520)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -460.0
+offset_top = -260.0
+offset_right = 460.0
+offset_bottom = 267.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7mu04")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(920, 520)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Chest"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+custom_minimum_size = Vector2(920, 500)
+layout_mode = 2
+script = ExtResource("2_enqt0")

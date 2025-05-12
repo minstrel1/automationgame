@@ -1,0 +1,55 @@
+[gd_scene load_steps=5 format=3 uid="uid://cuc12gn2pt6y"]
+
+[ext_resource type="Script" uid="uid://cxci021pryxe8" path="res://scripts/PlayerInventoryGUI.cs" id="1_de2ma"]
+[ext_resource type="PackedScene" uid="uid://byespjiunasj4" path="res://gui_scenes/dummy_inventory_gui.tscn" id="2_ygbyh"]
+
+[sub_resource type="Gradient" id="Gradient_af1l0"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.513233, 0.513233, 0.513233, 0.329412)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_a1bmb"]
+gradient = SubResource("Gradient_af1l0")
+
+[node name="PlayerInventoryGUI" type="PanelContainer"]
+custom_minimum_size = Vector2(460, 500)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -462.0
+offset_top = -260.0
+offset_right = 462.0
+offset_bottom = 260.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_de2ma")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 2
+texture = SubResource("GradientTexture1D_a1bmb")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_direction = 2
+layout_mode = 2
+
+[node name="InventoryContainer" type="VBoxContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(460, 520)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer/InventoryContainer"]
+layout_mode = 2
+text = "Player Inventory"
+horizontal_alignment = 1
+
+[node name="DummyInventoryGUI" parent="HBoxContainer/InventoryContainer" instance=ExtResource("2_ygbyh")]
+layout_mode = 2
+
+[node name="SideContainer" type="TabContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(460, 520)
+layout_mode = 2
+current_tab = 0
+
+[node name="Crafting" type="VBoxContainer" parent="HBoxContainer/SideContainer"]
+layout_mode = 2
+metadata/_tab_index = 0
