@@ -40,7 +40,12 @@ layout_mode = 0
 offset_right = 460.0
 offset_bottom = 500.0
 
-[node name="InventoryGrid" type="GridContainer" parent="ScrollContainer"]
+[node name="Control" type="Control" parent="ScrollContainer"]
+layout_mode = 2
+
+[node name="InventoryGrid" type="GridContainer" parent="ScrollContainer/Control"]
 custom_minimum_size = Vector2(460, 500)
 layout_mode = 2
+offset_right = 460.0
+offset_bottom = 500.0
 columns = 10

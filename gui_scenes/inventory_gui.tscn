@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://c1020ajrrx8h7"]
+[gd_scene load_steps=3 format=3 uid="uid://c1020ajrrx8h7"]
 
 [ext_resource type="Script" uid="uid://lo3jmf6vhqp3" path="res://scripts/InventoryGUI.cs" id="1_1uhre"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_1uhre"]
 
 [node name="InventoryGUI" type="Control"]
 custom_minimum_size = Vector2(460, 500)
@@ -39,7 +41,11 @@ layout_mode = 2
 offset_right = 460.0
 offset_bottom = 500.0
 
-[node name="InventoryGrid" type="GridContainer" parent="ScrollContainer"]
+[node name="Control" type="PanelContainer" parent="ScrollContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_1uhre")
+
+[node name="InventoryGrid" type="GridContainer" parent="ScrollContainer/Control"]
 custom_minimum_size = Vector2(460, 500)
 layout_mode = 2
 columns = 10

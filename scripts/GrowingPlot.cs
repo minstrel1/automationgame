@@ -7,13 +7,27 @@ using Godot.NativeInterop;
 [GlobalClass]
 [Tool]
 public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory, IInteractable {
-	int plot_width = 2;
-	int plot_length = 2;
-	double border = 0.25;
+
+	[ExportCategory("Growing Plot Properties")]
+	[Export]
+	public int plot_width = 2;
+	[Export]
+	public int plot_length = 2;
+	[Export]
+	public double border = 0.25;
+
+	[Export]
+	public bool auto_harvest = true;
+	[Export]
+	public float harvest_time = 5.0f;
+	[Export]
+	public bool auto_plant = true;
+	[Export]
+	public float plant_time = 5.0f;
 
 	int max_grow_slots;
-	Array<Growable> grow_slots_physical = new Array<Growable>();
 	
+	Array<Growable> grow_slots_physical = new Array<Growable>();
 	Inventory input_inventory;
 	Inventory output_inventory;
 	[Export]
@@ -61,19 +75,53 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 			plant_result = (string) current_seed.prototype["plant_result"];
 		}
 		
+		bool plant_set_this_frame = false;
 		//GD.Print("doing physics");
 		foreach (Growable growable in grow_slots_physical) {
-			if (! growable.plant_set) {
-				if (current_seed != null && plant_result != "") {
-					if (current_seed.count > 0) {
-						current_seed.count -= 1;
-						growable.set_plant(plant_result);
+			if (auto_plant) {
+				if (! growable.plant_set) {
+					if (current_seed != null && plant_result != "") {
+						if (current_seed.count > 0) {
+							current_seed.count -= 1;
+							growable.set_plant(plant_result);
+							plant_set_this_frame = true;
+						}
+					}
+				}
+			}
+
+			if (auto_harvest) {
+				if (growable.done_growing) {
+					Godot.Collections.Array harvest_results = (Godot.Collections.Array) growable.prototype["harvest_result"];
+					
+					Array<InventoryItem> to_insert = new Array<InventoryItem>();
+					bool all_insertable = true;
+
+					foreach (Dictionary result in harvest_results) {
+						InventoryItem new_item = InventoryItem.new_item((string) result["name"], (int) result["amount"]);
+						to_insert.Add(new_item);
+
+						if (!output_inventory.can_insert(new_item)) {
+							all_insertable = false;
+							break;
+						}
+
+					}
+
+					if (all_insertable) {
+						foreach (InventoryItem item in to_insert) {
+							output_inventory.insert(item);
+						}
+
+						growable.clear_plant();
+					} else {
+
 					}
 				}
 			}
 		}
 
-		if (current_seed != null) {
+		if (current_seed != null && plant_set_this_frame) {
 			current_seed.emit_update();
 		}
 	}

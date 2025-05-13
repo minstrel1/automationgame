@@ -15,9 +15,12 @@ public partial class InventoryGUI : GUI {
 	{
 		base._Ready();
 
-		inventory_grid = GetNode<GridContainer>("ScrollContainer/InventoryGrid");
+		inventory_grid = GetNode<GridContainer>("ScrollContainer/Control/InventoryGrid");
 
 		init_item_reps();
+
+		//GetNode<Control>("ScrollContainer/Control").Size = inventory_grid.Size;
+		
 	}
 
 	public static InventoryGUI make_inventory_gui (Inventory inventory, Control gui_parent) {

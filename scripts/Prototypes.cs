@@ -8,8 +8,15 @@ public partial class Prototypes : Node {
 	public static Prototypes Instance {get; private set;}
 	public static Dictionary growables = new Dictionary{
 		{"test_plant", new Dictionary{
-			{"time_to_grow", 1.0},
-		}}
+			{"time_to_grow", 0.09},
+			{"harvest_result", new Godot.Collections.Array{
+				new Dictionary{
+					{"type", "item"},
+					{"name", "test_item"},
+					{"amount", 3},
+				}
+			}},
+		}},
 	};
 
 	public static Dictionary items = new Dictionary{

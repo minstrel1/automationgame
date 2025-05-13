@@ -31,7 +31,7 @@ public partial class DummyInventoryGUI : GUIDummy {
 	public override void _Ready () {
 		base._Ready();
 
-		inventory_grid = GetNode<GridContainer>("ScrollContainer/InventoryGrid");
+		inventory_grid = GetNode<GridContainer>("ScrollContainer/Control/InventoryGrid");
 
 		if (Engine.IsEditorHint()) {
 			init_item_reps();

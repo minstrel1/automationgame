@@ -37,8 +37,8 @@ public partial class Inventory : Node {
 		return String.Format("Inventory of size {0}\nContents: {1}", contents.Count, contents.ToString());
 	}
 
-	public int get_first_slot_to_insert (String item_name) {
-		for (int i = 0; i < contents.Count; i++) {
+	public int get_first_slot_to_insert (String item_name, int start = 0) {
+		for (int i = start; i < contents.Count; i++) {
 			if (contents[i] != null) {
 				if (contents[i].name == item_name && contents[i].count < contents[i].stack_size) {
 					return i;
@@ -104,6 +104,50 @@ public partial class Inventory : Node {
 		}
 
 		return items_inserted;
+	}
+
+	public bool can_insert (InventoryItem item) {
+		int pos_to_insert = get_first_slot_to_insert(item.name);
+		if (pos_to_insert == -1) { return false; }
+
+		int current_count = item.count;
+		int starting_count = item.count;
+		int items_inserted = 0;
+		int difference = 0;
+		int before_count = 0;
+		int new_count = 0;
+
+		while (pos_to_insert != -1) {
+
+			if (contents[pos_to_insert] == null) {
+
+				items_inserted += current_count;
+				current_count -= current_count;
+
+				break;
+			} else {
+				before_count = contents[pos_to_insert].count;
+				new_count = Math.Min(before_count + current_count, contents[pos_to_insert].stack_size);
+				difference = new_count - before_count;
+				items_inserted += difference;
+
+				current_count -= difference;
+
+				if (items_inserted >= starting_count) {
+					if (items_inserted > starting_count) {
+						GD.PrintErr("A can_insert operation put more items in than started with.");
+					}
+					
+					break;
+				} else {
+					pos_to_insert = get_first_slot_to_insert(item.name, pos_to_insert + 1);
+				}
+
+			}
+			
+		}
+
+		return items_inserted == starting_count;
 	}
 
 	public InventoryItem get_item_at_index (int index) {

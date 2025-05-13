@@ -8,9 +8,11 @@ using Godot.NativeInterop;
 public partial class Growable : Node3D {
 	
 	public string current_plant_name = "";
+	public Dictionary prototype;
 	public int growth_time = 0;
 	public int current_growth_time = 0;
 	public bool plant_set = false;
+	public bool done_growing = false;
 
 	MeshInstance3D model;
 	SphereMesh sphere_mesh;
@@ -37,13 +39,13 @@ public partial class Growable : Node3D {
 	{
 		//ulong start = Time.GetTicksUsec();
 		
-		if (current_growth_time < growth_time) {
+		if (current_growth_time < growth_time && !done_growing) {
 			current_growth_time += 1;
 			float scale = (float) current_growth_time / growth_time;
 			model.Scale = Vector3.One * scale;
 
 			if (current_growth_time == growth_time) {
-
+				done_growing = true;
 			}
 		}
 
@@ -53,17 +55,29 @@ public partial class Growable : Node3D {
 
 	public void set_plant (String new_plant_name) {
 		if (Prototypes.growables.ContainsKey(new_plant_name)) {
-			Dictionary plant_data = (Dictionary)Prototypes.growables[new_plant_name];
+			prototype = (Dictionary)Prototypes.growables[new_plant_name];
 			current_plant_name = new_plant_name;
 			current_growth_time = 0;
-			growth_time = Globals.hours_to_ticks((float) plant_data["time_to_grow"]);
+			growth_time = Globals.hours_to_ticks((float) prototype["time_to_grow"]);
 			plant_set = true;
+			done_growing = false;
 
 			model.Visible = true;
 			model.Scale = Vector3.One * 0.000000001f;
 		} else {
 			GD.Print("Invalid Plant Name: " + new_plant_name);
 		}
+	}
+
+	public void clear_plant () {
+		current_plant_name = "";
+		prototype = null;
+
+		plant_set = false;
+		done_growing = false;
+
+		model.Visible = false;
+		model.Scale = Vector3.One * 0.000000001f;
 	}
 
 }
