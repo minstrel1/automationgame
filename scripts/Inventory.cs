@@ -11,6 +11,9 @@ public partial class Inventory : Node {
 	[Signal]
 	public delegate void OnItemSlotChangedEventHandler (int index, InventoryItem item);
 
+	[Signal]
+	public delegate void OnInventoryChangedEventHandler ();
+
 	public int inventory_size = 1;
 
 	public Inventory () {
@@ -47,6 +50,21 @@ public partial class Inventory : Node {
 				return i;
 			}
 		}
+		return -1;
+	}
+
+	public int get_last_slot_to_remove (String item_name, int start = -1) {
+		if (start == -1) {
+			start = contents.Count - 1;
+		}
+		for (int i = start; i >= 0; i--) {
+			if (contents[i] != null) {
+				if (contents[i].name == item_name) {
+					return i;
+				}
+			}
+		}
+
 		return -1;
 	}
 
@@ -92,18 +110,100 @@ public partial class Inventory : Node {
 					
 					break;
 				} else {
-					pos_to_insert = get_first_slot_to_insert(item.name);
+					pos_to_insert = get_first_slot_to_insert(item.name, pos_to_insert + 1);
 				}
 
 			}
 			
 		}
 
+		bool changed = false;
 		foreach (int index in changed_indexes) {
 			EmitSignal(SignalName.OnItemSlotChanged, index, contents[index]);
+			changed = true;
+		}
+		
+		if (changed) {
+			EmitSignal(SignalName.OnInventoryChanged);
+		}
+
+		if (item != null) {
+			item.emit_update();
 		}
 
 		return items_inserted;
+	}
+
+	public int insert (SimpleItem item) {
+		return insert(new InventoryItem(item.name, item.count));
+	}
+
+	public int insert (Array<InventoryItem> items) {
+		int total = 0;
+		foreach (InventoryItem item in items) {
+			total += insert(item);
+		}
+
+		return total;
+	}
+
+	public int insert (SimpleItem[] items) {
+		int total = 0;
+		foreach (SimpleItem item in items) {
+			total += insert(item);
+		}
+
+		return total;
+	}
+
+	public int remove (InventoryItem item) {
+		int pos_to_remove = get_last_slot_to_remove(item.name);
+		if (pos_to_remove == -1) { return 0; }
+
+		int items_removed = 0;
+		int before_count = 0;
+
+		int starting_amount = item.count;
+
+		Array<int> changed_indexes = new Array<int>();
+
+		while (pos_to_remove != -1) {
+			if (contents[pos_to_remove].count >= item.count) {
+				contents[pos_to_remove].count -= item.count;
+				items_removed += item.count;
+				
+				item.count = 0;
+
+				changed_indexes.Add(pos_to_remove);
+				break;
+			} else {
+				before_count = contents[pos_to_remove].count;
+				contents[pos_to_remove].count = 0;
+
+				item.count -= before_count;
+				items_removed -= before_count;
+
+				changed_indexes.Add(pos_to_remove);
+
+				pos_to_remove = get_last_slot_to_remove(item.name, pos_to_remove - 1);
+			}
+		}
+
+		bool changed = false;
+		foreach (int index in changed_indexes) {
+			EmitSignal(SignalName.OnItemSlotChanged, index, contents[index]);
+			changed = true;
+		}
+		
+		if (changed) {
+			EmitSignal(SignalName.OnInventoryChanged);
+		}
+
+		if (item != null) {
+			item.emit_update();
+		}
+
+		return items_removed;
 	}
 
 	public bool can_insert (InventoryItem item) {
@@ -148,6 +248,15 @@ public partial class Inventory : Node {
 		}
 
 		return items_inserted == starting_count;
+	}
+
+	public bool can_insert (Array<InventoryItem> items) {
+		foreach (InventoryItem item in items) {
+			if (!can_insert(item)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public InventoryItem get_item_at_index (int index) {

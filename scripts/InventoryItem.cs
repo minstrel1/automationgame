@@ -3,6 +3,11 @@ using Godot;
 using Godot.Collections;
 using Godot.NativeInterop;
 
+public struct SimpleItem {
+	public string name;
+	public int count;
+}
+
 [GlobalClass]
 public partial class InventoryItem : Node {
 

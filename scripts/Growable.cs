@@ -27,6 +27,7 @@ public partial class Growable : Node3D {
 		model.Position = Vector3.Zero;
 		model.Scale = Vector3.One * 0.0000001f;
 		model.Visible = false;
+		model.PhysicsInterpolationMode = PhysicsInterpolationModeEnum.Off;
 		AddChild(model);
 	}
 
@@ -58,7 +59,7 @@ public partial class Growable : Node3D {
 			prototype = (Dictionary)Prototypes.growables[new_plant_name];
 			current_plant_name = new_plant_name;
 			current_growth_time = 0;
-			growth_time = Globals.hours_to_ticks((float) prototype["time_to_grow"]);
+			growth_time = Globals.ighours_to_ticks((float) prototype["time_to_grow"]);
 			plant_set = true;
 			done_growing = false;
 

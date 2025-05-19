@@ -72,7 +72,7 @@ public partial class ItemRepresentation : Control {
 			if (mouse_event.ButtonIndex == MouseButton.Left && mouse_event.Pressed) {
 				if (Input.IsActionPressed("shift_modifier")) {
 					if (current_item != null) {
-						int count = current_item.count;
+
 						int result;
 						if (current_item.parent_inventory == Player.instance.inventory) {
 							result = Player.instance.active_inventory.insert(current_item);
@@ -80,9 +80,6 @@ public partial class ItemRepresentation : Control {
 							result = Player.instance.inventory.insert(current_item);
 						}
 
-						if (count != result) {
-							current_item.emit_update();
-						}
 					}
 				} else if (Player.hand_item.has_item()) {
 					if (current_item != null && Player.hand_item.current_item.name == current_item.name) {

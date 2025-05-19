@@ -5,7 +5,9 @@ using Godot.Collections;
 using Godot.NativeInterop;
 
 [GlobalClass]
+#if TOOLS
 [Tool]
+#endif
 public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory, IInteractable {
 
 	[ExportCategory("Growing Plot Properties")]
@@ -44,6 +46,9 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 	}
 
 	public override void on_build () {
+
+		base.on_build();
+
 		float grow_area_width  = (float)(grow_area.Size.X - (border * 2));
 		float grow_area_height = (float)(grow_area.Size.Y);
 		float grow_area_length = (float)(grow_area.Size.Z - (border * 2));
@@ -69,6 +74,10 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 	{
 		base._PhysicsProcess(delta);
 
+		if (Engine.IsEditorHint() || !is_built) {
+			return;
+		}
+
 		InventoryItem current_seed = input_inventory.get_item_at_index(0);
 		string plant_result = "";
 		if (current_seed != null) {
@@ -78,6 +87,27 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 		bool plant_set_this_frame = false;
 		//GD.Print("doing physics");
 		foreach (Growable growable in grow_slots_physical) {
+			if (auto_harvest) {
+				if (growable.done_growing) {
+					Godot.Collections.Array harvest_results = (Godot.Collections.Array) growable.prototype["harvest_result"];
+					
+					Array<InventoryItem> to_insert = new Array<InventoryItem>();
+
+					foreach (Dictionary result in harvest_results) {
+						InventoryItem new_item = InventoryItem.new_item((string) result["name"], (int) result["amount"]);
+						to_insert.Add(new_item);
+					}
+
+					if (output_inventory.can_insert(to_insert)) {
+						output_inventory.insert(to_insert);
+
+						growable.clear_plant();
+					} else {
+
+					}
+				}
+			}
+
 			if (auto_plant) {
 				if (! growable.plant_set) {
 					if (current_seed != null && plant_result != "") {
@@ -86,36 +116,6 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 							growable.set_plant(plant_result);
 							plant_set_this_frame = true;
 						}
-					}
-				}
-			}
-
-			if (auto_harvest) {
-				if (growable.done_growing) {
-					Godot.Collections.Array harvest_results = (Godot.Collections.Array) growable.prototype["harvest_result"];
-					
-					Array<InventoryItem> to_insert = new Array<InventoryItem>();
-					bool all_insertable = true;
-
-					foreach (Dictionary result in harvest_results) {
-						InventoryItem new_item = InventoryItem.new_item((string) result["name"], (int) result["amount"]);
-						to_insert.Add(new_item);
-
-						if (!output_inventory.can_insert(new_item)) {
-							all_insertable = false;
-							break;
-						}
-
-					}
-
-					if (all_insertable) {
-						foreach (InventoryItem item in to_insert) {
-							output_inventory.insert(item);
-						}
-
-						growable.clear_plant();
-					} else {
-
 					}
 				}
 			}
@@ -143,10 +143,12 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 	}
 
 	public void on_interact () {
-		if (Player.instance.active_gui is GrowingPlotGUI) {
-			Player.instance.clear_active_gui();
-		} else {
-			Player.set_active_gui(GrowingPlotGUI.make_growing_plot_gui(this, Player.instance.gui_parent));
+		if (is_built) {
+			if (Player.instance.active_gui is GrowingPlotGUI) {
+				Player.instance.clear_active_gui();
+			} else {
+				Player.set_active_gui(GrowingPlotGUI.make_growing_plot_gui(this, Player.instance.gui_parent));
+			}
 		}
 	}
 }

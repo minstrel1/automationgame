@@ -3,10 +3,13 @@
 [ext_resource type="Script" uid="uid://kusqrgnmqwo6" path="res://scripts/Chest.cs" id="1_3cbgf"]
 
 [node name="Node3D" type="CSGBox3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
 use_collision = true
+size = Vector3(0.9, 0.9, 0.9)
 script = ExtResource("1_3cbgf")
 grid_width = 1
 grid_height = 1
 grid_length = 1
 grid_offset = Vector3(0, 0.5, 0)
+PlacableDirections = 0
+special_voxels = []

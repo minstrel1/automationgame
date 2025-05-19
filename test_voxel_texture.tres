@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://b640f8sx4x12o"]
+
+[ext_resource type="Texture2D" uid="uid://bhx83njh2ptnq" path="res://test_voxel_texture.png" id="1_5cf1d"]
+
+[resource]
+transparency = 1
+albedo_texture = ExtResource("1_5cf1d")
+uv1_scale = Vector3(1, 8, 1)
+texture_filter = 2

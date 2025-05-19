@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://bynkxa8q587h7"]
+
+[ext_resource type="Texture2D" uid="uid://cyc75tsryu51f" path="res://building_grid_placable_box.png" id="1_ckegt"]
+
+[resource]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+albedo_texture = ExtResource("1_ckegt")
+texture_filter = 2
+disable_receive_shadows = true

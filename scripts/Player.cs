@@ -8,6 +8,8 @@ public partial class Player : CharacterBody3D {
 	[ExportGroup("Player")]
 	[Export(PropertyHint.Range, "1, 35, 1")]
 	public float speed = 10;
+	[Export(PropertyHint.Range, "1, 35, 1")]
+	public float sprint_speed = 20;
 	[Export(PropertyHint.Range, "10, 400, 1")]
 	public float acceleration = 100;
 	[Export(PropertyHint.Range, "10, 400, 1")]
@@ -33,9 +35,9 @@ public partial class Player : CharacterBody3D {
 	float vertical_frequency = 6.6f;
 
 	bool jumping = false;
+	bool sprinting = false;
 	bool mouse_captured = false;
 	bool controls_locked = false;
-	
 
 	float gravity = (float) ProjectSettings.GetSetting("physics/3d/default_gravity");
 
@@ -51,11 +53,13 @@ public partial class Player : CharacterBody3D {
 
 	float walk_time = 0;
 	bool stepped = false;
+	
+	bool scrolled_this_frame = false;
 
 	public Inventory inventory = new Inventory(250);
 
 	public RayCast3DExtendable interaction_raycaster;
-	public Vector3 last_cast_position;
+	public Vector3 last_interact_cast_position;
 	public GodotObject interact_cast_result;
 
 	public static Player instance;
@@ -72,8 +76,18 @@ public partial class Player : CharacterBody3D {
 		actual_renderer = GetNode<Camera3D>("Camera/Camera3D");
 
 		interaction_raycaster = GetNode<RayCast3DExtendable>("Camera/Camera3D/InteractionRaycaster");
+		building_raycaster = GetNode<RayCast3DExtendable>("Camera/Camera3D/BuildingRaycaster");
 
 		gui_parent = GetNode<Control>("PlayerGUI");
+
+		player_hud = GetNode<Control>("PlayerHUD");
+		clock_label = GetNode<Label>("PlayerHUD/Control/Label");
+		oxygen_label = GetNode<Label>("PlayerHUD/Control2/TextureProgressBar/Label");
+		oxygen_meter = GetNode<TextureProgressBar>("PlayerHUD/Control2/TextureProgressBar");
+		building_hit_label = GetNode<Label>("PlayerHUD/Control/Label2");
+
+		init_building_cursor();
+		init_build_mode();
 
 		capture_mouse();
 	}
@@ -87,7 +101,10 @@ public partial class Player : CharacterBody3D {
 	{
 		base._PhysicsProcess(delta);
 
+		scrolled_this_frame = false;
+
 		interaction_cast();
+		building_cast();
 
 		if (! controls_locked) {
 			walk_vel = do_walk((float) delta);
@@ -105,6 +122,10 @@ public partial class Player : CharacterBody3D {
 		if (head_bob && delta > 0) {
 			handle_bob(walk_vel, (float) delta);
 		}
+
+		update_stats();
+		update_hud();
+		
 	}
 
 	private Vector3 do_walk (float delta) {
@@ -112,15 +133,31 @@ public partial class Player : CharacterBody3D {
 		Vector3 forward = camera.GlobalTransform.Basis * new Vector3(move_dir.X, 0, move_dir.Y);
 		Vector3 walk_dir = new Vector3(forward.X, 0, forward.Z).Normalized();
 
+		bool can_sprint = false;
+		float final_speed = speed;
+
+		if (move_dir.Dot(Vector2.Up) > 0.5) {
+			can_sprint = true;
+		};
+
+		if (can_sprint && sprinting) {
+			final_speed = sprint_speed;
+		}
+
 		if (walk_dir == Vector3.Zero) {
 			if (IsOnFloor()) {
-				walk_vel = walk_vel.MoveToward(walk_dir * speed * move_dir.Length(), deceleration * delta);
-			} else {
-				walk_vel = walk_vel.MoveToward(walk_dir * speed * move_dir.Length(), deceleration * delta * 0.25f);
-			}
-			
+				walk_vel = walk_vel.MoveToward(walk_dir * final_speed * move_dir.Length(), deceleration * delta);
+			} 
 		} else {
-			walk_vel = walk_vel.MoveToward(walk_dir * speed * move_dir.Length(), acceleration * delta);
+			if (IsOnFloor()) {
+				walk_vel = walk_vel.MoveToward(walk_dir * final_speed * move_dir.Length(), acceleration * delta);
+			} else {
+				float move_dir_x = move_dir.X;
+				float move_dir_y = move_dir.Y;
+
+
+				walk_vel = walk_vel.MoveToward(walk_dir * final_speed * move_dir.Length(), acceleration * delta * 0.25f);
+			}
 		}
 
 		return walk_vel;
@@ -192,12 +229,47 @@ public partial class Player : CharacterBody3D {
 		}
 
 		if (Input.IsActionJustPressed("test")) {
-			inventory.insert(new InventoryItem("test_seeds", 27));
+			inventory.insert(new SimpleItem{name = "test_seeds", count = 27});
 		}
 
 		if (Input.IsActionJustPressed("test2")) {
-			inventory.insert(new InventoryItem("test_cock", 39));
+			inventory.remove(InventoryItem.new_item("test_seeds", 3));
 		}
+
+		if (Input.IsActionJustPressed("build_mode")) {
+			if (build_mode) {
+				foreach (BuildingGrid grid in BuildingGrid.grids) {
+					grid.set_mesh_visibility(false);
+				}
+
+				build_mode = false;
+			} else {
+				foreach (BuildingGrid grid in BuildingGrid.grids) {
+					grid.set_mesh_visibility(true);
+				}
+
+				build_mode = true;
+			}
+		}
+
+		if (build_mode && !scrolled_this_frame) {
+			if (Input.IsActionJustPressed("scroll_up")) {
+				GD.Print("scroll up");
+				current_building_rotation += 1;
+				if (current_building_rotation > 3) {
+					current_building_rotation = 0;
+				}
+				scrolled_this_frame = true;
+			} else if (Input.IsActionJustPressed("scroll_down")) {
+				current_building_rotation -= 1;
+				if (current_building_rotation < 0) {
+					current_building_rotation = 3;
+				}
+				scrolled_this_frame = true;
+			}
+		}
+
+		sprinting = Input.IsActionPressed("shift_modifier");
 
 		if (@event is InputEventMouseButton) {
 			InputEventMouseButton new_event = @event as InputEventMouseButton;
@@ -263,7 +335,7 @@ public partial class Player : CharacterBody3D {
 		Vector3 current_cast_position = interaction_raycaster.GetCollisionPoint();
 
 		if (interaction_raycaster.IsColliding()) {
-			last_cast_position = current_cast_position;
+			last_interact_cast_position = current_cast_position;
 		}
 
 		if (current_cast_result != interact_cast_result) {

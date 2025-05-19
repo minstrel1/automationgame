@@ -7,9 +7,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 use_collision = true
 size = Vector3(4, 1, 4)
 script = ExtResource("1_77n2t")
-grid_width = 4
-grid_length = 4
-grid_offset = Vector3(0, 1.5, 0)
+special_voxels = Array[Object]([])
 
 [node name="grow area" type="CSGBox3D" parent="."]
 transform = Transform3D(0.895, 0, 0, 0, 0.895, 0, 0, 0, 0.895, 0, 0.550344, 0)

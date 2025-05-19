@@ -5,6 +5,13 @@ using Godot;
 using Godot.Collections;
 using Godot.NativeInterop;
 
+public struct VoxelData {
+	public int placable_index;
+	public BuildDirection direction_built;
+	public BuildDirectionFlags support_directions;
+	public int voxel_flags;
+}
+
 [Tool]
 [GlobalClass]
 public partial class BuildingGrid : StaticBody3D {
@@ -19,13 +26,32 @@ public partial class BuildingGrid : StaticBody3D {
 
 	[ExportGroup("Grid Sizes")]
 	[Export]
-	public int grid_width = 32;
+	public int grid_width {
+		get;
+		set {
+			field = (int) Math.Ceiling((float) value / chunk_size) * chunk_size;
+		}
+	} = 32;
 	[Export]
-	public int grid_height = 32;
+	public int grid_height {
+		get;
+		set {
+			field = (int) Math.Ceiling((float) value / chunk_size) * chunk_size;
+		}
+	} = 32;
 	[Export]
-	public int grid_length = 32;
+	public int grid_length {
+		get;
+		set{
+			field = (int) Math.Ceiling((float) value / chunk_size) * chunk_size;
+		} 
+	} = 32;
 
-	static int max_faces = 4092 * 4;
+	[ExportGroup("Chunk Sizes")]
+	[Export]
+	public int chunk_size = 16;
+
+	static int max_faces = 4096 * 4;
 
 	ArrayMesh mesh = new ArrayMesh();
 	Vector3[] vertices = new Vector3[max_faces * 4];
@@ -41,10 +67,9 @@ public partial class BuildingGrid : StaticBody3D {
 	ConcavePolygonShape3D collision_polygon;
 
 	int face_count = 0;
-	float tex_div = 1f;
 	int voxel_count = 0;
 
-	public int[][][] voxel_data = {};
+	public BuildingGridChunk[][][] chunk_data = {};
 
 	static int max_placables = 2048;
 	// array of references to placables
@@ -69,11 +94,10 @@ public partial class BuildingGrid : StaticBody3D {
 
 		grids.Add(this);
 
-		init_voxel_array();
-		generate_mesh();
+		init_chunk_array();
 
 		if (!Engine.IsEditorHint()) {
-			mesh_instance.Visible = false;
+			set_mesh_visibility(false);
 		}
 	}
 
@@ -120,6 +144,13 @@ public partial class BuildingGrid : StaticBody3D {
 
 	public void set_mesh_visibility (bool value) {
 		mesh_instance.Visible = value;
+		for (int x = 0; x < grid_width / chunk_size; x++) {
+			for (int y = 0; y < grid_height / chunk_size; y++) {
+				for (int z = 0; z < grid_length / chunk_size; z++) {
+					chunk_data[x][y][z].set_mesh_visibility(value);
+				}
+			}
+		}
 	}
 
 	public float floor (float input) {
@@ -134,24 +165,48 @@ public partial class BuildingGrid : StaticBody3D {
 		position = position - GlobalPosition;
 		return new Vector3I((int)floor(position.X), (int)floor(position.Y), (int)floor(position.Z));
 	}
-
-	public void set_block (int x, int y, int z, int value) {
-		voxel_data[x][y][z] = value;
+	
+	public Vector3I position_to_chunk (Vector3 position) {
+		position = position - GlobalPosition;
+		return new Vector3I((int)floor(position.X / chunk_size), (int)floor(position.Y / chunk_size), (int)floor(position.Z / chunk_size));
 	}
 
-	public void set_block (Vector3I pos, int value) {
-		voxel_data[pos.X][pos.Y][pos.Z] = value;
+	public Vector3I position_to_chunk_voxel (Vector3 position) {
+		Vector3I chunk_pos = position_to_chunk(position);
+		position = position - GlobalPosition;
+		return new Vector3I((int)floor(position.X), (int)floor(position.Y), (int)floor(position.Z)) - (chunk_pos * chunk_size);
 	}
 
-	public int get_block (int x, int y, int z) {
-		return voxel_data[x][y][z];
+	public BuildingGridChunk set_block (int x, int y, int z, int value) {
+		BuildingGridChunk chunk = get_chunk(x, y, z);
+		chunk.set_block(x % chunk_size, y % chunk_size, z % chunk_size, value);
+		return chunk;
+	}
+
+	public BuildingGridChunk set_block (Vector3I pos, int value) {
+		BuildingGridChunk chunk = get_chunk(pos);
+		chunk.set_block(pos % chunk_size, value);
+		return chunk;
+	}
+
+	public VoxelData get_block (int x, int y, int z) {
+		return get_chunk(x, y, z).get_block(x % chunk_size, y % chunk_size, z % chunk_size);
 	}
 	
-	public int get_block (Vector3I pos) {
-		return voxel_data[pos.X][pos.Y][pos.Z];
+	public VoxelData get_block (Vector3I pos) {
+		return get_chunk(pos).get_block(pos % chunk_size);
 	}
 
-	public void set_area (Vector3I from, Vector3I to, int value) {
+	public BuildingGridChunk get_chunk (int x, int y, int z) {
+		return chunk_data[x / chunk_size][y / chunk_size][z / chunk_size];
+	}
+
+	public BuildingGridChunk get_chunk (Vector3I pos) {
+		pos /= chunk_size;
+		return chunk_data[pos.X][pos.Y][pos.Z];
+	}
+
+	public Array<BuildingGridChunk> set_area (Vector3I from, Vector3I to, int value) {
 		int temp = 0;
 		if (from.X > to.X) {
 			temp = from.X;
@@ -169,19 +224,26 @@ public partial class BuildingGrid : StaticBody3D {
 			to.Z = temp;
 		}
 
+		Array<BuildingGridChunk> affected_chunks = new Array<BuildingGridChunk>();
+
 		for (int x = from.X; x <= to.X; x++) {
 			for (int y = from.Y; y <= to.Y; y++) {
 				for (int z = from.Z; z <= to.Z; z++) {
 					if (is_position_valid(x, y, z)) {
-						set_block(x, y, z, value);
+						BuildingGridChunk chunk = set_block(x, y, z, value);
+						if (!affected_chunks.Contains(chunk)) {
+							affected_chunks.Add(chunk);
+						}
 					}
 				}
 			}
 		}
+
+		return affected_chunks;
 	}
 	
 	public void clear_block (int x, int y, int z) {
-		voxel_data[x][y][z] = 0;
+		set_block(x, y, z, 0);
 	}
 
 	public void clear_area (Vector3 from, Vector3 to) {
@@ -224,9 +286,13 @@ public partial class BuildingGrid : StaticBody3D {
 		return pos.X < grid_width && pos.X >= 0 && pos.Y < grid_height && pos.Y >= 0 && pos.Z < grid_length && pos.Z >= 0;
 	}
 
+	public bool is_chunk_valid (int x, int y, int z) {
+		return x < grid_width / chunk_size && x >= 0 && y < grid_height / chunk_size && y >= 0 && z < grid_length / chunk_size && z >= 0;
+	}
+
 	public Godot.Collections.Array is_area_free (Vector3I from, Vector3I to) {
 		Godot.Collections.Array result = new Godot.Collections.Array();
-		result.Resize(1024);
+		result.Resize(1);
 		result[0] = true;
 
 		GD.Print("Checking from " + from.ToString() + " to " + to.ToString());
@@ -257,7 +323,7 @@ public partial class BuildingGrid : StaticBody3D {
 					if (is_position_valid(x, y, z)) {
 						if (! is_block_free(x, y, z)) {
 							result[0] = false;
-							result.Append(new Vector3I(x, y, z));
+							result.Add(new Vector3I(x, y, z));
 						}
 					} else {
 						result[0] = false;
@@ -266,7 +332,7 @@ public partial class BuildingGrid : StaticBody3D {
 			}
 		}
 
-		GD.Print("Checks: " + checks.ToString());
+		//GD.Print("Checks: " + checks.ToString());
 
 		return result;
 	}
@@ -280,7 +346,7 @@ public partial class BuildingGrid : StaticBody3D {
 			return true;
 		}
 		
-		return voxel_data[(int)pos.X][(int)pos.Y][(int)pos.Z] == -1;
+		return get_block((int)pos.X, (int)pos.Y, (int)pos.Z).placable_index == -1;
 	}
 
 	public bool is_block_free (int x, int y, int z) {
@@ -292,211 +358,78 @@ public partial class BuildingGrid : StaticBody3D {
 			return true;
 		}
 		
-		return voxel_data[x][y][z] == -1;
+		return get_block(x, y, z).placable_index == -1;
 	}
 
-	public void init_voxel_array () {
-		voxel_data = new int[grid_width][][];
-		for (int x = 0; x < grid_width; x++) {
-			voxel_data[x] = new int[grid_height][];
-			for (int y = 0; y < grid_height; y++) {
-				voxel_data[x][y] = new int[grid_length];
-				for (int z = 0; z < grid_length; z++) {
-					voxel_data[x][y][z] = -1;
+	public void init_chunk_array () {
+		chunk_data = new BuildingGridChunk[grid_width / chunk_size][][];
+		for (int x = 0; x < grid_width / chunk_size; x++) {
+			chunk_data[x] = new BuildingGridChunk[grid_height / chunk_size][];
+			for (int y = 0; y < grid_height / chunk_size; y++) {
+				chunk_data[x][y] = new BuildingGridChunk[grid_length / chunk_size];
+				for (int z = 0; z < grid_length / chunk_size; z++) {
+					BuildingGridChunk new_instance = new BuildingGridChunk();
+
+					new_instance.Position = new Vector3(x * chunk_size, y * chunk_size, z * chunk_size);
+					new_instance.chunk_pos = new Vector3I(x, y, z);
+
+					new_instance.Name = String.Format("Chunk {0} {1} {2}", x, y, z);
+
+					new_instance.mesh_material = mesh_material;
+
+					new_instance.CollisionLayer = CollisionLayer;
+					
+					new_instance.parent_grid = this;
+					AddChild(new_instance);
+
+					chunk_data[x][y][z] = new_instance;
 				}
 			}
 		}
-	}
 
-	public void add_uvs (int x, int y) {
-		uvs[face_count * 4 + 0] = new Vector2(tex_div * x, tex_div * y);
-		uvs[face_count * 4 + 1] = new Vector2(tex_div * x + tex_div, tex_div * y);
-		uvs[face_count * 4 + 2] = new Vector2(tex_div * x + tex_div, tex_div * y + tex_div);
-		uvs[face_count * 4 + 3] = new Vector2(tex_div * x, tex_div * y + tex_div);
-	}
+		for (int x = 0; x < grid_width / chunk_size; x++) {
+			for (int y = 0; y < grid_height / chunk_size; y++) {
+				for (int z = 0; z < grid_length / chunk_size; z++) {
+					BuildingGridChunk chunk = chunk_data[x][y][z];
 
-	public void add_tris () {
-		indices[face_count * 6 + 0] = face_count * 4 + 0;
-		indices[face_count * 6 + 1] = face_count * 4 + 1;
-		indices[face_count * 6 + 2] = face_count * 4 + 2;
-		indices[face_count * 6 + 3] = face_count * 4 + 0;
-		indices[face_count * 6 + 4] = face_count * 4 + 2;
-		indices[face_count * 6 + 5] = face_count * 4 + 3;
+					if (is_chunk_valid(x - 1, y, z)) {
+						chunk.chunk_left = chunk_data[x - 1][y][z];
+					} 
 
-		face_count += 1;
-	}
-
-	public void add_collision_tris () {
-		collision_vertices[face_count * 6 + 0] = vertices[face_count * 4 + 0];
-		collision_vertices[face_count * 6 + 1] = vertices[face_count * 4 + 1];
-		collision_vertices[face_count * 6 + 2] = vertices[face_count * 4 + 2];
-		collision_vertices[face_count * 6 + 3] = vertices[face_count * 4 + 0];
-		collision_vertices[face_count * 6 + 4] = vertices[face_count * 4 + 2];
-		collision_vertices[face_count * 6 + 5] = vertices[face_count * 4 + 3];
-	}
-
-	// variable names are left / right, top / bottom, back / forward
-	private static Vector3 ltb = new Vector3(0f, 1f, 0f);
-	private static Vector3 rtb = new Vector3(1f, 1f, 0f);
-	private static Vector3 ltf = new Vector3(0f, 1f, 1f);
-	private static Vector3 rtf = new Vector3(1f, 1f, 1f);
-	private static Vector3 lbb = new Vector3(0f, 0f, 0f);
-	private static Vector3 rbb = new Vector3(1f, 0f, 0f);
-	private static Vector3 lbf = new Vector3(0f, 0f, 1f);
-	private static Vector3 rbf = new Vector3(1f, 0f, 1f);
-	public void add_cube (Vector3 pos) {
-		if (is_block_free(pos + Vector3.Up)) {
-			vertices[face_count * 4 + 0] = pos + ltb;
-			vertices[face_count * 4 + 1] = pos + rtb;
-			vertices[face_count * 4 + 2] = pos + rtf;
-			vertices[face_count * 4 + 3] = pos + ltf;
-
-			add_uvs(0, 0);
-			add_collision_tris();
-			add_tris();
-		}
-
-		if (is_block_free(pos + Vector3.Down)) {
-			vertices[face_count * 4 + 0] = pos + lbf;
-			vertices[face_count * 4 + 1] = pos + rbf;
-			vertices[face_count * 4 + 2] = pos + rbb;
-			vertices[face_count * 4 + 3] = pos + lbb;
-
-			add_uvs(0, 0);
-			add_collision_tris();
-			add_tris();
-		}
-
-		if (is_block_free(pos + Vector3.Right)) {
-			vertices[face_count * 4 + 0] = pos + rtf;
-			vertices[face_count * 4 + 1] = pos + rtb;
-			vertices[face_count * 4 + 2] = pos + rbb;
-			vertices[face_count * 4 + 3] = pos + rbf;
-
-			add_uvs(0, 0);
-			add_collision_tris();
-			add_tris();
-		}
-
-		if (is_block_free(pos + Vector3.Left)) {
-			vertices[face_count * 4 + 0] = pos + ltb;
-			vertices[face_count * 4 + 1] = pos + ltf;
-			vertices[face_count * 4 + 2] = pos + lbf;
-			vertices[face_count * 4 + 3] = pos + lbb;
-
-			add_uvs(0, 0);
-			add_collision_tris();
-			add_tris();
-		}
-
-		if (is_block_free(pos + Vector3.Back)) {
-			vertices[face_count * 4 + 0] = pos + ltf;
-			vertices[face_count * 4 + 1] = pos + rtf;
-			vertices[face_count * 4 + 2] = pos + rbf;
-			vertices[face_count * 4 + 3] = pos + lbf;
-
-			add_uvs(0, 0);
-			add_collision_tris();
-			add_tris();
-		}
-
-		if (is_block_free(pos + Vector3.Forward)) {
-			vertices[face_count * 4 + 0] = pos + rtb;
-			vertices[face_count * 4 + 1] = pos + ltb;
-			vertices[face_count * 4 + 2] = pos + lbb;
-			vertices[face_count * 4 + 3] = pos + rbb;
-
-			add_uvs(0, 0);
-			add_collision_tris();
-			add_tris();
-		}
-	}
-
-	public void make_floor () {
-		vertices[face_count * 4 + 0] = new Vector3(  0f,   0f,  0f);
-		vertices[face_count * 4 + 1] = new Vector3(  0f + grid_width,   0f,  0f);
-		vertices[face_count * 4 + 2] = new Vector3(  0f + grid_width,   0f,  0f + grid_length);
-		vertices[face_count * 4 + 3] = new Vector3(  0f,   0f,  0f + grid_length);
-		
-		uvs[face_count * 4 + 0] = new Vector2(0, 0);
-		uvs[face_count * 4 + 1] = new Vector2(tex_div * grid_width, 0);
-		uvs[face_count * 4 + 2] = new Vector2(tex_div * grid_width, tex_div * grid_length);
-		uvs[face_count * 4 + 3] = new Vector2(0, tex_div * grid_length);
-
-		add_collision_tris();
-		add_tris();
-	}
-
-	// TODO: Add greedy meshing / a method to reduce amount of triangles sent 
-
-	// TODO: Divide building grid into chunks to reduce amount of voxels needing to be modified every time
-
-	public void generate_mesh () {
-		ulong total_start = Time.GetTicksUsec();
-
-		mesh = new ArrayMesh();
-		//mesh.ClearSurfaces();
-		vertices = new Vector3[max_faces * 4];
-		indices = new Int32[max_faces * 6]; 
-		uvs = new Vector2[max_faces * 4];
-
-		face_count = 0;
-		voxel_count = 0;
-
-		// for (int x = 0; x < grid_width; x++) {
-		// 	for (int z = 0; z < grid_width; z++) {
-		// 		add_cube(new Vector3(x, -1, z));
-		// 	}
-		// }
-		make_floor();
-
-		ulong start = Time.GetTicksUsec();
-
-		for (int x = 0; x < grid_width; x++) {
-			for (int y = 0; y < grid_height; y++) {
-				for (int z = 0; z < grid_length; z++) {
-					if (voxel_data[x][y][z] >= 0) {
-						add_cube(new Vector3(x, y, z));
-						voxel_count += 1;
+					if (is_chunk_valid(x + 1, y, z)) {
+						chunk.chunk_right = chunk_data[x + 1][y][z];
 					}
+
+					if (is_chunk_valid(x, y + 1, z)) {
+						chunk.chunk_up = chunk_data[x][y + 1][z];
+					}
+
+					if (is_chunk_valid(x, y - 1, z)) {
+						chunk.chunk_down = chunk_data[x][y - 1][z];
+					}
+
+					if (is_chunk_valid(x, y, z - 1)) {
+						chunk.chunk_forward = chunk_data[x][y][z - 1];
+					}
+
+					if (is_chunk_valid(x, y, z + 1)) {
+						chunk.chunk_back = chunk_data[x][y][z + 1];
+					}
+					
+					chunk.generate_mesh();
 				}
 			}
 		}
-		ulong time = Time.GetTicksUsec() - start;
-		GD.Print("C# ARRAY TIME:" + time.ToString());
+	}
 
-		
-		Godot.Collections.Array array = new Godot.Collections.Array();
-		array.Resize((int) Mesh.ArrayType.Max);
-		array[(int) Mesh.ArrayType.Vertex] = vertices;
-		array[(int) Mesh.ArrayType.Index] = indices;
-		array[(int) Mesh.ArrayType.TexUV] = uvs;
-
-		start = Time.GetTicksUsec();
-		mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, array);
-		time = Time.GetTicksUsec() - start;
-		GD.Print("C# MESH TIME:" + time.ToString());
-
-		start = Time.GetTicksUsec();
-		collision_polygon.SetFaces(collision_vertices);
-		time = Time.GetTicksUsec() - start;
-		GD.Print("C# COLLISION TIME:" + time.ToString());
-
-		start = Time.GetTicksUsec();
-		//collision_shape.Shape = new_collision_shape;
-		time = Time.GetTicksUsec() - start;
-		GD.Print("C# COLLISION SET TIME:" + time.ToString());
-
-		
-		
-
-		mesh_instance.Mesh = mesh;
-
-		GD.Print("C# FACE COUNT: " + face_count.ToString() + " / " + max_faces.ToString());
-		GD.Print("C# VOXEL COUNT: " + voxel_count.ToString());
-
-		time = Time.GetTicksUsec() - total_start;
-		GD.Print("C# TOTAL MESH TIME:" + time.ToString());
-		
+	public void generate_mesh() {
+		for (int x = 0; x < grid_width / chunk_size; x++) {
+			for (int y = 0; y < grid_height / chunk_size; y++) {
+				for (int z = 0; z < grid_length / chunk_size; z++) {
+					chunk_data[x][y][z].generate_mesh();
+				}
+			}
+		}
 	}
 }
+

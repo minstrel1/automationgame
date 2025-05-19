@@ -24,6 +24,7 @@ func _ready() -> void:
 	cursor = new_sphere
 	cursor.visible = false
 	cursor.top_level = true
+	cursor.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 
 func _process(delta: float) -> void:
 	pass
@@ -41,6 +42,7 @@ func _physics_process(delta: float) -> void:
 
 			build_mode = true
 			pass
+		#print(build_mode)
 
 	cast()
 
@@ -59,15 +61,19 @@ func cast() -> void:
 		interact_cast_result = current_cast_result
 
 	if build_mode:
-		if interact_cast_result and (interact_cast_result is BuildingGrid):
+		if interact_cast_result and (interact_cast_result is BuildingGridChunk):
 
 			cursor.visible = true
 
-			last_known_grid = interact_cast_result
+			last_known_grid = (interact_cast_result as BuildingGridChunk).parent_grid
 
 			var collision_normal = get_collision_normal()
 
 			var hit_pos: Vector3i = last_known_grid.position_to_voxel(last_cast_position - (collision_normal * 0.5))
+
+			var hit_chunk: Vector3i = last_known_grid.position_to_chunk(last_cast_position + (collision_normal * 0.5))
+
+			var hit_voxel: Vector3i = last_known_grid.position_to_chunk_voxel(last_cast_position + (collision_normal * 0.5))
 
 			var projected_pos = hit_pos + Vector3i(collision_normal.x, collision_normal.y, collision_normal.z)
 
@@ -78,6 +84,9 @@ func cast() -> void:
 				pass
 			#cursor.global_position = last_cast_position
 			#print(cursor.global_position)
+
+			#print(hit_chunk)
+			#print(hit_voxel)
 
 			if Input.is_action_just_pressed("click"):
 
@@ -96,8 +105,11 @@ func cast() -> void:
 					if index != -1:
 						last_known_grid.add_child(new_instance)
 
-						last_known_grid.set_area(corner_1, corner_2, index)
-						last_known_grid.generate_mesh()
+						var affected_chunks = last_known_grid.set_area(corner_1, corner_2, index)
+
+						for chunk in affected_chunks:
+							(chunk as BuildingGridChunk).generate_mesh();
+							(chunk as BuildingGridChunk).generate_mesh_neighbors();
 
 						new_instance.parent_grid = last_known_grid
 						last_known_grid.set_placable(index, new_instance);

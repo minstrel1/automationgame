@@ -1,18 +1,31 @@
-[gd_scene load_steps=2 format=3 uid="uid://dv08dlncbff2q"]
+[gd_scene load_steps=4 format=3 uid="uid://dv08dlncbff2q"]
 
 [ext_resource type="Script" uid="uid://brbd5ek3kaceh" path="res://scripts/GrowingPlot.cs" id="1_cv31k"]
+[ext_resource type="Script" uid="uid://3d021kys16yn" path="res://scripts/SpecialVoxelData.cs" id="2_2ywuo"]
+
+[sub_resource type="Resource" id="Resource_gfcda"]
+script = ExtResource("2_2ywuo")
+voxel_position = Vector3i(0, -1, 2)
+voxel_flags = 0
+FlagDirections = 64
+SupportDirections = 0
 
 [node name="grow plot" type="CSGBox3D" node_paths=PackedStringArray("grow_area")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 use_collision = true
 size = Vector3(4.9, 1, 4.9)
 script = ExtResource("1_cv31k")
 grow_area = NodePath("grow area")
 grid_width = 5
 grid_length = 5
-grid_offset = Vector3(0, 1.5, 0)
+grid_offset = Vector3(0, 1, 0)
+PlacableDirections = 1
+special_voxels = Array[Object]([SubResource("Resource_gfcda")])
 
 [node name="grow area" type="CSGBox3D" parent="."]
 transform = Transform3D(0.895, 0, 0, 0, 0.895, 0, 0, 0, 0.895, 0, 0.550344, 0)
 operation = 2
 size = Vector3(5, 0.591309, 5)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.05)
+size = Vector3(0.9, 0.9, 0.9)
