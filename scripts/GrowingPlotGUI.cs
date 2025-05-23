@@ -6,9 +6,8 @@ using Godot.NativeInterop;
 public partial class GrowingPlotGUI : GUI {
 
 	public GrowingPlot growing_plot;
-	public Array<ItemRepresentation> item_reps = new Array<ItemRepresentation>();
-	public InventoryGUI player_inventory_gui;
 
+	public InventoryGUI player_inventory_gui;
 	public ItemRepresentation seed_input_gui;
 	public InventoryGUI product_output_gui;
 
@@ -24,6 +23,9 @@ public partial class GrowingPlotGUI : GUI {
 
 		player_inventory_gui = InventoryGUI.make_inventory_gui(Player.instance.inventory, result.parent);
 		result.parent.MoveChild(player_inventory_gui, result.node_index);
+		player_inventory_gui.Position = result.pos;
+		player_inventory_gui.CustomMinimumSize = result.min_size;
+		player_inventory_gui.Size = result.size;
 
 		result = remove_dummy(inventory_result[1]);
 
@@ -42,7 +44,6 @@ public partial class GrowingPlotGUI : GUI {
 		Player.instance.lock_controls();
 		Player.instance.active_inventory = growing_plot.get_input_inventory();
 
-		init_item_reps();
 	}
 
 	public static GrowingPlotGUI make_growing_plot_gui (GrowingPlot growing_plot, Control gui_parent) {
@@ -56,10 +57,13 @@ public partial class GrowingPlotGUI : GUI {
 		return new_instance;
 	}
 
-	public void init_item_reps () {
-		// for (int i = 0; i < inventory.inventory_size; i++) {
-		// 	item_reps.Add(ItemRepresentation.make_item_representation(i, inventory, inventory_grid));
-		// }
+	public override void release()
+	{
+		player_inventory_gui.release();
+		seed_input_gui.release();
+		product_output_gui.release();
+
+		base.release();
 	}
 
 	public override void _ExitTree()

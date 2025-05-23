@@ -129,3 +129,4 @@ common/physics_interpolation=true
 [rendering]
 
 lights_and_shadows/directional_shadow/size=8192
+lights_and_shadows/directional_shadow/16_bits=false

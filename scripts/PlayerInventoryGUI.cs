@@ -34,4 +34,11 @@ public partial class PlayerInventoryGUI : GUI {
 		return new_instance;
 	}
 
+	public override void release()
+	{
+		inventory_gui.release();
+
+		base.release();
+	}
+
 }

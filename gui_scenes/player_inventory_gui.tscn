@@ -44,6 +44,7 @@ horizontal_alignment = 1
 
 [node name="DummyInventoryGUI" parent="HBoxContainer/InventoryContainer" instance=ExtResource("2_ygbyh")]
 layout_mode = 2
+inventory_size = 10
 
 [node name="SideContainer" type="TabContainer" parent="HBoxContainer"]
 custom_minimum_size = Vector2(460, 520)

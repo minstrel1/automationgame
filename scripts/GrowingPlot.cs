@@ -10,7 +10,11 @@ using Godot.NativeInterop;
 #endif
 public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory, IInteractable {
 
+	
+
 	[ExportCategory("Growing Plot Properties")]
+	[Export]
+	public string interact_name = "Growing Plot";
 	[Export]
 	public int plot_width = 2;
 	[Export]
@@ -34,6 +38,7 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 	Inventory output_inventory;
 	[Export]
 	CsgBox3D grow_area;
+	CsgShape3D collider;
 
 	public override void _Ready()
 	{
@@ -41,6 +46,8 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 
 		input_inventory = new Inventory (1);
 		output_inventory = new Inventory (4);
+
+		collider = GetNode<CsgBox3D>("CSGBox3D2");
 
 		adjust_box();
 	}
@@ -134,12 +141,17 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 		return output_inventory;
 	}
 
-	public void on_hover_focus () {
+	public override void set_collision(bool value)
+	{
+		collider.UseCollision = value;
+	}
 
+	public void on_hover_focus () {
+		set_mesh_visibility(true);
 	}
 
 	public void on_hover_unfocus () {
-
+		set_mesh_visibility(false);
 	}
 
 	public void on_interact () {
@@ -150,5 +162,9 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 				Player.set_active_gui(GrowingPlotGUI.make_growing_plot_gui(this, Player.instance.gui_parent));
 			}
 		}
+	}
+
+	public string get_interact_text() {
+		return "Configure " + interact_name;
 	}
 }

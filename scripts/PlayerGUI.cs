@@ -15,7 +15,7 @@ public partial class Player {
 
 	public void clear_active_gui () {
 		if (is_in_gui()) {
-			active_gui.QueueFree();
+			active_gui.release();
 			active_gui = null;
 		}
 		capture_mouse();

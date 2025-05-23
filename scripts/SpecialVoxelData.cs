@@ -27,8 +27,12 @@ public enum BuildDirectionFlags {
 
 public enum SpecialVoxelFlags {
 	None,
-	ItemInterface,
-	FluidInterface,
+	ItemInput,
+	ItemOutput,
+	ItemInputOutput,
+	FluidInput,
+	FluidOutput,
+	FluidInputOutput,
 }
 
 [Tool]
@@ -57,7 +61,6 @@ public partial class SpecialVoxelData : Resource {
 		GD.Print(parent);
 
 		if (parent != null) {
-			GD.Print("on prop change");
 			parent.make_visualiser_mesh();
 		}
 	}

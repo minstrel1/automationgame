@@ -56,7 +56,7 @@ public partial class Player : CharacterBody3D {
 	
 	bool scrolled_this_frame = false;
 
-	public Inventory inventory = new Inventory(250);
+	public Inventory inventory = new Inventory(100);
 
 	public RayCast3DExtendable interaction_raycaster;
 	public Vector3 last_interact_cast_position;
@@ -80,14 +80,10 @@ public partial class Player : CharacterBody3D {
 
 		gui_parent = GetNode<Control>("PlayerGUI");
 
-		player_hud = GetNode<Control>("PlayerHUD");
-		clock_label = GetNode<Label>("PlayerHUD/Control/Label");
-		oxygen_label = GetNode<Label>("PlayerHUD/Control2/TextureProgressBar/Label");
-		oxygen_meter = GetNode<TextureProgressBar>("PlayerHUD/Control2/TextureProgressBar");
-		building_hit_label = GetNode<Label>("PlayerHUD/Control/Label2");
+		ready_hud();
 
-		init_building_cursor();
 		init_build_mode();
+		make_building_instance();
 
 		capture_mouse();
 	}
@@ -106,15 +102,9 @@ public partial class Player : CharacterBody3D {
 		interaction_cast();
 		building_cast();
 
-		if (! controls_locked) {
-			walk_vel = do_walk((float) delta);
-			grav_vel = do_gravity((float) delta);
-			jump_vel = do_jump((float) delta);
-		} else {
-			walk_vel = Vector3.Zero;
-			grav_vel = do_gravity((float) delta);
-			jump_vel = Vector3.Zero;
-		}
+		walk_vel = do_walk((float) delta);
+		grav_vel = do_gravity((float) delta);
+		jump_vel = do_jump((float) delta);
 
 		Velocity = walk_vel + grav_vel + jump_vel;
 		MoveAndSlide();
@@ -129,7 +119,13 @@ public partial class Player : CharacterBody3D {
 	}
 
 	private Vector3 do_walk (float delta) {
-		move_dir = Input.GetVector("move_left", "move_right", "move_forward", "move_backward");
+
+		if (!controls_locked) {
+			move_dir = Input.GetVector("move_left", "move_right", "move_forward", "move_backward");
+		} else {
+			move_dir = Vector2.Zero;
+		}
+
 		Vector3 forward = camera.GlobalTransform.Basis * new Vector3(move_dir.X, 0, move_dir.Y);
 		Vector3 walk_dir = new Vector3(forward.X, 0, forward.Z).Normalized();
 
@@ -222,7 +218,9 @@ public partial class Player : CharacterBody3D {
 		}
 
 		if (Input.IsActionJustPressed("interact")) {
-			if (is_interact_valid()) {
+			if (is_in_gui()) {
+				clear_active_gui();
+			} else if (is_interact_valid()) {
 				GD.Print("Interacting with " + interact_cast_result.ToString());
 				(interact_cast_result as IInteractable).on_interact();
 			}
@@ -233,7 +231,7 @@ public partial class Player : CharacterBody3D {
 		}
 
 		if (Input.IsActionJustPressed("test2")) {
-			inventory.remove(InventoryItem.new_item("test_seeds", 3));
+			set_active_gui(InventoryGUI.make_inventory_gui(inventory, gui_parent));
 		}
 
 		if (Input.IsActionJustPressed("build_mode")) {
@@ -338,17 +336,20 @@ public partial class Player : CharacterBody3D {
 			last_interact_cast_position = current_cast_position;
 		}
 
-		if (current_cast_result != interact_cast_result) {
-			if (is_interact_valid()) {
-				(interact_cast_result as IInteractable).on_hover_unfocus();
-			}
+		if (!is_in_gui()) {
+			if (current_cast_result != interact_cast_result) {
+				if (is_interact_valid()) {
+					(interact_cast_result as IInteractable).on_hover_unfocus();
+				}
 
-			interact_cast_result = current_cast_result;
+				interact_cast_result = current_cast_result;
 
-			if (is_interact_valid()) {
-				(interact_cast_result as IInteractable).on_hover_focus();
+				if (is_interact_valid()) {
+					(interact_cast_result as IInteractable).on_hover_focus();
+				}
 			}
 		}
+
 	}
 
 	public bool is_interact_valid () {

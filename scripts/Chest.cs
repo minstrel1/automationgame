@@ -10,6 +10,9 @@ public partial class Chest : BuildingGridPlacable, IBuildingWithInventory, IInte
 	
 	public Inventory inventory;
 
+	[Export]
+	public string interact_name = "Chest";
+
 	public override void _Ready()
 	{
 		base._Ready();
@@ -50,5 +53,9 @@ public partial class Chest : BuildingGridPlacable, IBuildingWithInventory, IInte
 		} else {
 			Player.set_active_gui(ChestGUI.make_chest_gui(this, Player.instance.gui_parent));
 		}
+	}
+
+	public string get_interact_text () {
+		return "Open " + interact_name;
 	}
 }

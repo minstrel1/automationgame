@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Godot;
 using Godot.Collections;
 using Godot.NativeInterop;
@@ -23,7 +24,10 @@ public struct GUIDummyData {
 
 public partial class GUI : Control {
 	public Control gui_parent;
-	public Dictionary<string, Array<GUIDummy>> dummies = new Dictionary<string, Array<GUIDummy>>();
+	public Godot.Collections.Dictionary<string, Array<GUIDummy>> dummies = new Godot.Collections.Dictionary<string, Array<GUIDummy>>();
+
+	public bool in_use = false;
+	public bool readied = false;
 	
 	public override void _Ready () {
 		int count = 0;
@@ -38,10 +42,13 @@ public partial class GUI : Control {
 				count += 1;
 			}
 		}
+
 		if (count > 0) {
 			//GD.Print(String.Format("GUI {0} found {1} dummies.", this.ToString(), count));
 			//GD.Print(dummies);
 		}
+
+		readied = true;
 	}
 
 	public Array<GUIDummy> pop_dummy_type (string type) {
@@ -68,7 +75,7 @@ public partial class GUI : Control {
 			dummy.Position,
 			dummy.GlobalPosition,
 			dummy.Size,
-			dummy.GetMinimumSize()
+			dummy.GetCombinedMinimumSize()
 		);
 
 		dummy.QueueFree();
@@ -89,5 +96,9 @@ public partial class GUI : Control {
 		}
 
 		return result;
+	}
+
+	public virtual void release () {
+		QueueFree();
 	}
 }

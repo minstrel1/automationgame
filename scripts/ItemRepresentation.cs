@@ -1,25 +1,49 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Godot;
 using Godot.Collections;
 using Godot.NativeInterop;
 
-public partial class ItemRepresentation : Control {
+public partial class ItemRepresentation : GUI {
 
-	public Control gui_parent;
+	public static Array<ItemRepresentation> instances = new Array<ItemRepresentation>();
+	public static Stack<ItemRepresentation> available_instances = new Stack<ItemRepresentation>();
+
 	public Inventory parent_inventory;
 	public int current_index;
 	public InventoryItem current_item;
+	
 	public static PackedScene scene = GD.Load<PackedScene>("res://gui_scenes/item_representation.tscn");
+
 	public TextureRect background;
 	public TextureRect item_texture;
 	public Label item_count;
 
-	public static ItemRepresentation make_item_representation (int current_index, Inventory parent_inventory, Control parent) {
-		ItemRepresentation new_rep = scene.Instantiate<ItemRepresentation>();
+	public bool interactable = true;
+
+	public static ItemRepresentation make_item_representation (int current_index, Inventory parent_inventory, Control parent, bool interactable = true) {
+		ItemRepresentation new_rep = get_first_available_instance();
+
+		if (new_rep == null) {
+			new_rep = scene.Instantiate<ItemRepresentation>();
+			instances.Add(new_rep);
+		} else {
+			if (new_rep.GetParent() != null) {
+				GD.Print("WHATT HE FUCK>?>???");
+			}
+		}
+
 		new_rep.parent_inventory = parent_inventory;
 		new_rep.gui_parent = parent;
 		new_rep.current_index = current_index;
+		new_rep.in_use = true;
+		new_rep.interactable = interactable;
 
+		if (new_rep.readied) {
+			new_rep.RequestReady();
+		}
+		
 		parent.AddChild(new_rep);
 
 		return new_rep;
@@ -27,10 +51,12 @@ public partial class ItemRepresentation : Control {
 
 	public override void _Ready()
 	{
+		base._Ready();
+
 		background = GetNode<TextureRect>("Background");
 		item_texture = GetNode<TextureRect>("ItemTexture");
 		item_count = GetNode<Label>("ItemCount");
-		
+
 		parent_inventory.OnItemSlotChanged += on_inventory_slot_changed;
 
 		if (parent_inventory.get_item_at_index(current_index) != null) {
@@ -38,6 +64,19 @@ public partial class ItemRepresentation : Control {
 		}
 
 		update_visualization();
+	
+	}
+
+	public void clear () {
+		gui_parent = null;
+
+		if (parent_inventory != null) {
+			parent_inventory.OnItemSlotChanged -= on_inventory_slot_changed;
+		}
+
+		parent_inventory = null;
+		current_index = 0;
+		current_item = null;
 	}
 
 	public void on_inventory_slot_changed (int index, InventoryItem item) {
@@ -155,9 +194,33 @@ public partial class ItemRepresentation : Control {
 		}
 	}
 
+	public static ItemRepresentation get_first_available_instance () {
+		if (available_instances.Count > 0) {
+			ItemRepresentation result = available_instances.Pop();
+			if (result.GetParent() != null) {
+				GD.Print("Item rep pushed with parent");
+			}
+			return result;
+		}
+
+		return null;
+	}
+
+	public override void release () {
+		in_use = false;
+		
+		Node parent = gui_parent;
+		if (parent != null) {
+			parent.RemoveChild(this);
+		}
+
+		clear();
+		
+		available_instances.Push(this);
+	}
+
 	public override void _ExitTree()
 	{
 		base._ExitTree();
-		parent_inventory.OnItemSlotChanged -= on_inventory_slot_changed;
 	}
 }

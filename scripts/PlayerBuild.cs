@@ -18,6 +18,10 @@ public partial class Player {
 	public bool build_mode = false;
 
 	public void init_build_mode () {
+		
+	}
+	
+	public void make_building_instance () {
 		current_building_instance = current_building_scene.Instantiate<BuildingGridPlacable>();
 
 		current_building_instance.Position = Vector3.Zero;
@@ -26,19 +30,14 @@ public partial class Player {
 		current_building_instance.PhysicsInterpolationMode = PhysicsInterpolationModeEnum.Off;
 
 		AddChild(current_building_instance);
+
+		current_building_instance.set_collision(false);
 	}
-	
-	public void init_building_cursor () {
-		building_cursor = new CsgSphere3D();
 
-		building_cursor.Radius = 0.5f;
-		building_cursor.Position = Vector3.Zero;
-		building_cursor.UseCollision = false;
-		building_cursor.Visible = false;
-		building_cursor.TopLevel = true;
-		building_cursor.PhysicsInterpolationMode = PhysicsInterpolationModeEnum.Off;
+	public void clear_building_instance () {
+		current_building_instance.QueueFree();
 
-		AddChild(building_cursor);
+		current_building_instance = null;
 	}
 
 	public void building_cast () {
@@ -53,10 +52,8 @@ public partial class Player {
 			building_cast_result = current_cast_result;
 		}
 
-		if (build_mode) {
+		if (build_mode && current_building_instance != null) {
 			if (building_cast_result != null && building_cast_result is BuildingGridChunk) {
-
-				building_cursor.Visible = true;
 
 				last_known_grid = (building_cast_result as BuildingGridChunk).parent_grid;
 
@@ -68,8 +65,7 @@ public partial class Player {
 
 				Vector3I projected_pos = hit_pos + new Vector3I((int) collision_normal.X, (int) collision_normal.Y, (int) collision_normal.Z);
 				
-				building_cursor.Visible = true;
-				building_cursor.GlobalPosition = new Vector3(projected_pos.X, projected_pos.Y, projected_pos.Z) + last_known_grid.GlobalPosition + new Vector3(0.5f, 0.5f, 0.5f);
+				current_building_instance.Visible = true;
 
 				building_hit_label.Text = "Hit Pos: " + hit_pos.ToString();
 
@@ -84,6 +80,7 @@ public partial class Player {
 				}
 
 				current_building_instance.Position = new Vector3(projected_pos.X, projected_pos.Y, projected_pos.Z) + last_known_grid.GlobalPosition + new Vector3(0.5f, 0.5f, 0.5f);
+				current_building_instance.Rotation = new Vector3(0, 0, 0);
 				Tools.up_to_rot(current_building_instance, build_normal);
 				current_building_instance.Rotate(build_normal, (float) (current_building_rotation * (Math.PI / 2.0f)));
 
@@ -100,7 +97,6 @@ public partial class Player {
 				corner_2 += projected_pos;
 
 				if (Input.IsActionJustPressed("click") && !controls_locked) {
-
 					
 					Godot.Collections.Array test_result = last_known_grid.is_area_free(corner_1, corner_2);
 
@@ -118,12 +114,15 @@ public partial class Player {
 							Godot.Collections.Array<BuildingGridChunk> affected_chunks = last_known_grid.set_area(corner_1, corner_2, index);
 
 							foreach (BuildingGridChunk chunk in affected_chunks) {
-								chunk.generate_mesh();
-								chunk.generate_mesh_neighbors();
+								new_instance.occupied_chunks.Add(chunk);
+								chunk.OnChunkChanged += new_instance.on_chunk_changed;
+								chunk.on_chunk_changed();
 							}
 
 							new_instance.parent_grid = last_known_grid;
 							last_known_grid.set_placable(index, new_instance);
+
+							new_instance.set_mesh_visibility(false);
 
 							new_instance.on_build();
 						}
@@ -147,10 +146,10 @@ public partial class Player {
 					}
 				}
 			} else {
-				building_cursor.Visible = false;
+				current_building_instance.Visible = false;
 			}
 		} else {
-			building_cursor.Visible = false;
+			current_building_instance.Visible = false;
 		}
 	}
 }

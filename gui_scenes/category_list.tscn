@@ -1,0 +1,457 @@
+[gd_scene load_steps=5 format=3 uid="uid://vbvabvpfivvr"]
+
+[ext_resource type="Texture2D" uid="uid://b3e53ahpsap14" path="res://item_textures/test_item.png" id="1_c8ima"]
+[ext_resource type="PackedScene" uid="uid://bqqjm14k1137e" path="res://gui_scenes/category_element.tscn" id="1_djbe2"]
+[ext_resource type="PackedScene" uid="uid://drninlmo8l1ku" path="res://gui_scenes/dummy_item_representation.tscn" id="2_ib442"]
+[ext_resource type="Texture2D" uid="uid://dt8g38wxbygcy" path="res://stopwatch.png" id="3_ib442"]
+
+[node name="Control" type="PanelContainer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(0, 554)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Control2" type="Control" parent="VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(500, 400)
+layout_mode = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer/Control2"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_right = 200.0
+offset_bottom = 400.0
+grow_horizontal = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/HBoxContainer/Control2/PanelContainer"]
+custom_minimum_size = Vector2(500, 400)
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer/HBoxContainer/Control2/PanelContainer/ScrollContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 5
+
+[node name="CategoryElement" parent="VBoxContainer/HBoxContainer/Control2/PanelContainer/ScrollContainer/GridContainer" instance=ExtResource("1_djbe2")]
+layout_mode = 2
+
+[node name="Control" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer/Control"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="VBoxContainer/HBoxContainer/Control/PanelContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+
+[node name="Control" type="TextureRect" parent="VBoxContainer/HBoxContainer/Control/PanelContainer/Control"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -25.0
+offset_right = 25.0
+offset_bottom = 50.0
+grow_horizontal = 2
+texture = ExtResource("1_c8ima")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/Control/PanelContainer/Control"]
+clip_contents = true
+custom_minimum_size = Vector2(100, 15)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -15.0
+offset_right = 50.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 10
+text = "I might Cum a lil"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="PanelContainer2" type="PanelContainer" parent="VBoxContainer/HBoxContainer/Control"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="VBoxContainer/HBoxContainer/Control/PanelContainer2"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+
+[node name="Control" type="TextureRect" parent="VBoxContainer/HBoxContainer/Control/PanelContainer2/Control"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -25.0
+offset_right = 25.0
+offset_bottom = 50.0
+grow_horizontal = 2
+texture = ExtResource("1_c8ima")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/Control/PanelContainer2/Control"]
+clip_contents = true
+custom_minimum_size = Vector2(100, 15)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -15.0
+offset_right = 50.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 10
+text = "I might Cum a lil"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="PanelContainer3" type="PanelContainer" parent="VBoxContainer/HBoxContainer/Control"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="VBoxContainer/HBoxContainer/Control/PanelContainer3"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+
+[node name="Control" type="TextureRect" parent="VBoxContainer/HBoxContainer/Control/PanelContainer3/Control"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -25.0
+offset_right = 25.0
+offset_bottom = 50.0
+grow_horizontal = 2
+texture = ExtResource("1_c8ima")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/Control/PanelContainer3/Control"]
+clip_contents = true
+custom_minimum_size = Vector2(100, 15)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -15.0
+offset_right = 50.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 10
+text = "I might Cum a lil"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="PanelContainer4" type="PanelContainer" parent="VBoxContainer/HBoxContainer/Control"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="VBoxContainer/HBoxContainer/Control/PanelContainer4"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+
+[node name="Control" type="TextureRect" parent="VBoxContainer/HBoxContainer/Control/PanelContainer4/Control"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -25.0
+offset_right = 25.0
+offset_bottom = 50.0
+grow_horizontal = 2
+texture = ExtResource("1_c8ima")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/Control/PanelContainer4/Control"]
+clip_contents = true
+custom_minimum_size = Vector2(100, 15)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -15.0
+offset_right = 50.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 10
+text = "I might Cum a lil"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="PanelContainer5" type="PanelContainer" parent="VBoxContainer/HBoxContainer/Control"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="VBoxContainer/HBoxContainer/Control/PanelContainer5"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+
+[node name="Control" type="TextureRect" parent="VBoxContainer/HBoxContainer/Control/PanelContainer5/Control"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -25.0
+offset_right = 25.0
+offset_bottom = 50.0
+grow_horizontal = 2
+texture = ExtResource("1_c8ima")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/Control/PanelContainer5/Control"]
+clip_contents = true
+custom_minimum_size = Vector2(100, 15)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -15.0
+offset_right = 50.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 10
+text = "I might Cum a lil"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="PanelContainer6" type="PanelContainer" parent="VBoxContainer/HBoxContainer/Control"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="VBoxContainer/HBoxContainer/Control/PanelContainer6"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+
+[node name="Control" type="TextureRect" parent="VBoxContainer/HBoxContainer/Control/PanelContainer6/Control"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -25.0
+offset_right = 25.0
+offset_bottom = 50.0
+grow_horizontal = 2
+texture = ExtResource("1_c8ima")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/Control/PanelContainer6/Control"]
+clip_contents = true
+custom_minimum_size = Vector2(100, 15)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -15.0
+offset_right = 50.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 10
+text = "I might Cum a lil"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="LowerView" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(400, 150)
+layout_mode = 2
+
+[node name="Control" type="Control" parent="VBoxContainer/LowerView"]
+custom_minimum_size = Vector2(150, 150)
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Control" type="TextureRect" parent="VBoxContainer/LowerView/Control"]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -50.0
+offset_right = 50.0
+offset_bottom = 100.0
+grow_horizontal = 2
+texture = ExtResource("1_c8ima")
+
+[node name="Label" type="Label" parent="VBoxContainer/LowerView/Control"]
+clip_contents = true
+custom_minimum_size = Vector2(150, 50)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -50.0
+offset_right = 20.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "What the fuck! I am going to cum a"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Control2" type="Control" parent="VBoxContainer/LowerView"]
+custom_minimum_size = Vector2(450, 60)
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -450.0
+offset_top = -60.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/LowerView/Control2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -113.0
+offset_top = -25.0
+offset_right = 113.0
+offset_bottom = 25.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/LowerView/Control2/HBoxContainer"]
+layout_mode = 2
+text = "Cost "
+horizontal_alignment = 1
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/LowerView/Control2/HBoxContainer"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/LowerView/Control2/HBoxContainer/PanelContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/LowerView/Control2/HBoxContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="DummyItemRepresentation2" parent="VBoxContainer/LowerView/Control2/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" instance=ExtResource("2_ib442")]
+layout_mode = 2
+
+[node name="DummyItemRepresentation" parent="VBoxContainer/LowerView/Control2/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" instance=ExtResource("2_ib442")]
+layout_mode = 2
+
+[node name="DummyItemRepresentation3" parent="VBoxContainer/LowerView/Control2/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" instance=ExtResource("2_ib442")]
+layout_mode = 2
+
+[node name="DummyItemRepresentation4" parent="VBoxContainer/LowerView/Control2/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" instance=ExtResource("2_ib442")]
+layout_mode = 2
+
+[node name="DummyItemRepresentation5" parent="VBoxContainer/LowerView/Control2/HBoxContainer/PanelContainer/VBoxContainer/HBoxContainer" instance=ExtResource("2_ib442")]
+layout_mode = 2
+
+[node name="VSeparator2" type="VSeparator" parent="VBoxContainer/LowerView/Control2/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 9
+
+[node name="Label2" type="Label" parent="VBoxContainer/LowerView/Control2/HBoxContainer"]
+layout_mode = 2
+text = "Time"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="VBoxContainer/LowerView/Control2/HBoxContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/LowerView/Control2/HBoxContainer/Control"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -25.0
+offset_right = 25.0
+offset_bottom = 25.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_ib442")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="VBoxContainer/LowerView/Control2/HBoxContainer/Control/TextureRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "999"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/LowerView"]
+custom_minimum_size = Vector2(450, 90)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+bbcode_enabled = true
+text = "i am going to fucking cum all over the place if i am not given a handjob RIGHT NOW
+i am going to fucking cum all over the place if i am not given a handjob RIGHT NOW
+i am going to fucking cum all over the place if i am not given a handjob RIGHT NOW
+"

@@ -80,13 +80,16 @@ public partial class BuildingGridPlacable : Node3D {
 	private Vector2[] uvs = new Vector2[max_visualiser_faces * 4];
 
 	private int face_count = 0;
-	private float tex_div = 1f / 4;
+	private float h_tex_div = 1f / 14;
+	private float v_tex_div = 1f / 2;
 
 	private Array<MeshInstance3D> special_visualisers;
 
 	public string packed_scene_path;
 
 	public bool is_built = false;
+
+	public Array<BuildingGridChunk> occupied_chunks;
 
 	public override void _Ready()
 	{
@@ -105,6 +108,8 @@ public partial class BuildingGridPlacable : Node3D {
 		visualiser.SetSurfaceOverrideMaterial(0, material);
 
 		special_visualisers = new Array<MeshInstance3D>();
+
+		occupied_chunks = new Array<BuildingGridChunk>();
 		
 		AddChild(visualiser);
 		adjust_box();
@@ -137,7 +142,7 @@ public partial class BuildingGridPlacable : Node3D {
 		make_box(grid_offset, new Vector3(grid_width, grid_height, grid_length));
 
 		foreach (SpecialVoxelData special_voxel in special_voxels) {
-			make_box(grid_offset + special_voxel.voxel_position, new Vector3(1, 1, 1), special_voxel.flag_directions);
+			make_box(grid_offset + special_voxel.voxel_position, new Vector3(1, 1, 1), special_voxel.flag_directions, (int) special_voxel.voxel_flags);
 			GD.Print((int) special_voxel.flag_directions);
 		}
 
@@ -168,7 +173,7 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + ltb + new Vector3(0, -0.5f, 0.5f);
 			vertices[face_count * 4 + 3 ] = pos + ltb + new Vector3(0, -0.5f, 0);
 
-			add_uvs();
+			add_uvs(face * 2);
 			add_tris();
 
 			vertices[face_count * 4 + 0 ] = pos + ltf + new Vector3(0, 0, -0.5f);
@@ -176,7 +181,7 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + ltf + new Vector3(0, -0.5f, 0);
 			vertices[face_count * 4 + 3 ] = pos + ltf + new Vector3(0, -0.5f, -0.5f);
 
-			add_uvs(1);
+			add_uvs((face * 2) + 1);
 			add_tris();
 
 			vertices[face_count * 4 + 0 ] = pos + lbf + new Vector3(0, 0.5f, -0.5f);
@@ -184,7 +189,7 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + lbf;
 			vertices[face_count * 4 + 3 ] = pos + lbf + new Vector3(0, 0, -0.5f);
 
-			add_uvs(2);
+			add_uvs((face * 2) + 1, 1);
 			add_tris();
 
 			vertices[face_count * 4 + 0 ] = pos + lbb + new Vector3(0, 0.5f, 0);
@@ -192,7 +197,7 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + lbb + new Vector3(0, 0, 0.5f);
 			vertices[face_count * 4 + 3 ] = pos + lbb;
 
-			add_uvs(3);
+			add_uvs(face * 2, 1);
 			add_tris();
 		}
 
@@ -202,7 +207,7 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + rtf + new Vector3(0, -0.5f, -0.5f);
 			vertices[face_count * 4 + 3 ] = pos + rtf + new Vector3(0, -0.5f, 0);
 
-			add_uvs();
+			add_uvs(face * 2);
 			add_tris();
 
 			vertices[face_count * 4 + 0 ] = pos + rtb + new Vector3(0, 0, 0.5f);
@@ -210,7 +215,7 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + rtb + new Vector3(0, -0.5f, 0);
 			vertices[face_count * 4 + 3 ] = pos + rtb + new Vector3(0, -0.5f, 0.5f);
 
-			add_uvs(1);
+			add_uvs((face * 2) + 1);
 			add_tris();
 
 			vertices[face_count * 4 + 0 ] = pos + rbb + new Vector3(0, 0.5f, 0.5f);
@@ -218,7 +223,7 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + rbb;
 			vertices[face_count * 4 + 3 ] = pos + rbb + new Vector3(0, 0, 0.5f);
 
-			add_uvs(2);
+			add_uvs((face * 2) + 1, 1);
 			add_tris();
 
 			vertices[face_count * 4 + 0 ] = pos + rbf + new Vector3(0, 0.5f, 0);
@@ -226,7 +231,7 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + rbf + new Vector3(0, 0, -0.5f);
 			vertices[face_count * 4 + 3 ] = pos + rbf;
 
-			add_uvs(3);
+			add_uvs(face * 2, 1);
 			add_tris();
 		}
 
@@ -236,7 +241,7 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + ltb + new Vector3(0.5f, 0, 0.5f);
 			vertices[face_count * 4 + 3 ] = pos + ltb + new Vector3(0, 0, 0.5f);
 
-			add_uvs();
+			add_uvs(face * 2);
 			add_tris();
 
 			vertices[face_count * 4 + 0 ] = pos + rtb + new Vector3(-0.5f, 0, 0);
@@ -244,7 +249,7 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + rtb + new Vector3(0, 0, 0.5f);
 			vertices[face_count * 4 + 3 ] = pos + rtb + new Vector3(-0.5f, 0, 0.5f);
 
-			add_uvs(1);
+			add_uvs((face * 2) + 1);
 			add_tris();
 
 			vertices[face_count * 4 + 0 ] = pos + rtf + new Vector3(-0.5f, 0, -0.5f);
@@ -252,7 +257,7 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + rtf;
 			vertices[face_count * 4 + 3 ] = pos + rtf + new Vector3(-0.5f, 0, 0);
 
-			add_uvs(2);
+			add_uvs((face * 2) + 1, 1);
 			add_tris();
 
 			vertices[face_count * 4 + 0 ] = pos + ltf + new Vector3(0, 0, -0.5f);
@@ -260,7 +265,7 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + ltf + new Vector3(0.5f, 0, 0);
 			vertices[face_count * 4 + 3 ] = pos + ltf;
 
-			add_uvs(3);
+			add_uvs(face * 2, 1);
 			add_tris();
 		}
 
@@ -270,7 +275,7 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + lbf + new Vector3(0.5f, 0, -0.5f);
 			vertices[face_count * 4 + 3 ] = pos + lbf + new Vector3(0, 0, -0.5f);
 
-			add_uvs();
+			add_uvs(face * 2);
 			add_tris();
 
 			vertices[face_count * 4 + 0 ] = pos + rbf + new Vector3(-0.5f, 0, 0);
@@ -278,7 +283,7 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + rbf + new Vector3(0, 0, -0.5f);
 			vertices[face_count * 4 + 3 ] = pos + rbf + new Vector3(-0.5f, 0, -0.5f);
 
-			add_uvs(1);
+			add_uvs((face * 2) + 1);
 			add_tris();
 
 			vertices[face_count * 4 + 0 ] = pos + rbb + new Vector3(-0.5f, 0, 0.5f);
@@ -286,7 +291,7 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + rbb;
 			vertices[face_count * 4 + 3 ] = pos + rbb + new Vector3(-0.5f, 0, 0);
 
-			add_uvs(2);
+			add_uvs((face * 2) + 1, 1);
 			add_tris();
 
 			vertices[face_count * 4 + 0 ] = pos + lbb + new Vector3(0, 0, 0.5f);
@@ -294,7 +299,7 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + lbb + new Vector3(0.5f, 0, 0);
 			vertices[face_count * 4 + 3 ] = pos + lbb;
 
-			add_uvs(3);
+			add_uvs(face * 2, 1);
 			add_tris();
 		}
 
@@ -304,7 +309,7 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + rtb + new Vector3(-0.5f, -0.5f, 0);
 			vertices[face_count * 4 + 3 ] = pos + rtb + new Vector3(0, -0.5f, 0);
 
-			add_uvs();
+			add_uvs(face * 2);
 			add_tris();
 
 			vertices[face_count * 4 + 0 ] = pos + ltb + new Vector3(0.5f, 0, 0);
@@ -312,7 +317,7 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + ltb + new Vector3(0, -0.5f, 0);
 			vertices[face_count * 4 + 3 ] = pos + ltb + new Vector3(0.5f, -0.5f, 0);
 
-			add_uvs(1);
+			add_uvs((face * 2) + 1);
 			add_tris();
 
 			vertices[face_count * 4 + 0 ] = pos + lbb + new Vector3(0.5f, 0.5f, 0);
@@ -320,7 +325,7 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + lbb;
 			vertices[face_count * 4 + 3 ] = pos + lbb + new Vector3(0.5f, 0, 0);
 
-			add_uvs(2);
+			add_uvs((face * 2) + 1, 1);
 			add_tris();
 
 			vertices[face_count * 4 + 0 ] = pos + rbb + new Vector3(0, 0.5f, 0);
@@ -328,7 +333,7 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + rbb + new Vector3(-0.5f, 0, 0);
 			vertices[face_count * 4 + 3 ] = pos + rbb;
 
-			add_uvs(3);
+			add_uvs(face * 2, 1);
 			add_tris();
 		}
 
@@ -338,7 +343,7 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + ltf + new Vector3(0.5f, -0.5f, 0);
 			vertices[face_count * 4 + 3 ] = pos + ltf + new Vector3(0, -0.5f, 0);
 
-			add_uvs();
+			add_uvs(face * 2);
 			add_tris();
 
 			vertices[face_count * 4 + 0 ] = pos + rtf + new Vector3(-0.5f, 0, 0);
@@ -346,7 +351,7 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + rtf + new Vector3(0, -0.5f, 0);
 			vertices[face_count * 4 + 3 ] = pos + rtf + new Vector3(-0.5f, -0.5f, 0);
 
-			add_uvs(1);
+			add_uvs((face * 2) + 1);
 			add_tris();
 
 			vertices[face_count * 4 + 0 ] = pos + rbf + new Vector3(-0.5f, 0.5f, 0);
@@ -354,7 +359,7 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + rbf;
 			vertices[face_count * 4 + 3 ] = pos + rbf + new Vector3(-0.5f, 0, 0);
 
-			add_uvs(2);
+			add_uvs((face * 2) + 1, 1);
 			add_tris();
 
 			vertices[face_count * 4 + 0 ] = pos + lbf + new Vector3(0, 0.5f, 0);
@@ -362,16 +367,16 @@ public partial class BuildingGridPlacable : Node3D {
 			vertices[face_count * 4 + 2 ] = pos + lbf + new Vector3(0.5f, 0, 0);
 			vertices[face_count * 4 + 3 ] = pos + lbf;
 
-			add_uvs(3);
+			add_uvs(face * 2, 1);
 			add_tris();
 		}
 	}
 
-	public void add_uvs (int index = 0) {
-		uvs[face_count * 4 + 0] = new Vector2(tex_div * index, 0);
-		uvs[face_count * 4 + 1] = new Vector2(tex_div * index + tex_div, 0);
-		uvs[face_count * 4 + 2] = new Vector2(tex_div * index + tex_div, 1);
-		uvs[face_count * 4 + 3] = new Vector2(tex_div * index, 1);
+	public void add_uvs (int h_index = 0, int v_index = 0) {
+		uvs[face_count * 4 + 0] = new Vector2(h_tex_div * h_index, v_tex_div * v_index);
+		uvs[face_count * 4 + 1] = new Vector2(h_tex_div * h_index + h_tex_div, v_tex_div * v_index);
+		uvs[face_count * 4 + 2] = new Vector2(h_tex_div * h_index + h_tex_div, v_tex_div * v_index + v_tex_div);
+		uvs[face_count * 4 + 3] = new Vector2(h_tex_div * h_index, v_tex_div * v_index + v_tex_div);
 	}
 
 	public void add_tris () {
@@ -452,6 +457,14 @@ public partial class BuildingGridPlacable : Node3D {
 	public override void _PhysicsProcess(double delta)
 	{
 		base._PhysicsProcess(delta);
+	}
+
+	public virtual void set_collision (bool value) {
+		
+	}
+
+	public virtual void on_chunk_changed (BuildingGridChunk chunk) {
+		GD.Print(chunk + " changed");
 	}
 
 }

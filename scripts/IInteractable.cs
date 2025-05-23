@@ -9,4 +9,7 @@ public interface IInteractable {
 	void on_hover_unfocus ();
 
 	void on_interact ();
+
+	string get_interact_text ();
+
 }

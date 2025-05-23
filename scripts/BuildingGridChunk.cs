@@ -45,6 +45,9 @@ public partial class BuildingGridChunk : StaticBody3D {
 
 	public bool mesh_gen_this_frame = false;
 
+	[Signal]
+	public delegate void OnChunkChangedEventHandler (BuildingGridChunk chunk);
+
 	public override void _Ready()
 	{
 		base._Ready();
@@ -109,6 +112,15 @@ public partial class BuildingGridChunk : StaticBody3D {
 				}
 			}
 		}
+	}
+
+	public void on_chunk_changed () {
+		
+		generate_mesh();
+		generate_mesh_neighbors();
+
+		EmitSignal(BuildingGridChunk.SignalName.OnChunkChanged, this);
+
 	}
 	
 	public bool is_block_free (Vector3 pos) {
@@ -270,8 +282,8 @@ public partial class BuildingGridChunk : StaticBody3D {
 	}
 
 	public void make_floor () {
-		for (int x = 0; x <= chunk_size; x++) {
-			for (int z = 0; z <= chunk_size; z++) {
+		for (int x = 0; x < chunk_size; x++) {
+			for (int z = 0; z < chunk_size; z++) {
 				vertices[face_count * 4 + 0] = new Vector3(  x,   0f,  z);
 				vertices[face_count * 4 + 1] = new Vector3(  x + 1,   0f,  z);
 				vertices[face_count * 4 + 2] = new Vector3(  x + 1,   0f,  z + 1);

@@ -487,6 +487,7 @@ interact_distance = 30.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00343227, 0.0170288, -0.00247717)
 target_position = Vector3(0, 0, -1)
 script = ExtResource("3_g14j6")
+interact_distance = 5.0
 
 [node name="PlayerHUD" type="Control" parent="Player"]
 layout_mode = 3
@@ -521,6 +522,15 @@ offset_right = 127.0
 offset_bottom = 137.0
 theme_override_font_sizes/font_size = 20
 text = "Hit Pos:"
+
+[node name="Label3" type="Label" parent="Player/PlayerHUD/Control"]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 126.0
+offset_right = 127.0
+offset_bottom = 168.0
+theme_override_font_sizes/font_size = 20
+text = "FPS:"
 
 [node name="Control2" type="Control" parent="Player/PlayerHUD"]
 custom_minimum_size = Vector2(200, 200)
@@ -574,6 +584,40 @@ offset_right = 70.0
 offset_bottom = 60.0
 theme_override_font_sizes/font_size = 16
 text = "O2"
+horizontal_alignment = 1
+
+[node name="Control3" type="Control" parent="Player/PlayerHUD"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -75.0
+offset_right = 100.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Player/PlayerHUD/Control3"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -76.0
+offset_top = -24.935
+offset_right = 76.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="Player/PlayerHUD/Control3/PanelContainer"]
+layout_mode = 2
+text = "Press E to Dingaling"
 horizontal_alignment = 1
 
 [node name="PlayerGUI" type="Control" parent="Player"]
@@ -644,6 +688,7 @@ environment = SubResource("Environment_8uh7m")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.786466, -0.404532, 0.466717, -0.123767, 0.637103, 0.760777, -0.605105, -0.65609, 0.450993, 0, 20.8424, 8.50293)
 shadow_enabled = true
+directional_shadow_max_distance = 500.0
 
 [node name="Node3D" type="Node3D" parent="."]
 

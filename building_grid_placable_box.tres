@@ -3,9 +3,12 @@
 [ext_resource type="Texture2D" uid="uid://cyc75tsryu51f" path="res://building_grid_placable_box.png" id="1_ckegt"]
 
 [resource]
+render_priority = 100
 transparency = 2
 alpha_scissor_threshold = 0.5
 alpha_antialiasing_mode = 0
+cull_mode = 2
+no_depth_test = true
 albedo_texture = ExtResource("1_ckegt")
 texture_filter = 2
 disable_receive_shadows = true
