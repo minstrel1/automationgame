@@ -83,7 +83,6 @@ public partial class Player : CharacterBody3D {
 		ready_hud();
 
 		init_build_mode();
-		make_building_instance();
 
 		capture_mouse();
 	}
@@ -98,6 +97,7 @@ public partial class Player : CharacterBody3D {
 		base._PhysicsProcess(delta);
 
 		scrolled_this_frame = false;
+		
 
 		interaction_cast();
 		building_cast();
@@ -115,6 +115,8 @@ public partial class Player : CharacterBody3D {
 
 		update_stats();
 		update_hud();
+
+		mouse_clicked = false;
 		
 	}
 
@@ -231,7 +233,7 @@ public partial class Player : CharacterBody3D {
 		}
 
 		if (Input.IsActionJustPressed("test2")) {
-			set_active_gui(InventoryGUI.make_inventory_gui(inventory, gui_parent));
+			set_active_gui(InventoryGUI.make(inventory, gui_parent));
 		}
 
 		if (Input.IsActionJustPressed("build_mode")) {
@@ -241,12 +243,20 @@ public partial class Player : CharacterBody3D {
 				}
 
 				build_mode = false;
+				clear_active_gui();
+				clear_building_instance();
+				current_building_scene = null;
 			} else {
 				foreach (BuildingGrid grid in BuildingGrid.grids) {
 					grid.set_mesh_visibility(true);
 				}
 
 				build_mode = true;
+				if (current_building_instance == null) {
+					CategoryList new_instance = CategoryList.make(CategoryListMode.Buildings, Prototypes.buildings, gui_parent);
+					new_instance.OnChoiceSelected += on_building_choice_selected;
+					set_active_gui(new_instance);
+				}
 			}
 		}
 
@@ -271,10 +281,12 @@ public partial class Player : CharacterBody3D {
 
 		if (@event is InputEventMouseButton) {
 			InputEventMouseButton new_event = @event as InputEventMouseButton;
-			if (new_event.Pressed) {
+			if (new_event.ButtonIndex == MouseButton.Left && new_event.Pressed) {
 				if (hand_item.has_item()) {
 					hand_item.clear_item();
 				}
+
+				mouse_clicked = true;
 			}
 		}
 	}

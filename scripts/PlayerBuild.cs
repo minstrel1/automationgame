@@ -13,12 +13,16 @@ public partial class Player {
 
 	public CsgSphere3D building_cursor;
 
-	public PackedScene current_building_scene = GD.Load<PackedScene>("res://building_scenes/ExampleGrowingPlot.tscn");
+	public PackedScene current_building_scene = null; //GD.Load<PackedScene>("res://building_scenes/ExampleGrowingPlot.tscn");
 	public BuildingGridPlacable current_building_instance;
 	public bool build_mode = false;
 
+	public bool mouse_clicked = false;
+
 	public void init_build_mode () {
-		
+		if (current_building_scene != null) {
+			make_building_instance();
+		}
 	}
 	
 	public void make_building_instance () {
@@ -35,9 +39,26 @@ public partial class Player {
 	}
 
 	public void clear_building_instance () {
-		current_building_instance.QueueFree();
+		if (current_building_instance != null) {
+			current_building_instance.QueueFree();
+		}
 
 		current_building_instance = null;
+	}
+
+	public void on_building_choice_selected (Dictionary data) {
+		string res_path = (string) data["res_path"];
+		if (res_path != null) {
+			try {
+				current_building_scene = GD.Load<PackedScene>(res_path);
+				make_building_instance();
+			} catch {
+				GD.Print("we done fucked up loading shit!");
+			}
+		}
+
+		((CategoryList) active_gui).OnChoiceSelected -= on_building_choice_selected;
+		clear_active_gui();
 	}
 
 	public void building_cast () {
@@ -69,6 +90,11 @@ public partial class Player {
 
 				building_hit_label.Text = "Hit Pos: " + hit_pos.ToString();
 
+				if (last_known_grid.is_position_valid(hit_pos)) {
+					voxel_data_label.Text = last_known_grid.get_block(hit_pos).ToString();
+				}
+				
+
 				BuildDirection build_direction = Tools.normal_to_enum(collision_normal);
 				
 				Vector3 build_normal = Vector3.Up;
@@ -96,36 +122,37 @@ public partial class Player {
 				corner_1 += projected_pos;
 				corner_2 += projected_pos;
 
-				if (Input.IsActionJustPressed("click") && !controls_locked) {
+				if (mouse_clicked && !is_in_gui() && !controls_locked) {
 					
 					Godot.Collections.Array test_result = last_known_grid.is_area_free(corner_1, corner_2);
 
 					if ((bool) test_result[0]) {
-						int index = last_known_grid.get_free_index();
+						
+						BuildingGridPlacable new_instance = current_building_scene.Instantiate<BuildingGridPlacable>();
+						
+						last_known_grid.place(new_instance, projected_pos, build_normal, current_building_rotation);
 
-						if (index != -1) {
+							// BuildingGridPlacable new_instance = current_building_scene.Instantiate<BuildingGridPlacable>();
 
-							BuildingGridPlacable new_instance = current_building_scene.Instantiate<BuildingGridPlacable>();
+							// last_known_grid.AddChild(new_instance);
 
-							last_known_grid.AddChild(new_instance);
+							// new_instance.GlobalTransform = current_building_instance.GlobalTransform;
 
-							new_instance.GlobalTransform = current_building_instance.GlobalTransform;
+							// Godot.Collections.Array<BuildingGridChunk> affected_chunks = last_known_grid.set_area(corner_1, corner_2, index);
 
-							Godot.Collections.Array<BuildingGridChunk> affected_chunks = last_known_grid.set_area(corner_1, corner_2, index);
+							// foreach (BuildingGridChunk chunk in affected_chunks) {
+							// 	new_instance.occupied_chunks.Add(chunk);
+							// 	chunk.OnChunkChanged += new_instance.on_chunk_changed;
+							// 	chunk.on_chunk_changed();
+							// }
 
-							foreach (BuildingGridChunk chunk in affected_chunks) {
-								new_instance.occupied_chunks.Add(chunk);
-								chunk.OnChunkChanged += new_instance.on_chunk_changed;
-								chunk.on_chunk_changed();
-							}
+							// new_instance.parent_grid = last_known_grid;
+							// last_known_grid.set_placable(index, new_instance);
 
-							new_instance.parent_grid = last_known_grid;
-							last_known_grid.set_placable(index, new_instance);
+							// new_instance.set_mesh_visibility(false);
 
-							new_instance.set_mesh_visibility(false);
-
-							new_instance.on_build();
-						}
+							// new_instance.on_build();
+						
 
 					} else {
 						GD.Print(test_result);
@@ -146,10 +173,14 @@ public partial class Player {
 					}
 				}
 			} else {
-				current_building_instance.Visible = false;
+				if (current_building_instance != null) {
+					current_building_instance.Visible = false;
+				}
 			}
 		} else {
-			current_building_instance.Visible = false;
+			if (current_building_instance != null) {
+				current_building_instance.Visible = false;
+			}
 		}
 	}
 }

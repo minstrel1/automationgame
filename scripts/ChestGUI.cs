@@ -19,8 +19,8 @@ public partial class ChestGUI : GUI {
 
 		inventory_parent = GetNode<Control>("VBoxContainer/HBoxContainer");
 
-		player_inventory_gui = InventoryGUI.make_inventory_gui(Player.instance.inventory, inventory_parent);
-		chest_inventory_gui = InventoryGUI.make_inventory_gui(chest.inventory, inventory_parent);
+		player_inventory_gui = InventoryGUI.make(Player.instance.inventory, inventory_parent);
+		chest_inventory_gui = InventoryGUI.make(chest.inventory, inventory_parent);
 	}
 
 	public static ChestGUI make_chest_gui (Chest chest, Control gui_parent) {

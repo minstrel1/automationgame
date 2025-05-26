@@ -159,7 +159,7 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 			if (Player.instance.active_gui is GrowingPlotGUI) {
 				Player.instance.clear_active_gui();
 			} else {
-				Player.set_active_gui(GrowingPlotGUI.make_growing_plot_gui(this, Player.instance.gui_parent));
+				Player.set_active_gui(GrowingPlotGUI.make(this, Player.instance.gui_parent));
 			}
 		}
 	}

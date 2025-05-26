@@ -15,6 +15,8 @@ public partial class InventoryGUI : GUI {
 
 	public GridContainer inventory_grid;
 
+	public bool interactable = true;
+
 	public override void _Ready()
 	{
 		base._Ready();
@@ -36,7 +38,7 @@ public partial class InventoryGUI : GUI {
 		inventory = null;
 	}
 
-	public static InventoryGUI make_inventory_gui (Inventory inventory, Control gui_parent) {
+	public static InventoryGUI make (Inventory inventory, Control gui_parent, bool interactable = true) {
 		InventoryGUI new_instance = get_first_available_instance();
 
 		if (new_instance == null) {
@@ -46,6 +48,7 @@ public partial class InventoryGUI : GUI {
 
 		new_instance.inventory = inventory;
 		new_instance.gui_parent = gui_parent;
+		new_instance.interactable = interactable;
 
 		if (new_instance.readied) {
 			new_instance.RequestReady();
@@ -58,7 +61,7 @@ public partial class InventoryGUI : GUI {
 
 	public void init_item_reps () {
 		for (int i = 0; i < inventory.inventory_size; i++) {
-			item_reps.Add(ItemRepresentation.make_item_representation(i, inventory, inventory_grid));
+			item_reps.Add(ItemRepresentation.make_item_representation(i, inventory, inventory_grid, interactable));
 		}
 	}
 

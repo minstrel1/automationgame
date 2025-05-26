@@ -23,7 +23,7 @@ public partial class Chest : BuildingGridPlacable, IBuildingWithInventory, IInte
 	}
 
 	public override void on_build () {
-		
+		base.on_build();
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -47,15 +47,25 @@ public partial class Chest : BuildingGridPlacable, IBuildingWithInventory, IInte
 
 	}
 
+	public override void set_collision(bool value)
+	{
+		
+	}
+
 	public void on_interact () {
-		if (Player.instance.active_gui is ChestGUI) {
-			Player.instance.clear_active_gui();
-		} else {
-			Player.set_active_gui(ChestGUI.make_chest_gui(this, Player.instance.gui_parent));
+		if (is_built) {
+			if (Player.instance.active_gui is ChestGUI) {
+				Player.instance.clear_active_gui();
+			} else {
+				Player.set_active_gui(ChestGUI.make_chest_gui(this, Player.instance.gui_parent));
+			}
 		}
 	}
 
 	public string get_interact_text () {
-		return "Open " + interact_name;
+		if (is_built) {
+			return "Open " + interact_name;
+		}
+		return null;
 	}
 }

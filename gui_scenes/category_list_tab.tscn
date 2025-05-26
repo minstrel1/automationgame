@@ -1,0 +1,46 @@
+[gd_scene load_steps=3 format=3 uid="uid://wwti6m2be0kl"]
+
+[ext_resource type="Script" uid="uid://bn4ybcs0e24th" path="res://scripts/CategoryListTab.cs" id="1_h6cdh"]
+[ext_resource type="Texture2D" uid="uid://b3e53ahpsap14" path="res://item_textures/test_item.png" id="1_ietru"]
+
+[node name="PanelContainer" type="PanelContainer"]
+script = ExtResource("1_h6cdh")
+
+[node name="Control" type="Control" parent="."]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+mouse_filter = 1
+
+[node name="Control" type="TextureRect" parent="Control"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -25.0
+offset_right = 25.0
+offset_bottom = 50.0
+grow_horizontal = 2
+texture = ExtResource("1_ietru")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="Control"]
+clip_contents = true
+custom_minimum_size = Vector2(100, 15)
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -15.0
+offset_right = 50.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 1
+theme_override_constants/line_spacing = 0
+theme_override_font_sizes/font_size = 10
+text = "I might Cum a lil"
+horizontal_alignment = 1
+autowrap_mode = 2

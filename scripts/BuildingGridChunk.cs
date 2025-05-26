@@ -87,13 +87,13 @@ public partial class BuildingGridChunk : StaticBody3D {
 		return voxel_data[pos.X][pos.Y][pos.Z];
 	}
 
-	public void set_block (int x, int y, int z, int value) {
-		voxel_data[x][y][z] = new VoxelData{placable_index = value};
+	public void set_block (int x, int y, int z, VoxelData data) {
+		voxel_data[x][y][z] = data;
 		
 	}
 
-	public void set_block (Vector3I pos, int value) {
-		voxel_data[pos.X][pos.Y][pos.Z] = new VoxelData{placable_index = value};
+	public void set_block (Vector3I pos, VoxelData data) {
+		voxel_data[pos.X][pos.Y][pos.Z] = data;
 	}
 
 	public void set_mesh_visibility (bool value) {

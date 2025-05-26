@@ -1,6 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://c7nt6nfedgouy"]
+[gd_scene load_steps=4 format=3 uid="uid://c7nt6nfedgouy"]
 
 [ext_resource type="Script" uid="uid://kusqrgnmqwo6" path="res://scripts/Chest.cs" id="1_3cbgf"]
+[ext_resource type="Script" uid="uid://3d021kys16yn" path="res://scripts/SpecialVoxelData.cs" id="2_pbqkr"]
+
+[sub_resource type="Resource" id="Resource_wu5b1"]
+script = ExtResource("2_pbqkr")
+voxel_position = Vector3i(0, 0, 0)
+voxel_flags = 3
+FlagDirections = 102
+SupportDirections = 1
 
 [node name="Node3D" type="CSGBox3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
@@ -10,6 +18,12 @@ script = ExtResource("1_3cbgf")
 grid_width = 1
 grid_height = 1
 grid_length = 1
-grid_offset = Vector3(0, 0.5, 0)
-PlacableDirections = 0
-special_voxels = []
+PlacableDirections = 1
+SupportDirections = 1
+rotate_support = true
+special_voxels = [SubResource("Resource_wu5b1")]
+building_cost = [{
+"amount": 3,
+"name": "test_item",
+"type": "item"
+}]

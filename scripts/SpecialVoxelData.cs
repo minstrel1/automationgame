@@ -46,6 +46,7 @@ public partial class SpecialVoxelData : Resource {
 	[Export(PropertyHint.Layers2DPhysics)]
 	public int FlagDirections {get; set {field = value; on_property_changed();}} = 1 << 0;
 	public BuildDirectionFlags flag_directions  = BuildDirectionFlags.Any;
+	
 	[Export(PropertyHint.Layers2DPhysics)]
 	public int SupportDirections {get; set {field = value; on_property_changed();}} = 0;
 	public BuildDirectionFlags support_directions = 0;

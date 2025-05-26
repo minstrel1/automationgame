@@ -294,4 +294,12 @@ public partial class Inventory : Node {
 		}
 	}
 
+	public void destroy () {
+		foreach (InventoryItem item in contents) {
+			item.QueueFree();
+		}
+
+		this.QueueFree();
+	}
+
 }

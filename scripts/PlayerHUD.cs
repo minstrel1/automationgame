@@ -10,6 +10,7 @@ public partial class Player {
 	public Label oxygen_label;
 	public Label building_hit_label;
 	public Label fps_label;
+	public Label voxel_data_label;
 	public TextureProgressBar oxygen_meter;
 
 	public PanelContainer interact_label_container;
@@ -22,6 +23,7 @@ public partial class Player {
 		oxygen_meter = GetNode<TextureProgressBar>("PlayerHUD/Control2/TextureProgressBar");
 		building_hit_label = GetNode<Label>("PlayerHUD/Control/Label2");
 		fps_label = GetNode<Label>("PlayerHUD/Control/Label3");
+		voxel_data_label = GetNode<Label>("PlayerHUD/Control/Label4");
 
 		interact_label_container = GetNode<PanelContainer>("PlayerHUD/Control3/PanelContainer");
 		interact_label = GetNode<Label>("PlayerHUD/Control3/PanelContainer/Label");

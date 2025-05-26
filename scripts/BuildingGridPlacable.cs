@@ -6,6 +6,15 @@ using Godot;
 using Godot.Collections;
 using Godot.NativeInterop;
 
+public enum BuildingCategory {
+	Logistics,
+	Agriculture,
+	Metallurgy,
+	Structures,
+	Decorations,
+	Miscellaneous
+}
+
 [GlobalClass]
 [Tool]
 public partial class BuildingGridPlacable : Node3D {
@@ -70,6 +79,35 @@ public partial class BuildingGridPlacable : Node3D {
 	[ExportToolButton("Add Special Voxel")]
 	public Callable add_voxel_button => Callable.From(add_special_voxel);
 
+	[ExportCategory("Dict. Properties")]
+
+	[Export]
+	public string display_name = "Placable";
+
+	[Export]
+	public string display_description = "A basic growing plot.";
+
+	[Export]
+	public BuildingCategory building_category = BuildingCategory.Miscellaneous;
+
+	[Export]
+	public bool unlocked = true;
+
+	[Export]
+	public Texture2D display_icon = GD.Load<Texture2D>("res://item_textures/test_item.png");
+
+	[Export]
+	public float building_time = 5.0f;
+
+	[Export]
+	public Godot.Collections.Array building_cost = new Godot.Collections.Array{
+		new Dictionary{
+			{"type", "item"},
+			{"name", "test_item"},
+			{"amount", 5},
+		}
+	};
+
 	private MeshInstance3D visualiser;
 
 	private static int max_visualiser_faces = 512;
@@ -96,6 +134,9 @@ public partial class BuildingGridPlacable : Node3D {
 		foreach (SpecialVoxelData thing in special_voxels) {
 			add_special_voxel(thing);
 		}
+
+		placable_directions = (BuildDirectionFlags) PlacableDirections;
+		support_directions = (BuildDirectionFlags) SupportDirections;
 
 		GD.Print("placable init");
 		visualiser = new MeshInstance3D();

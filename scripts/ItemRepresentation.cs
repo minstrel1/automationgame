@@ -104,8 +104,7 @@ public partial class ItemRepresentation : GUI {
 	{
 		base._GuiInput(@event);
 
-
-		if (@event is InputEventMouseButton) {
+		if (@event is InputEventMouseButton && interactable) {
 			InputEventMouseButton mouse_event = @event as InputEventMouseButton;
 
 			if (mouse_event.ButtonIndex == MouseButton.Left && mouse_event.Pressed) {

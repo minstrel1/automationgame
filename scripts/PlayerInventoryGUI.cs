@@ -20,7 +20,7 @@ public partial class PlayerInventoryGUI : GUI {
 
 		inventory_gui_parent = result.parent;
 		
-		inventory_gui = InventoryGUI.make_inventory_gui(inventory, inventory_gui_parent);
+		inventory_gui = InventoryGUI.make(inventory, inventory_gui_parent);
 	}
 
 	public static PlayerInventoryGUI make_player_inventory_gui (Inventory inventory, Control gui_parent) {

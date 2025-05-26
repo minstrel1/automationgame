@@ -5,6 +5,155 @@ using Godot;
 using Godot.Collections;
 using Godot.NativeInterop;
 
+public enum CategoryListMode {
+	Buildings,
+	Recipes,
+}
+
 public partial class CategoryList : GUI {
-	
+
+
+	public static PackedScene scene = GD.Load<PackedScene>("res://gui_scenes/category_list.tscn");
+
+	public Array<CategoryListElement> elements = new Array<CategoryListElement>();
+
+	[Signal]
+	public delegate void OnChoiceSelectedEventHandler (Dictionary data);
+
+	public GridContainer element_container;
+	public VBoxContainer tab_container;
+
+	public Control lower_view;
+	public InventoryGUI lower_inventory_gui;
+	public Control lower_inventory_parent;
+
+	public Dictionary data;
+	public CategoryListMode mode;
+	public Inventory lower_inventory;
+
+	public string current_category = "Agriculture";
+
+	public CategoryListElement current_element = null;
+
+
+	public override void _Ready()
+	{
+		base._Ready();
+
+		element_container = GetNode<GridContainer>("VBoxContainer/HBoxContainer/Control2/PanelContainer/ScrollContainer/GridContainer");
+		tab_container = GetNode<VBoxContainer>("VBoxContainer/HBoxContainer/Control/Control3");
+
+		lower_view = GetNode<Control>("VBoxContainer/LowerView");
+
+		Array<GUIDummy> inventory_result = pop_dummy_type("InventoryGUI");
+		GUIDummyData result = remove_dummy(inventory_result[0]);
+
+		lower_inventory_parent = result.parent;
+
+		update_element_visualization();
+		update_tab_visualization();
+		update_lower_visualization();
+	}
+
+	public static CategoryList make (CategoryListMode mode, Dictionary data, Control gui_parent) {
+		CategoryList new_instance = scene.Instantiate<CategoryList>();
+
+		new_instance.gui_parent = gui_parent;
+		new_instance.data = data;
+		new_instance.mode = mode;
+
+		// foreach (string category_name in data.Keys) {
+		// 	if (((Godot.Collections.Array) data[category_name]).Count > 0) {
+		// 		new_instance.current_category = category_name;
+		// 		break;
+		// 	}
+		// }
+
+		new_instance.gui_parent.AddChild(new_instance);
+
+		return new_instance;
+	}
+
+	public void update_element_visualization () {
+		foreach (CategoryListElement element in elements) {
+			element.release();
+		}
+
+		elements.Clear();
+
+		foreach (Dictionary element_data in ((Godot.Collections.Array) data[current_category])) {
+			elements.Add(CategoryListElement.make(this, element_data, element_container));
+		}
+	}
+
+	public void update_tab_visualization () {
+		foreach (String category_name in data.Keys) {
+			if (((Godot.Collections.Array) data[category_name]).Count > 0) {
+				CategoryListTab.make(this, Enum.Parse<BuildingCategory>(category_name), tab_container);
+			}
+		}
+	}
+
+	public void update_lower_visualization () {
+		if (lower_inventory_gui != null) {
+			lower_inventory_gui.release();
+		}
+		lower_inventory_gui = null;
+
+		if (lower_inventory != null) {
+			lower_inventory.destroy();
+		}
+		lower_inventory = null;
+
+		if (current_element == null) {
+			lower_view.Visible = false;
+		} else {
+			lower_view.Visible = true;
+
+			Dictionary element_data = current_element.data;
+			int cost_count = 0;
+			
+			switch (mode) {
+				case CategoryListMode.Buildings:
+					cost_count = ((Godot.Collections.Array) element_data["building_cost"]).Count;
+					
+					lower_inventory = new Inventory(cost_count);
+
+					foreach (Dictionary item in (Godot.Collections.Array) element_data["building_cost"]) {
+						lower_inventory.insert(new InventoryItem((string) item["name"], (int) item["amount"]));
+					}
+
+					lower_inventory_gui = InventoryGUI.make(lower_inventory, lower_inventory_parent, false);
+
+					lower_inventory_gui.CustomMinimumSize = new Vector2((cost_count * 42) + ((cost_count - 1) * 4), 42);
+					lower_inventory_gui.Size = new Vector2((cost_count * 42) + ((cost_count - 1) * 4), 42);
+					break;
+			}
+		}
+	}
+
+	public override void _PhysicsProcess(double delta)
+	{
+		base._PhysicsProcess(delta);
+	}
+
+	public void choice_selected (Dictionary data) {
+		EmitSignal(CategoryList.SignalName.OnChoiceSelected, data);
+	}
+
+	public override void release()
+	{
+		foreach (CategoryListElement element in elements) {
+			element.release();
+		}
+
+		base.release();
+	}
+
+	public override void _ExitTree()
+	{
+		base._ExitTree();
+
+	}
+
 }

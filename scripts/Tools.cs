@@ -33,6 +33,23 @@ public partial class Tools {
 		return point;
 	}
 
+	public static Vector3 rot_to_up (Vector3 normal) {
+		return rot_to_up(normal, normal);
+	}
+
+	public static BuildDirection rot_to_up (BuildDirection direction) {
+		Vector3 normal = enum_to_normal(direction);
+		return normal_to_enum(rot_to_up(normal, normal));
+	}
+
+	public static Vector3I rot_to_up (Vector3I point, Vector3 normal) {
+		return v3_to_v3I(rot_to_up(v3I_to_v3(point), normal));
+	}
+
+	public static Vector3I v3I_rot (Vector3I point, Vector3 axis, float angle) {
+		return v3_to_v3I(v3I_to_v3(point).Rotated(axis, angle));
+	}
+
 	public static Vector3 up_to_rot (Vector3 point, Vector3 normal) {
 
 		if (normal == Vector3.Up) {
@@ -71,7 +88,53 @@ public partial class Tools {
 
 	}
 
+	public static Vector3I up_to_rot (Vector3I point, Vector3 normal) {
+		return v3_to_v3I(up_to_rot(v3I_to_v3(point), normal));
+	}
+
+	public static BuildDirection up_to_rot (BuildDirection direction, Vector3 normal) {
+		Vector3 enum_normal = enum_to_normal(direction);
+		return normal_to_enum(up_to_rot(enum_normal, normal));
+	}
+
+	public static BuildDirectionFlags up_to_rot (BuildDirectionFlags directions, Vector3 normal) {
+		Array<BuildDirection> enums = flags_to_enum(directions);
+
+		for (int i = 0; i < enums.Count; i++) {
+			enums[i] = up_to_rot(enums[i], normal);
+		}
+
+		return enum_to_flags(enums);
+	}
+
+	public static Vector3I apply_building_rotations (Vector3I pos, Vector3 normal, int rotation) {
+		pos = Tools.up_to_rot(pos, normal);
+		pos = Tools.v3I_rot(pos, normal, (float) (rotation * (Math.PI / 2.0f)));
+		return pos;
+	}
+
+	public static BuildDirection apply_building_rotations (BuildDirection direction, Vector3 normal, int rotation) {
+		Vector3 enum_normal = enum_to_normal(direction);
+
+		enum_normal = up_to_rot(enum_normal, normal);
+		enum_normal = enum_normal.Rotated(normal, rotation * (float) ((Math.PI / 2.0f)));
+
+		return normal_to_enum(enum_normal);
+	}
+
+	public static BuildDirectionFlags apply_building_rotations (BuildDirectionFlags directions, Vector3 normal, int rotation) {
+		Array<BuildDirection> enums = flags_to_enum(directions);
+
+		for (int i = 0; i < enums.Count; i++) {
+			enums[i] = apply_building_rotations(enums[i], normal, rotation);
+		}
+
+		return enum_to_flags(enums);
+	}
+
 	public static BuildDirection normal_to_enum (Vector3 normal) {
+
+		normal = v3I_to_v3(v3_to_v3I(normal));
 
 		if (normal == Vector3.Up) {
 			return BuildDirection.Up;
@@ -139,9 +202,51 @@ public partial class Tools {
 		return result;
 	}
 
+	public static BuildDirectionFlags enum_to_flags (Array<BuildDirection> enums) {
+		BuildDirectionFlags result = 0;
+
+		foreach(BuildDirection direction in enums) {
+			switch (direction) {
+				case BuildDirection.Left:
+					result |= BuildDirectionFlags.Left;
+					break;
+				case BuildDirection.Right:
+					result |= BuildDirectionFlags.Right;
+					break;
+				case BuildDirection.Up:
+					result |= BuildDirectionFlags.Up;
+					break;
+				case BuildDirection.Down:
+					result |= BuildDirectionFlags.Down;
+					break;
+				case BuildDirection.Forward:
+					result |= BuildDirectionFlags.Forward;
+					break;
+				case BuildDirection.Back:
+					result |= BuildDirectionFlags.Back;
+					break;
+			}
+		}
+
+		return result;
+	}
+
 	public static bool enum_in_flags (BuildDirection value, BuildDirectionFlags flags) {
 		Array<BuildDirection> result = flags_to_enum(flags);
 		return result.Contains(value);
+	}
+
+	public static Dictionary packed_scene_to_properties (string res_path) {
+		PackedScene packed_scene = (PackedScene) GD.Load(res_path);
+		SceneState scene_state = packed_scene.GetState();
+
+		Dictionary result = new Dictionary();
+
+		for (int i = 0; i < scene_state.GetNodePropertyCount(0); i++) {
+			result[scene_state.GetNodePropertyName(0, i)] = scene_state.GetNodePropertyValue(0, i);
+		}
+
+		return result;
 	}
 
 }

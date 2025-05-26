@@ -21,7 +21,7 @@ public partial class GrowingPlotGUI : GUI {
 
 		GUIDummyData result = remove_dummy(inventory_result[0]);
 
-		player_inventory_gui = InventoryGUI.make_inventory_gui(Player.instance.inventory, result.parent);
+		player_inventory_gui = InventoryGUI.make(Player.instance.inventory, result.parent);
 		result.parent.MoveChild(player_inventory_gui, result.node_index);
 		player_inventory_gui.Position = result.pos;
 		player_inventory_gui.CustomMinimumSize = result.min_size;
@@ -29,7 +29,7 @@ public partial class GrowingPlotGUI : GUI {
 
 		result = remove_dummy(inventory_result[1]);
 
-		product_output_gui = InventoryGUI.make_inventory_gui(growing_plot.get_output_inventory(), result.parent);
+		product_output_gui = InventoryGUI.make(growing_plot.get_output_inventory(), result.parent);
 		result.parent.MoveChild(product_output_gui, result.node_index);
 		product_output_gui.Position = result.pos;
 		product_output_gui.CustomMinimumSize = result.min_size;
@@ -46,7 +46,7 @@ public partial class GrowingPlotGUI : GUI {
 
 	}
 
-	public static GrowingPlotGUI make_growing_plot_gui (GrowingPlot growing_plot, Control gui_parent) {
+	public static GrowingPlotGUI make (GrowingPlot growing_plot, Control gui_parent) {
 		GrowingPlotGUI new_instance = scene.Instantiate<GrowingPlotGUI>();
 
 		new_instance.growing_plot = growing_plot;

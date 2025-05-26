@@ -484,10 +484,14 @@ script = ExtResource("3_g14j6")
 interact_distance = 30.0
 
 [node name="InteractionRaycaster" type="RayCast3D" parent="Player/Camera/Camera3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00343227, 0.0170288, -0.00247717)
 target_position = Vector3(0, 0, -1)
 script = ExtResource("3_g14j6")
 interact_distance = 5.0
+
+[node name="BuildingPickRaycaster" type="RayCast3D" parent="Player/Camera/Camera3D"]
+target_position = Vector3(0, 0, -1)
+script = ExtResource("3_g14j6")
+interact_distance = 30.0
 
 [node name="PlayerHUD" type="Control" parent="Player"]
 layout_mode = 3
@@ -531,6 +535,15 @@ offset_right = 127.0
 offset_bottom = 168.0
 theme_override_font_sizes/font_size = 20
 text = "FPS:"
+
+[node name="Label4" type="Label" parent="Player/PlayerHUD/Control"]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 155.0
+offset_right = 127.0
+offset_bottom = 197.0
+theme_override_font_sizes/font_size = 20
+text = "VoxelData"
 
 [node name="Control2" type="Control" parent="Player/PlayerHUD"]
 custom_minimum_size = Vector2(200, 200)

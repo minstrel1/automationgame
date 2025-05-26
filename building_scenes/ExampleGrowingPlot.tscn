@@ -26,6 +26,13 @@ grid_length = 5
 grid_offset = Vector3(0, 1, 0)
 PlacableDirections = 1
 special_voxels = Array[Object]([SubResource("Resource_gfcda"), SubResource("Resource_qlxu3")])
+display_name = "Growing Plot"
+building_category = 1
+building_cost = [{
+"amount": 3,
+"name": "test_item",
+"type": "item"
+}]
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="." node_paths=PackedStringArray("interaction_parent")]
 use_collision = true
