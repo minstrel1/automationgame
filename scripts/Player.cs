@@ -222,7 +222,7 @@ public partial class Player : CharacterBody3D {
 		if (Input.IsActionJustPressed("interact")) {
 			if (is_in_gui()) {
 				clear_active_gui();
-			} else if (is_interact_valid()) {
+			} else if (is_interact_valid() && !build_mode) {
 				GD.Print("Interacting with " + interact_cast_result.ToString());
 				(interact_cast_result as IInteractable).on_interact();
 			}
@@ -348,7 +348,7 @@ public partial class Player : CharacterBody3D {
 			last_interact_cast_position = current_cast_position;
 		}
 
-		if (!is_in_gui()) {
+		if (!is_in_gui() && !build_mode) {
 			if (current_cast_result != interact_cast_result) {
 				if (is_interact_valid()) {
 					(interact_cast_result as IInteractable).on_hover_unfocus();

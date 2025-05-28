@@ -231,6 +231,24 @@ public partial class Tools {
 		return result;
 	}
 
+	public static BuildDirection get_enum_opposite (BuildDirection direction) {
+		switch (direction) {
+			case BuildDirection.Left:
+				return BuildDirection.Right;
+			case BuildDirection.Right:
+				return BuildDirection.Left;
+			case BuildDirection.Up:
+				return BuildDirection.Down;
+			case BuildDirection.Down:
+				return BuildDirection.Up;
+			case BuildDirection.Forward:
+				return BuildDirection.Back;
+			case BuildDirection.Back:
+				return BuildDirection.Forward;
+		}
+		return 0;
+	}
+
 	public static bool enum_in_flags (BuildDirection value, BuildDirectionFlags flags) {
 		Array<BuildDirection> result = flags_to_enum(flags);
 		return result.Contains(value);

@@ -5,9 +5,10 @@
 
 [sub_resource type="Resource" id="Resource_wu5b1"]
 script = ExtResource("2_pbqkr")
+name = "voxel"
 voxel_position = Vector3i(0, 0, 0)
 voxel_flags = 3
-FlagDirections = 102
+FlagDirections = 126
 SupportDirections = 1
 
 [node name="Node3D" type="CSGBox3D"]
@@ -22,6 +23,9 @@ PlacableDirections = 1
 SupportDirections = 1
 rotate_support = true
 special_voxels = [SubResource("Resource_wu5b1")]
+display_name = "Basic Chest"
+display_description = "A basic chest."
+building_category = 0
 building_cost = [{
 "amount": 3,
 "name": "test_item",

@@ -27,6 +27,10 @@ public partial class CategoryList : GUI {
 	public InventoryGUI lower_inventory_gui;
 	public Control lower_inventory_parent;
 
+	public Label lower_view_name;
+	public TextureRect lower_view_icon;
+	public RichTextLabel lower_view_desc;
+
 	public Dictionary data;
 	public CategoryListMode mode;
 	public Inventory lower_inventory;
@@ -34,6 +38,7 @@ public partial class CategoryList : GUI {
 	public string current_category = "Agriculture";
 
 	public CategoryListElement current_element = null;
+	public Dictionary current_element_data = null;
 
 
 	public override void _Ready()
@@ -44,6 +49,9 @@ public partial class CategoryList : GUI {
 		tab_container = GetNode<VBoxContainer>("VBoxContainer/HBoxContainer/Control/Control3");
 
 		lower_view = GetNode<Control>("VBoxContainer/LowerView");
+		lower_view_name = GetNode<Label>("VBoxContainer/LowerView/Control/Label");
+		lower_view_icon = GetNode<TextureRect>("VBoxContainer/LowerView/Control/Control");
+		lower_view_desc = GetNode<RichTextLabel>("VBoxContainer/LowerView/RichTextLabel");
 
 		Array<GUIDummy> inventory_result = pop_dummy_type("InventoryGUI");
 		GUIDummyData result = remove_dummy(inventory_result[0]);
@@ -127,6 +135,10 @@ public partial class CategoryList : GUI {
 
 					lower_inventory_gui.CustomMinimumSize = new Vector2((cost_count * 42) + ((cost_count - 1) * 4), 42);
 					lower_inventory_gui.Size = new Vector2((cost_count * 42) + ((cost_count - 1) * 4), 42);
+
+					lower_view_name.Text = (string) element_data["display_name"];
+					lower_view_desc.Text = (string) element_data["display_description"];
+					lower_view_icon.Texture = (Texture2D) element_data["display_icon"];
 					break;
 			}
 		}

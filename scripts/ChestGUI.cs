@@ -33,4 +33,12 @@ public partial class ChestGUI : GUI {
 
 		return new_instance;
 	}
+
+	public override void release()
+	{
+		player_inventory_gui.release();
+		chest_inventory_gui.release();
+
+		base.release();
+	}
 }	

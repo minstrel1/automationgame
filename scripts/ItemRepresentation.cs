@@ -113,7 +113,9 @@ public partial class ItemRepresentation : GUI {
 
 						int result;
 						if (current_item.parent_inventory == Player.instance.inventory) {
-							result = Player.instance.active_inventory.insert(current_item);
+							if (Player.instance.active_inventory != null) {
+								result = Player.instance.active_inventory.insert(current_item);
+							}
 						} else {
 							result = Player.instance.inventory.insert(current_item);
 						}

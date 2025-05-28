@@ -78,6 +78,7 @@ offset_right = 50.0
 offset_bottom = 100.0
 grow_horizontal = 2
 texture = ExtResource("1_c8ima")
+expand_mode = 1
 
 [node name="Label" type="Label" parent="VBoxContainer/LowerView/Control"]
 clip_contents = true

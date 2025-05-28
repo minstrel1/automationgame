@@ -39,6 +39,8 @@ public enum SpecialVoxelFlags {
 [GlobalClass]
 public partial class SpecialVoxelData : Resource {
 	[Export]
+	public string name = "voxel";
+	[Export]
 	public Vector3I voxel_position {get; set {field = value; on_property_changed();}} 
 	[Export]
 	public SpecialVoxelFlags voxel_flags;
@@ -46,7 +48,7 @@ public partial class SpecialVoxelData : Resource {
 	[Export(PropertyHint.Layers2DPhysics)]
 	public int FlagDirections {get; set {field = value; on_property_changed();}} = 1 << 0;
 	public BuildDirectionFlags flag_directions  = BuildDirectionFlags.Any;
-	
+
 	[Export(PropertyHint.Layers2DPhysics)]
 	public int SupportDirections {get; set {field = value; on_property_changed();}} = 0;
 	public BuildDirectionFlags support_directions = 0;
@@ -59,7 +61,7 @@ public partial class SpecialVoxelData : Resource {
 		flag_directions = (BuildDirectionFlags) FlagDirections;
 		support_directions = (BuildDirectionFlags) SupportDirections;
 
-		GD.Print(parent);
+		//GD.Print(parent);
 
 		if (parent != null) {
 			parent.make_visualiser_mesh();

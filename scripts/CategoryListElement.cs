@@ -78,8 +78,10 @@ public partial class CategoryListElement : GUI {
 		if (@event is InputEventMouse) {
 			InputEventMouse mouse_event = @event as InputEventMouse;
 
-			if (parent_category_list.current_element != this) {
+			
+			if (parent_category_list.current_element_data != this.data) {
 				parent_category_list.current_element = this;
+				parent_category_list.current_element_data = data;
 				parent_category_list.update_lower_visualization();
 			}
 			

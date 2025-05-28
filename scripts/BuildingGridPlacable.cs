@@ -138,7 +138,7 @@ public partial class BuildingGridPlacable : Node3D {
 		placable_directions = (BuildDirectionFlags) PlacableDirections;
 		support_directions = (BuildDirectionFlags) SupportDirections;
 
-		GD.Print("placable init");
+		//GD.Print("placable init");
 		visualiser = new MeshInstance3D();
 		visualiser.Position = Vector3.Zero;
 		make_visualiser_mesh();
@@ -184,7 +184,7 @@ public partial class BuildingGridPlacable : Node3D {
 
 		foreach (SpecialVoxelData special_voxel in special_voxels) {
 			make_box(grid_offset + special_voxel.voxel_position, new Vector3(1, 1, 1), special_voxel.flag_directions, (int) special_voxel.voxel_flags);
-			GD.Print((int) special_voxel.flag_directions);
+			//GD.Print((int) special_voxel.flag_directions);
 		}
 
 		Godot.Collections.Array array = new Godot.Collections.Array();

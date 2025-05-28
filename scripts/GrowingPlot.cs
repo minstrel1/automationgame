@@ -74,7 +74,7 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 			}
 		}
 
-		GD.Print(grow_slots_physical);
+		//GD.Print(grow_slots_physical);
 	}
 
 	public override void _PhysicsProcess(double delta)

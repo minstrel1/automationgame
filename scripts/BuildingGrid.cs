@@ -311,7 +311,7 @@ public partial class BuildingGrid : StaticBody3D {
 		result.Resize(1);
 		result[0] = true;
 
-		GD.Print("Checking from " + from.ToString() + " to " + to.ToString());
+		//GD.Print("Checking from " + from.ToString() + " to " + to.ToString());
 
 		int temp = 0;
 		if (from.X > to.X) {
@@ -427,18 +427,18 @@ public partial class BuildingGrid : StaticBody3D {
 			
 		}
 
-		foreach (BuildingGridChunk chunk in affected_chunks) {
-			placable.occupied_chunks.Add(chunk);
-			chunk.OnChunkChanged += placable.on_chunk_changed;
-			chunk.on_chunk_changed();
-		}
-
 		placable.parent_grid = this;
 		set_placable(index, placable);
 
 		placable.set_mesh_visibility(false);
 
 		placable.on_build();
+
+		foreach (BuildingGridChunk chunk in affected_chunks) {
+			placable.occupied_chunks.Add(chunk);
+			chunk.OnChunkChanged += placable.on_chunk_changed;
+			chunk.on_chunk_changed();
+		}
 
 		return true;
 	}
