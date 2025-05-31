@@ -7,6 +7,7 @@ using Godot.NativeInterop;
 public partial class Inventory : Node {
 
 	public Array<InventoryItem> contents = new Array<InventoryItem>();
+	public Array<FilterBase> filters = new Array<FilterBase>();
 
 	[Signal]
 	public delegate void OnItemSlotChangedEventHandler (int index, InventoryItem item);
@@ -18,11 +19,13 @@ public partial class Inventory : Node {
 
 	public Inventory () {
 		contents.Resize(10);
+		filters.Resize(10);
 		inventory_size = 10;
 	}
 	
 	public Inventory (int size = 10) {
 		contents.Resize(size);
+		filters.Resize(size);
 		inventory_size = size;
 	}
 
@@ -47,7 +50,9 @@ public partial class Inventory : Node {
 					return i;
 				}
 			} else {
-				return i;
+				if (filters[i] == null || (filters[i].match(item_name))) {
+					return i;
+				}
 			}
 		}
 		return -1;
@@ -60,6 +65,34 @@ public partial class Inventory : Node {
 		for (int i = start; i >= 0; i--) {
 			if (contents[i] != null) {
 				if (contents[i].name == item_name) {
+					return i;
+				}
+			}
+		}
+
+		return -1;
+	}
+
+	public int get_first_item (FilterBase filter, int start = 0) {
+		for (int i = start; i < contents.Count; i++) {
+			if (contents[i] != null) {
+				if (filter.match(contents[i].name)) {
+					return i;
+				}
+			}
+		}
+
+		return -1;
+	}
+
+	public int get_last_item (FilterBase filter, int start = -1) {
+		if (start == -1) {
+			start = contents.Count - 1;
+		}
+
+		for (int i = start; i >= 0; i--) {
+			if (contents[i] != null) {
+				if (filter.match(contents[i].name)) {
 					return i;
 				}
 			}
@@ -282,6 +315,8 @@ public partial class Inventory : Node {
 			item.current_index = index;
 		}
 		EmitSignal(SignalName.OnItemSlotChanged, index, contents[index]);
+		EmitSignal(SignalName.OnInventoryChanged);
+
 	}
 
 	public void remove_item (InventoryItem item){
@@ -291,7 +326,20 @@ public partial class Inventory : Node {
 			contents[index].current_index = 0;
 			contents[index] = null;
 			EmitSignal(SignalName.OnItemSlotChanged, index, contents[index]);
+			EmitSignal(SignalName.OnInventoryChanged);
 		}
+	}
+
+	public void set_filter (FilterBase filter, int index) {
+		filters[index] = filter;
+	}
+
+	public FilterBase get_filter (int index) {
+		return filters[index];
+	}
+
+	public void remove_filter (int index) {
+		filters[index] = null;
 	}
 
 	public void destroy () {

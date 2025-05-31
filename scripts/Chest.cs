@@ -19,6 +19,8 @@ public partial class Chest : BuildingGridPlacable, IBuildingWithInventory, IInte
 
 		inventory = new Inventory(10);
 
+		((ItemSpecialVoxel) special_voxels["voxel"]).inventory = inventory;
+
 		adjust_box();
 	}
 

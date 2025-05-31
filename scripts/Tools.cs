@@ -267,4 +267,30 @@ public partial class Tools {
 		return result;
 	}
 
+	public static bool is_special_compatible (SpecialVoxelFlags from, SpecialVoxelFlags to) {
+		switch (from) {
+			case SpecialVoxelFlags.None:
+				return false;
+			
+			case SpecialVoxelFlags.ItemInput:
+				return to == SpecialVoxelFlags.ItemOutput || to == SpecialVoxelFlags.ItemInputOutput;
+
+			case SpecialVoxelFlags.ItemOutput:
+				return to == SpecialVoxelFlags.ItemInput || to == SpecialVoxelFlags.ItemInputOutput;
+
+			case SpecialVoxelFlags.ItemInputOutput:
+				return to == SpecialVoxelFlags.ItemInput || to == SpecialVoxelFlags.ItemOutput;
+
+			case SpecialVoxelFlags.FluidInput:
+				return to == SpecialVoxelFlags.FluidOutput || to == SpecialVoxelFlags.FluidInputOutput;
+
+			case SpecialVoxelFlags.FluidOutput:
+				return to == SpecialVoxelFlags.FluidInput || to == SpecialVoxelFlags.FluidInputOutput;
+
+			case SpecialVoxelFlags.FluidInputOutput:
+				return to == SpecialVoxelFlags.FluidInput || to == SpecialVoxelFlags.FluidOutput;
+		}
+		return false;
+	}
+
 }

@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Godot;
 using Godot.Collections;
-using Godot.NativeInterop;
 
 public enum CategoryListMode {
 	Buildings,

@@ -1,0 +1,47 @@
+using System;
+using Godot;
+using Godot.Collections;
+using Godot.NativeInterop;
+
+public partial class ItemFilter : FilterBase {
+
+	public string name;
+	public bool invert;
+
+	public ItemFilter () {
+		this.name = "";
+		this.invert = false;
+	}
+
+	public ItemFilter (string name, bool invert = false) {
+		this.name = name;
+		this.invert = invert;
+	}
+
+	public override bool match (string test) {
+		return (test == name) && !invert;
+	}
+
+}
+
+public partial class ItemTypeFilter : FilterBase {
+
+	public string name;
+	public bool invert;
+
+	public ItemTypeFilter () {
+		this.name = "";
+		this.invert = false;
+	}
+
+	public ItemTypeFilter (string name, bool invert = false) {
+		this.name = name;
+		this.invert = invert;
+	}
+
+	public override bool match (string test) {
+		// performance could be fucking terrible on this
+		return ((string) ((Dictionary) Prototypes.items[test])["type"] == name) && !invert; 
+	}
+}
+

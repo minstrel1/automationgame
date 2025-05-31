@@ -63,6 +63,9 @@ public partial class GrowingPlotGUI : GUI {
 		seed_input_gui.release();
 		product_output_gui.release();
 
+		Player.instance.unlock_controls();
+		Player.instance.active_inventory = null;
+
 		base.release();
 	}
 
@@ -70,7 +73,5 @@ public partial class GrowingPlotGUI : GUI {
 	{
 		base._ExitTree();
 
-		Player.instance.unlock_controls();
-		Player.instance.active_inventory = null;
 	}
 }

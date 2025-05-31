@@ -17,10 +17,20 @@ public partial class ChestGUI : GUI {
 	{
 		base._Ready();
 
-		inventory_parent = GetNode<Control>("VBoxContainer/HBoxContainer");
+		Array<GUIDummy> inventory_result = pop_dummy_type("InventoryGUI");
 
-		player_inventory_gui = InventoryGUI.make(Player.instance.inventory, inventory_parent);
-		chest_inventory_gui = InventoryGUI.make(chest.inventory, inventory_parent);
+		GUIDummyData result = remove_dummy(inventory_result[0]);
+
+		player_inventory_gui = InventoryGUI.make(Player.instance.inventory, result.parent);
+		player_inventory_gui.Position = result.pos;
+
+		result = remove_dummy(inventory_result[1]);
+
+		chest_inventory_gui = InventoryGUI.make(chest.inventory, result.parent);
+		chest_inventory_gui.Position = result.pos;
+
+		Player.instance.lock_controls();
+		Player.instance.active_inventory = chest.inventory;
 	}
 
 	public static ChestGUI make_chest_gui (Chest chest, Control gui_parent) {
@@ -38,6 +48,9 @@ public partial class ChestGUI : GUI {
 	{
 		player_inventory_gui.release();
 		chest_inventory_gui.release();
+
+		Player.instance.unlock_controls();
+		Player.instance.active_inventory = null;
 
 		base.release();
 	}

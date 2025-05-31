@@ -1,24 +1,23 @@
-[gd_scene load_steps=7 format=3 uid="uid://dv08dlncbff2q"]
+[gd_scene load_steps=6 format=3 uid="uid://dv08dlncbff2q"]
 
 [ext_resource type="Script" uid="uid://brbd5ek3kaceh" path="res://scripts/GrowingPlot.cs" id="1_cv31k"]
-[ext_resource type="Script" uid="uid://3d021kys16yn" path="res://scripts/SpecialVoxelData.cs" id="2_2ywuo"]
+[ext_resource type="Script" uid="uid://bg67704cqo5ma" path="res://scripts/SpecialVoxelData.cs" id="2_qlxu3"]
 [ext_resource type="Script" uid="uid://l7vn0rr5n8ew" path="res://scripts/InteractableDummy.cs" id="3_gfcda"]
-[ext_resource type="Texture2D" uid="uid://ct8nbwm8uymkp" path="res://item_textures/test_papy.jpg" id="3_qlxu3"]
 
-[sub_resource type="Resource" id="Resource_gfcda"]
-script = ExtResource("2_2ywuo")
-name = "voxel"
+[sub_resource type="Resource" id="Resource_183o3"]
+script = ExtResource("2_qlxu3")
+name = "seed_input"
 voxel_position = Vector3i(0, -1, 2)
 voxel_flags = 1
 FlagDirections = 64
 SupportDirections = 0
 
-[sub_resource type="Resource" id="Resource_qlxu3"]
-script = ExtResource("2_2ywuo")
-name = "voxel"
+[sub_resource type="Resource" id="Resource_fv6ty"]
+script = ExtResource("2_qlxu3")
+name = "crop_output"
 voxel_position = Vector3i(0, -1, -2)
 voxel_flags = 2
-FlagDirections = 32
+FlagDirections = 33
 SupportDirections = 0
 
 [node name="grow plot" type="Node3D" node_paths=PackedStringArray("grow_area")]
@@ -28,10 +27,9 @@ grid_width = 5
 grid_length = 5
 grid_offset = Vector3(0, 1, 0)
 PlacableDirections = 8
-special_voxels = Array[Object]([SubResource("Resource_gfcda"), SubResource("Resource_qlxu3")])
+special_voxel_data = Array[Object]([SubResource("Resource_183o3"), SubResource("Resource_fv6ty")])
 display_name = "Growing Plot"
 building_category = 1
-display_icon = ExtResource("3_qlxu3")
 building_cost = [{
 "amount": 3,
 "name": "test_item",

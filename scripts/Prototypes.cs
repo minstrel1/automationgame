@@ -22,6 +22,7 @@ public partial class Prototypes : Node {
 	public static Dictionary items = new Dictionary{
 		{"test_item", new Dictionary{
 			{"name", "test_item"},
+			{"type", "miscellaneous"},
 			{"display_name", "Test Item"},
 			{"display_description", "This is a test item."},
 			{"icon_texture", "res://item_textures/test_item.png"},
@@ -30,6 +31,7 @@ public partial class Prototypes : Node {
 		}},
 		{"test_cock", new Dictionary{
 			{"name", "test_cock"},
+			{"type", "miscellaneous"},
 			{"display_name", "Test Cock"},
 			{"display_description", "This is a test item."},
 			{"icon_texture", "res://item_textures/test_cock.png"},
@@ -38,6 +40,7 @@ public partial class Prototypes : Node {
 		}},
 		{"test_seeds", new Dictionary{
 			{"name", "test_seeds"},
+			{"type", "seed"},
 			{"display_name", "Test Seeds"},
 			{"display_description", "This is a test item."},
 			{"icon_texture", "res://item_textures/test_seeds.png"},
@@ -55,7 +58,7 @@ public partial class Prototypes : Node {
 		}},
 		{"Agriculture", new Dictionary {
 			{"display_name", "Agriculture"},
-			{"icon_texture", "res://item_textures/test_papy.jpg"}
+			{"icon_texture", "res://item_textures/test_item.png"}
 		}},
 		{"Metallurgy", new Dictionary {
 			{"display_name", "Metallurgy"},
@@ -71,7 +74,7 @@ public partial class Prototypes : Node {
 		}},
 		{"Miscellaneous", new Dictionary {
 			{"display_name", "Miscellaneous"},
-			{"icon_texture", "res://item_textures/test_beast.png"}
+			{"icon_texture", "res://item_textures/test_item.png"}
 		}},
 	};
 

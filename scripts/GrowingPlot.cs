@@ -45,7 +45,12 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 		base._Ready();
 
 		input_inventory = new Inventory (1);
+		input_inventory.set_filter(new ItemTypeFilter("seed"), 0);
+
 		output_inventory = new Inventory (4);
+
+		((ItemSpecialVoxel) special_voxels["seed_input"]).inventory = input_inventory;
+		((ItemSpecialVoxel) special_voxels["crop_output"]).inventory = output_inventory;
 
 		collider = GetNode<CsgBox3D>("CSGBox3D2");
 

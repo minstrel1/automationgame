@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cli36mqbwq1jg"]
+[gd_scene load_steps=4 format=3 uid="uid://cli36mqbwq1jg"]
 
 [ext_resource type="Script" uid="uid://ydh1pbse6wrn" path="res://scripts/ChestGUI.cs" id="1_7mu04"]
 [ext_resource type="Script" uid="uid://ctow5yvnwds2l" path="res://scripts/GUI.cs" id="2_enqt0"]
+[ext_resource type="PackedScene" uid="uid://byespjiunasj4" path="res://gui_scenes/dummy_inventory_gui.tscn" id="3_enqt0"]
 
 [node name="growing_plot_gui" type="PanelContainer"]
 custom_minimum_size = Vector2(920, 520)
@@ -31,3 +32,35 @@ horizontal_alignment = 1
 custom_minimum_size = Vector2(920, 500)
 layout_mode = 2
 script = ExtResource("2_enqt0")
+
+[node name="Control" type="Control" parent="VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(460, 500)
+layout_mode = 2
+
+[node name="DummyInventoryGUI" parent="VBoxContainer/HBoxContainer/Control" instance=ExtResource("3_enqt0")]
+layout_mode = 2
+anchors_preset = 0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 4.0
+offset_top = 0.0
+offset_right = 464.0
+offset_bottom = 500.0
+
+[node name="Control2" type="Control" parent="VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(460, 500)
+layout_mode = 2
+
+[node name="DummyInventoryGUI2" parent="VBoxContainer/HBoxContainer/Control2" instance=ExtResource("3_enqt0")]
+layout_mode = 2
+anchors_preset = 0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 4.0
+offset_top = 0.0
+offset_right = 464.0
+offset_bottom = 500.0

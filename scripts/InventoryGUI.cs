@@ -36,6 +36,8 @@ public partial class InventoryGUI : GUI {
 		item_reps.Clear();
 
 		inventory = null;
+		
+		Position = Vector2.Zero;
 	}
 
 	public static InventoryGUI make (Inventory inventory, Control gui_parent, bool interactable = true) {

@@ -1,10 +1,6 @@
 using System;
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 using Godot;
 using Godot.Collections;
-using Godot.NativeInterop;
 
 public enum BuildingCategory {
 	Logistics,
@@ -74,10 +70,10 @@ public partial class BuildingGridPlacable : Node3D {
 	public bool rotatable = true;
 
 	[Export]
-	public Array<SpecialVoxelData> special_voxels {get; set {field = value; on_special_voxel_array_changed();}}
+	public Array<SpecialVoxelData> special_voxel_data {get; set {field = value; on_special_voxel_array_changed();}}
 
 	[ExportToolButton("Add Special Voxel")]
-	public Callable add_voxel_button => Callable.From(add_special_voxel);
+	public Callable add_voxel_button => Callable.From(add_special_voxel_data);
 
 	[ExportCategory("Dict. Properties")]
 
@@ -129,10 +125,14 @@ public partial class BuildingGridPlacable : Node3D {
 
 	public Array<BuildingGridChunk> occupied_chunks;
 
-	public override void _Ready()
-	{
-		foreach (SpecialVoxelData thing in special_voxels) {
-			add_special_voxel(thing);
+	public Dictionary<string, SpecialVoxel> special_voxels = new Dictionary<string, SpecialVoxel>();
+
+	public override void _Ready() {
+		if (special_voxel_data != null) {
+			foreach (SpecialVoxelData thing in special_voxel_data) {
+				add_special_voxel_data(thing);
+				add_special_voxel(thing);
+			}	
 		}
 
 		placable_directions = (BuildDirectionFlags) PlacableDirections;
@@ -164,8 +164,8 @@ public partial class BuildingGridPlacable : Node3D {
 			visualiser.Position = Vector3.Zero;
 		}
 
-		if (special_voxels != null) {
-			foreach (SpecialVoxelData thing in special_voxels) {
+		if (special_voxel_data != null) {
+			foreach (SpecialVoxelData thing in special_voxel_data) {
 				thing.parent_center = grid_offset;
 			}
 		}
@@ -182,11 +182,13 @@ public partial class BuildingGridPlacable : Node3D {
 
 		make_box(grid_offset, new Vector3(grid_width, grid_height, grid_length));
 
-		foreach (SpecialVoxelData special_voxel in special_voxels) {
-			make_box(grid_offset + special_voxel.voxel_position, new Vector3(1, 1, 1), special_voxel.flag_directions, (int) special_voxel.voxel_flags);
-			//GD.Print((int) special_voxel.flag_directions);
+		if (special_voxel_data != null) {
+			foreach (SpecialVoxelData special_voxel in special_voxel_data) {
+				make_box(grid_offset + special_voxel.voxel_position, new Vector3(1, 1, 1), special_voxel.flag_directions, (int) special_voxel.voxel_flags);
+				//GD.Print((int) special_voxel.flag_directions);
+			}
 		}
-
+		
 		Godot.Collections.Array array = new Godot.Collections.Array();
 		array.Resize((int) Mesh.ArrayType.Max);
 		array[(int) Mesh.ArrayType.Vertex] = vertices;
@@ -431,21 +433,49 @@ public partial class BuildingGridPlacable : Node3D {
 		face_count += 1;
 	}
 
-	public void add_special_voxel () {
-		add_special_voxel(null);
+	public void add_special_voxel_data () {
+		add_special_voxel_data(null);
 	}
 
-	public void add_special_voxel (SpecialVoxelData instance) {
+	public void add_special_voxel_data (SpecialVoxelData instance) {
 
 		SpecialVoxelData new_instance = instance;
 		if (instance == null) {
 			new_instance = new SpecialVoxelData();
-			special_voxels.Add(new_instance);
+			special_voxel_data.Add(new_instance);
 		}
 
 		new_instance.parent = this;
 
 		NotifyPropertyListChanged();
+	}
+
+	public void add_special_voxel (SpecialVoxelData data) {
+		SpecialVoxel new_instance;
+
+		if (data.voxel_flags == SpecialVoxelFlags.ItemInput || data.voxel_flags == SpecialVoxelFlags.ItemOutput || data.voxel_flags == SpecialVoxelFlags.ItemInputOutput) {
+			new_instance = new ItemSpecialVoxel();
+		} else if (data.voxel_flags == SpecialVoxelFlags.FluidInput || data.voxel_flags == SpecialVoxelFlags.FluidOutput || data.voxel_flags == SpecialVoxelFlags.FluidInputOutput) {
+			new_instance = new FluidSpecialVoxel();
+		} else {
+			new_instance = new SpecialVoxel();
+		}
+
+		new_instance.name = data.name;
+		new_instance.voxel_position = data.voxel_position;
+		new_instance.voxel_flags = data.voxel_flags;
+		new_instance.flag_directions = data.flag_directions;
+		new_instance.support_directions = data.support_directions;
+		new_instance.parent_center = data.parent_center;
+		new_instance.parent = data.parent;
+
+		if (special_voxels.ContainsKey(data.name)) {
+			GD.PrintErr(Name + " has a duplicate SpecialVoxel name of " + data.name);
+		}
+		
+		special_voxels[data.name] = new_instance;
+
+		AddChild(new_instance);
 	}
 
 	public void on_special_voxel_array_changed () {
@@ -488,6 +518,10 @@ public partial class BuildingGridPlacable : Node3D {
 
 	public virtual void on_build () {
 		is_built = true;
+
+		foreach (string name in special_voxels.Keys) {
+			special_voxels[name].on_build();
+		}
 	}
 
 	public override void _Process(double delta)
@@ -498,6 +532,10 @@ public partial class BuildingGridPlacable : Node3D {
 	public override void _PhysicsProcess(double delta)
 	{
 		base._PhysicsProcess(delta);
+
+		foreach (string name in special_voxels.Keys) {
+			special_voxels[name].update();
+		}
 	}
 
 	public virtual void set_collision (bool value) {
@@ -506,6 +544,11 @@ public partial class BuildingGridPlacable : Node3D {
 
 	public virtual void on_chunk_changed (BuildingGridChunk chunk) {
 		GD.Print(chunk + " changed");
+
+		foreach (string name in special_voxels.Keys) {
+			//GD.Print(special_voxel.ToString() + " updating");
+			special_voxels[name].update_voxel_connections();
+		}
 	}
 
 }

@@ -77,6 +77,8 @@ public partial class ItemRepresentation : GUI {
 		parent_inventory = null;
 		current_index = 0;
 		current_item = null;
+
+		Position = Vector2.Zero;
 	}
 
 	public void on_inventory_slot_changed (int index, InventoryItem item) {

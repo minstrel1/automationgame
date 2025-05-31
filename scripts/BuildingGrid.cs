@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Godot;
 using Godot.Collections;
-using Godot.NativeInterop;
 
 public struct VoxelData {
 	public int placable_index;
@@ -11,7 +9,7 @@ public struct VoxelData {
 	public BuildDirectionFlags support_directions;
 
 	public bool is_special_voxel;
-	public int special_index;
+	public SpecialVoxel special_voxel;
 	public BuildDirectionFlags special_directions;
 	public SpecialVoxelFlags voxel_flags;
 
@@ -21,7 +19,7 @@ public struct VoxelData {
 			direction_built,
 			support_directions,
 			is_special_voxel,
-			special_index,
+			special_voxel,
 			special_directions,
 			voxel_flags
 		);
@@ -394,6 +392,10 @@ public partial class BuildingGrid : StaticBody3D {
 			return false;
 		}
 
+		AddChild(placable, true);
+
+		GD.Print("placable support dirs " + placable.support_directions.ToString());
+
 		VoxelData data = new VoxelData{
 			placable_index = index,
 			direction_built = Tools.normal_to_enum(normal), 
@@ -401,11 +403,10 @@ public partial class BuildingGrid : StaticBody3D {
 			voxel_flags = SpecialVoxelFlags.None
 		};
 
-		AddChild(placable);
-
 		Godot.Collections.Array<BuildingGridChunk> affected_chunks = set_area(corner_1, corner_2, data);
 
-		foreach (SpecialVoxelData special_voxel in placable.special_voxels) {
+		foreach (string name in placable.special_voxels.Keys) {
+			SpecialVoxel special_voxel = placable.special_voxels[name];
 			Vector3I pos_to_affect = Tools.apply_building_rotations(special_voxel.voxel_position + Tools.v3_to_v3I(placable.grid_offset), normal, rotation) + grid_pos;
 
 			if (is_position_valid(pos_to_affect)) {
@@ -417,8 +418,12 @@ public partial class BuildingGrid : StaticBody3D {
 					is_special_voxel = true,
 					voxel_flags = special_voxel.voxel_flags,
 					special_directions = Tools.apply_building_rotations(special_voxel.flag_directions, normal, rotation),
-					special_index = placable.special_voxels.IndexOf(special_voxel),
+					special_voxel = special_voxel,
 				};
+
+				special_voxel.placed_voxel_data = special_data;
+				special_voxel.placed_voxel_pos = pos_to_affect;
+				special_voxel.parent_grid = this;
 
 				set_block(pos_to_affect, special_data);
 			} else {
