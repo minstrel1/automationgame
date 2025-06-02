@@ -45,12 +45,12 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 		base._Ready();
 
 		input_inventory = new Inventory (1);
-		input_inventory.set_filter(new ItemTypeFilter("seed"), 0);
+		input_inventory.set_filter(new ItemCategoryFilter("seed"), 0);
 
 		output_inventory = new Inventory (4);
 
-		((ItemSpecialVoxel) special_voxels["seed_input"]).inventory = input_inventory;
-		((ItemSpecialVoxel) special_voxels["crop_output"]).inventory = output_inventory;
+		((ItemSpecialVoxel) special_voxels["seed_input"]).set_inventory(input_inventory);
+		((ItemSpecialVoxel) special_voxels["crop_output"]).set_inventory(output_inventory);
 
 		collider = GetNode<CsgBox3D>("CSGBox3D2");
 
@@ -76,6 +76,7 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 				new_node.GlobalPosition = coordinate;
 				new_node.Name = String.Format("{0}, {1}", x, z);
 				grow_slots_physical.Add(new_node);
+				output_inventory.OnInventoryChanged += new_node.on_output_inventory_changed;
 			}
 		}
 
@@ -93,7 +94,7 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 		InventoryItem current_seed = input_inventory.get_item_at_index(0);
 		string plant_result = "";
 		if (current_seed != null) {
-			plant_result = (string) current_seed.prototype["plant_result"];
+			plant_result = current_seed.prototype.plant_result;
 		}
 		
 		bool plant_set_this_frame = false;
@@ -101,22 +102,29 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 		foreach (Growable growable in grow_slots_physical) {
 			if (auto_harvest) {
 				if (growable.done_growing) {
-					Godot.Collections.Array harvest_results = (Godot.Collections.Array) growable.prototype["harvest_result"];
+					if (!growable.waiting_on_insert) {
+						Godot.Collections.Array harvest_results = growable.prototype.harvest_result;
 					
-					Array<InventoryItem> to_insert = new Array<InventoryItem>();
+						growable.to_insert = new Array<InventoryItem>();
 
-					foreach (Dictionary result in harvest_results) {
-						InventoryItem new_item = InventoryItem.new_item((string) result["name"], (int) result["amount"]);
-						to_insert.Add(new_item);
+						foreach (Dictionary result in harvest_results) {
+							InventoryItem new_item = InventoryItem.new_item((string) result["name"], (int) result["amount"]);
+							growable.to_insert.Add(new_item);
+						}
+
+						growable.waiting_on_insert = true;
 					}
+					
+					if (growable.try_insert) {
+						if (output_inventory.can_insert(growable.to_insert)) {
+							output_inventory.insert(growable.to_insert);
 
-					if (output_inventory.can_insert(to_insert)) {
-						output_inventory.insert(to_insert);
-
-						growable.clear_plant();
-					} else {
-
+							growable.clear_plant();
+						} else {
+							growable.try_insert = false;
+						}
 					}
+					
 				}
 			}
 
@@ -125,6 +133,7 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 					if (current_seed != null && plant_result != "") {
 						if (current_seed.count > 0) {
 							current_seed.count -= 1;
+							current_seed.emit_update();
 							growable.set_plant(plant_result);
 							plant_set_this_frame = true;
 						}

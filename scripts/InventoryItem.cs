@@ -31,22 +31,22 @@ public partial class InventoryItem : Node {
 		}
 	} = 1;
 	public int stack_size = 1;
-	public Dictionary prototype;
+	public ItemPrototype prototype;
 	public Inventory parent_inventory;
 	public int current_index = -1;
 
 	public InventoryItem (string new_name, int new_count) {
 		if (Prototypes.items.ContainsKey(new_name)) {
-			Dictionary data = (Dictionary) Prototypes.items[new_name];
+			ItemPrototype data = Prototypes.items[new_name];
 			if (new_count <= 0) {
 				throw new Exception("Items cannot be initialized with counts 0 or less.");
 			}
 
 			this.prototype = data;
 
-			this.name = (string) data["name"];
-			this.count = Math.Min(new_count, (int) data["stack_size"]);
-			this.stack_size = (int) data["stack_size"];
+			this.name = (string) data.name;
+			this.count = Math.Min(new_count, (int) data.stack_size);
+			this.stack_size = (int) data.stack_size;
 		} else {
 			GD.Print("This item doesn't exist.");
 		}
@@ -87,6 +87,7 @@ public partial class InventoryItem : Node {
 	public void emit_update () {
 		if (parent_inventory != null) {
 			parent_inventory.EmitSignal(Inventory.SignalName.OnItemSlotChanged, current_index, this);
+			parent_inventory.EmitSignal(Inventory.SignalName.OnInventoryChanged, parent_inventory);
 		} else {
 			//GD.Print("we aint got no fuckin parent inventory");
 		}

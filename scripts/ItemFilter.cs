@@ -24,24 +24,24 @@ public partial class ItemFilter : FilterBase {
 
 }
 
-public partial class ItemTypeFilter : FilterBase {
+public partial class ItemCategoryFilter : FilterBase {
 
 	public string name;
 	public bool invert;
 
-	public ItemTypeFilter () {
+	public ItemCategoryFilter () {
 		this.name = "";
 		this.invert = false;
 	}
 
-	public ItemTypeFilter (string name, bool invert = false) {
+	public ItemCategoryFilter (string name, bool invert = false) {
 		this.name = name;
 		this.invert = invert;
 	}
 
 	public override bool match (string test) {
 		// performance could be fucking terrible on this
-		return ((string) ((Dictionary) Prototypes.items[test])["type"] == name) && !invert; 
+		return (Prototypes.items[test].category == name) && !invert; 
 	}
 }
 

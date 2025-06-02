@@ -445,6 +445,8 @@ public partial class BuildingGridPlacable : Node3D {
 			special_voxel_data.Add(new_instance);
 		}
 
+		new_instance.update_flags();
+
 		new_instance.parent = this;
 
 		NotifyPropertyListChanged();
@@ -464,10 +466,12 @@ public partial class BuildingGridPlacable : Node3D {
 		new_instance.name = data.name;
 		new_instance.voxel_position = data.voxel_position;
 		new_instance.voxel_flags = data.voxel_flags;
-		new_instance.flag_directions = data.flag_directions;
-		new_instance.support_directions = data.support_directions;
+		new_instance.FlagDirections = data.FlagDirections;
+		new_instance.SupportDirections = data.SupportDirections;
 		new_instance.parent_center = data.parent_center;
 		new_instance.parent = data.parent;
+
+		new_instance.update_flags();
 
 		if (special_voxels.ContainsKey(data.name)) {
 			GD.PrintErr(Name + " has a duplicate SpecialVoxel name of " + data.name);

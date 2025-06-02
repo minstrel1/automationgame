@@ -59,7 +59,7 @@ public partial class HandItemRepresentation : Control {
 
 	public void update_visualization () {
 		if (current_item != null) {
-			string texture_path = (string) current_item.prototype["icon_texture"];
+			string texture_path = current_item.prototype.icon_texture;
 			item_texture.Texture = GD.Load<Texture2D>(texture_path);
 
 			item_count.Text = current_item.count.ToString();

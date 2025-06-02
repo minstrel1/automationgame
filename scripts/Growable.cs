@@ -8,11 +8,15 @@ using Godot.NativeInterop;
 public partial class Growable : Node3D {
 	
 	public string current_plant_name = "";
-	public Dictionary prototype;
+	public GrowablePrototype prototype;
 	public int growth_time = 0;
 	public int current_growth_time = 0;
 	public bool plant_set = false;
 	public bool done_growing = false;
+
+	public bool waiting_on_insert = false;
+	public Array<InventoryItem> to_insert = new Array<InventoryItem>();
+	public bool try_insert = true;
 
 	MeshInstance3D model;
 	SphereMesh sphere_mesh;
@@ -56,10 +60,10 @@ public partial class Growable : Node3D {
 
 	public void set_plant (String new_plant_name) {
 		if (Prototypes.growables.ContainsKey(new_plant_name)) {
-			prototype = (Dictionary)Prototypes.growables[new_plant_name];
+			prototype = Prototypes.growables[new_plant_name];
 			current_plant_name = new_plant_name;
 			current_growth_time = 0;
-			growth_time = Globals.ighours_to_ticks((float) prototype["time_to_grow"]);
+			growth_time = Globals.ighours_to_ticks((float) prototype.time_to_grow);
 			plant_set = true;
 			done_growing = false;
 
@@ -79,6 +83,13 @@ public partial class Growable : Node3D {
 
 		model.Visible = false;
 		model.Scale = Vector3.One * 0.000000001f;
+
+		waiting_on_insert = false;
+		try_insert = true;
+	}
+
+	public void on_output_inventory_changed (Inventory inventory) {
+		try_insert = true;
 	}
 
 }

@@ -247,66 +247,90 @@ public partial class BuildingGridChunk : StaticBody3D {
 	private static Vector3 rbf = new Vector3(1f, 0f, 1f);
 
 	public void add_cube (Vector3 pos, BuildDirectionFlags flags) {
-		if (is_block_free(pos + Vector3.Left) && (flags == BuildDirectionFlags.Any || (((int) flags & 2) >> 1) == 1)) {
+		if (is_block_free(pos + Vector3.Left)) {
 			vertices[face_count * 4 + 0] = pos + ltb;
 			vertices[face_count * 4 + 1] = pos + ltf;
 			vertices[face_count * 4 + 2] = pos + lbf;
 			vertices[face_count * 4 + 3] = pos + lbb;
 
+			if (flags == BuildDirectionFlags.Any || (((int) flags & 2) >> 1) == 1) {
+
+			}
+
 			add_uvs();
 			add_collision_tris();
 			add_tris();
 		}
 
-		if (is_block_free(pos + Vector3.Right) && (flags == BuildDirectionFlags.Any || (((int) flags & 4) >> 2) == 1)) {
+		if (is_block_free(pos + Vector3.Right)) {
 			vertices[face_count * 4 + 0] = pos + rtf;
 			vertices[face_count * 4 + 1] = pos + rtb;
 			vertices[face_count * 4 + 2] = pos + rbb;
 			vertices[face_count * 4 + 3] = pos + rbf;
 
+			if (flags == BuildDirectionFlags.Any || (((int) flags & 4) >> 2) == 1) {
+
+			}
+
 			add_uvs();
 			add_collision_tris();
 			add_tris();
 		}
 
-		if (is_block_free(pos + Vector3.Up) && (flags == BuildDirectionFlags.Any || (((int) flags & 8) >> 3) == 1)) {
+		if (is_block_free(pos + Vector3.Up)) {
 			vertices[face_count * 4 + 0] = pos + ltb;
 			vertices[face_count * 4 + 1] = pos + rtb;
 			vertices[face_count * 4 + 2] = pos + rtf;
 			vertices[face_count * 4 + 3] = pos + ltf;
 
+			if (flags == BuildDirectionFlags.Any || (((int) flags & 8) >> 3) == 1) {
+				
+			}
+
 			add_uvs();
 			add_collision_tris();
 			add_tris();
 		}
 
-		if (is_block_free(pos + Vector3.Down) && (flags == BuildDirectionFlags.Any || (((int) flags & 16) >> 4) == 1)) {
+		if (is_block_free(pos + Vector3.Down)) {
 			vertices[face_count * 4 + 0] = pos + lbf;
 			vertices[face_count * 4 + 1] = pos + rbf;
 			vertices[face_count * 4 + 2] = pos + rbb;
 			vertices[face_count * 4 + 3] = pos + lbb;
 
+			if (flags == BuildDirectionFlags.Any || (((int) flags & 16) >> 4) == 1) {
+
+			}
+
 			add_uvs();
 			add_collision_tris();
 			add_tris();
 		}
 
-		if (is_block_free(pos + Vector3.Forward) && (flags == BuildDirectionFlags.Any || (((int) flags & 32) >> 5) == 1)) {
+		if (is_block_free(pos + Vector3.Forward) ) {
 			vertices[face_count * 4 + 0] = pos + rtb;
 			vertices[face_count * 4 + 1] = pos + ltb;
 			vertices[face_count * 4 + 2] = pos + lbb;
 			vertices[face_count * 4 + 3] = pos + rbb;
 
+			if (flags == BuildDirectionFlags.Any || (((int) flags & 32) >> 5) == 1) {
+				
+			}
+
 			add_uvs();
 			add_collision_tris();
 			add_tris();
 		}
 
-		if (is_block_free(pos + Vector3.Back) && (flags == BuildDirectionFlags.Any || (((int) flags & 64) >> 6) == 1)) {
+		if (is_block_free(pos + Vector3.Back)) {
 			vertices[face_count * 4 + 0] = pos + ltf;
 			vertices[face_count * 4 + 1] = pos + rtf;
 			vertices[face_count * 4 + 2] = pos + rbf;
 			vertices[face_count * 4 + 3] = pos + lbf;
+
+			if (flags == BuildDirectionFlags.Any || (((int) flags & 64) >> 6) == 1) {
+				
+			}
 
 			add_uvs();
 			add_collision_tris();
@@ -317,14 +341,16 @@ public partial class BuildingGridChunk : StaticBody3D {
 	public void make_floor () {
 		for (int x = 0; x < chunk_size; x++) {
 			for (int z = 0; z < chunk_size; z++) {
-				vertices[face_count * 4 + 0] = new Vector3(  x,   0f,  z);
-				vertices[face_count * 4 + 1] = new Vector3(  x + 1,   0f,  z);
-				vertices[face_count * 4 + 2] = new Vector3(  x + 1,   0f,  z + 1);
-				vertices[face_count * 4 + 3] = new Vector3(  x,   0f,  z + 1);
-				
-				add_uvs();
-				add_collision_tris();
-				add_tris();
+				if (is_block_free(new Vector3(x, 0, z))) {
+					vertices[face_count * 4 + 0] = new Vector3(  x,   0f,  z);
+					vertices[face_count * 4 + 1] = new Vector3(  x + 1,   0f,  z);
+					vertices[face_count * 4 + 2] = new Vector3(  x + 1,   0f,  z + 1);
+					vertices[face_count * 4 + 3] = new Vector3(  x,   0f,  z + 1);
+					
+					add_uvs();
+					add_collision_tris();
+					add_tris();
+				}
 			}
 		}
 	}
@@ -388,7 +414,6 @@ public partial class BuildingGridChunk : StaticBody3D {
 			for (int y = 0; y < chunk_size; y++) {
 				for (int z = 0; z < chunk_size; z++) {
 					if (voxel_data[x][y][z].placable_index >= 0) {
-						GD.Print(voxel_data[x][y][z].support_directions);
 						add_cube(new Vector3(x, y, z), voxel_data[x][y][z].support_directions);
 						voxel_count += 1;
 					}

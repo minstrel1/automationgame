@@ -13,6 +13,8 @@ public partial class Player {
 
 		oxygen_remaining -= 1;
 
+		oxygen_remaining = Math.Clamp(oxygen_remaining, 0, max_oxygen);
+
 	}
 
 }

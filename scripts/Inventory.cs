@@ -13,7 +13,7 @@ public partial class Inventory : Node {
 	public delegate void OnItemSlotChangedEventHandler (int index, InventoryItem item);
 
 	[Signal]
-	public delegate void OnInventoryChangedEventHandler ();
+	public delegate void OnInventoryChangedEventHandler (Inventory inventory);
 
 	public int inventory_size = 1;
 
@@ -157,7 +157,7 @@ public partial class Inventory : Node {
 		}
 		
 		if (changed) {
-			EmitSignal(SignalName.OnInventoryChanged);
+			EmitSignal(SignalName.OnInventoryChanged, this);
 		}
 
 		if (item != null) {
@@ -229,7 +229,7 @@ public partial class Inventory : Node {
 		}
 		
 		if (changed) {
-			EmitSignal(SignalName.OnInventoryChanged);
+			EmitSignal(SignalName.OnInventoryChanged, this);
 		}
 
 		if (item != null) {
@@ -315,7 +315,7 @@ public partial class Inventory : Node {
 			item.current_index = index;
 		}
 		EmitSignal(SignalName.OnItemSlotChanged, index, contents[index]);
-		EmitSignal(SignalName.OnInventoryChanged);
+		EmitSignal(SignalName.OnInventoryChanged, this);
 
 	}
 
@@ -326,7 +326,7 @@ public partial class Inventory : Node {
 			contents[index].current_index = 0;
 			contents[index] = null;
 			EmitSignal(SignalName.OnItemSlotChanged, index, contents[index]);
-			EmitSignal(SignalName.OnInventoryChanged);
+			EmitSignal(SignalName.OnInventoryChanged, this);
 		}
 	}
 

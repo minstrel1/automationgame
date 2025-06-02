@@ -36,14 +36,18 @@ public partial class SpecialVoxelData : Resource {
 
 	public void on_property_changed () {
 		
-		flag_directions = (BuildDirectionFlags) FlagDirections;
-		support_directions = (BuildDirectionFlags) SupportDirections;
+		update_flags();
 
 		//GD.Print(parent);
 
 		if (parent != null) {
 			parent.make_visualiser_mesh();
 		}
+	}
+
+	public void update_flags () {
+		flag_directions = (BuildDirectionFlags) FlagDirections;
+		support_directions = (BuildDirectionFlags) SupportDirections;
 	}
 
 	

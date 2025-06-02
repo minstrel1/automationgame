@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://ckulag1ysyeoi"]
+
+[ext_resource type="Script" uid="uid://c7inyqfjp24lr" path="res://scripts/BuildingGridPlacable.cs" id="1_333jj"]
+
+[node name="Node3D" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+script = ExtResource("1_333jj")
+grid_width = 1
+grid_height = 1
+grid_length = 1
+special_voxel_data = []
+display_name = "Cube"
+display_description = "A simple building cube"
+building_category = 3
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+use_collision = true
