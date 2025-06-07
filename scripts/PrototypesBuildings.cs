@@ -17,8 +17,8 @@ public partial class Prototypes : Node {
 			{"display_name", "Agriculture"},
 			{"icon_texture", "res://item_textures/test_item.png"}
 		}},
-		{"Metallurgy", new Dictionary {
-			{"display_name", "Metallurgy"},
+		{"Production", new Dictionary {
+			{"display_name", "Production"},
 			{"icon_texture", "res://item_textures/test_item.png"}
 		}},
 		{"Structures", new Dictionary {

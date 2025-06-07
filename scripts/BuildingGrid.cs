@@ -407,7 +407,7 @@ public partial class BuildingGrid : StaticBody3D {
 
 		foreach (string name in placable.special_voxels.Keys) {
 			SpecialVoxel special_voxel = placable.special_voxels[name];
-			Vector3I pos_to_affect = Tools.apply_building_rotations(special_voxel.voxel_position + Tools.v3_to_v3I(placable.grid_offset), normal, rotation) + grid_pos;
+			Vector3I pos_to_affect = Tools.apply_building_rotations(special_voxel.voxel_position + Tools.v3_to_v3I(placable.grid_offset + placable.get_spacing_offset()), normal, rotation) + grid_pos;
 
 			if (is_position_valid(pos_to_affect)) {
 				VoxelData special_data = new VoxelData{

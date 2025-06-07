@@ -699,9 +699,9 @@ horizontal_alignment = 2
 environment = SubResource("Environment_8uh7m")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.786466, -0.404532, 0.466717, -0.123767, 0.637103, 0.760777, -0.605105, -0.65609, 0.450993, 0, 20.8424, 8.50293)
+transform = Transform3D(0.786466, -0.404532, 0.466717, -0.123767, 0.637103, 0.760777, -0.605105, -0.65609, 0.450992, 0, 20.8424, 8.50293)
 shadow_enabled = true
-directional_shadow_max_distance = 500.0
+directional_shadow_max_distance = 250.0
 
 [node name="Node3D" type="Node3D" parent="."]
 
@@ -711,14 +711,14 @@ libraries = {
 }
 
 [node name="BuildingGrid" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -66.0282, -0.514008, -30.3703)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -79.7698, -0.514008, -30.3703)
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("5_ykrsh")
 mesh_material = ExtResource("12_5tkv4")
-grid_width = 128
+grid_width = 144
 grid_height = 64
-grid_length = 128
+grid_length = 144
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -46.7814)

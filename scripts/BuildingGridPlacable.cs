@@ -5,7 +5,7 @@ using Godot.Collections;
 public enum BuildingCategory {
 	Logistics,
 	Agriculture,
-	Metallurgy,
+	Production,
 	Structures,
 	Decorations,
 	Miscellaneous
@@ -171,6 +171,14 @@ public partial class BuildingGridPlacable : Node3D {
 		}
 	}
 
+	public Vector3 get_spacing_offset () {
+		return new Vector3(
+			grid_width % 2 == 0 ? -0.5f : 0,
+			grid_height % 2 == 0 ? -0.5f : 0,
+			grid_length % 2 == 0 ? -0.5f : 0
+		);
+	}
+
 	public void make_visualiser_mesh () {
 		ArrayMesh new_mesh = new ArrayMesh();
 
@@ -184,7 +192,7 @@ public partial class BuildingGridPlacable : Node3D {
 
 		if (special_voxel_data != null) {
 			foreach (SpecialVoxelData special_voxel in special_voxel_data) {
-				make_box(grid_offset + special_voxel.voxel_position, new Vector3(1, 1, 1), special_voxel.flag_directions, (int) special_voxel.voxel_flags);
+				make_box(grid_offset + special_voxel.voxel_position + get_spacing_offset(), new Vector3(1, 1, 1), special_voxel.flag_directions, (int) special_voxel.voxel_flags);
 				//GD.Print((int) special_voxel.flag_directions);
 			}
 		}

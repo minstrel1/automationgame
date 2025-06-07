@@ -49,11 +49,18 @@ public partial class InventoryItem : Node {
 			this.stack_size = (int) data.stack_size;
 		} else {
 			GD.Print("This item doesn't exist.");
+			
 		}
 	}
 
 	public static InventoryItem new_item (string new_name, int new_count) {
 		return new InventoryItem(new_name, new_count);
+	}
+
+	public InventoryItem clone () {
+		InventoryItem new_instance = (InventoryItem) MemberwiseClone();
+
+		return new_instance;
 	}
 
 	public override string ToString()

@@ -10,8 +10,6 @@ using Godot.NativeInterop;
 #endif
 public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory, IInteractable {
 
-	
-
 	[ExportCategory("Growing Plot Properties")]
 	[Export]
 	public string interact_name = "Growing Plot";
@@ -103,14 +101,9 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 			if (auto_harvest) {
 				if (growable.done_growing) {
 					if (!growable.waiting_on_insert) {
-						Godot.Collections.Array harvest_results = growable.prototype.harvest_result;
+						Godot.Collections.Array<ProductPrototype> harvest_results = growable.prototype.harvest_result;
 					
-						growable.to_insert = new Array<InventoryItem>();
-
-						foreach (Dictionary result in harvest_results) {
-							InventoryItem new_item = InventoryItem.new_item((string) result["name"], (int) result["amount"]);
-							growable.to_insert.Add(new_item);
-						}
+						growable.to_insert = growable.prototype.get_products().Item1;
 
 						growable.waiting_on_insert = true;
 					}
