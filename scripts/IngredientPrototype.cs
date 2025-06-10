@@ -5,7 +5,7 @@ using Godot.Collections;
 using Godot.NativeInterop;
 
 public partial class IngredientPrototype : GodotObject {
-	public string type = "none";
-	public string name = "test_item";
-	public int amount = 1;
+	public virtual string type {set; get;} = "none";
+	public virtual string name {set; get;} = "none";
+	public virtual int amount {set; get;} = 1;
 }

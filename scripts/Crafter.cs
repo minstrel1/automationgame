@@ -19,15 +19,45 @@ public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IIn
 	Inventory input_inventory;
 	Inventory output_inventory;
 
+	bool check_input = true;
+	bool check_output = true;
 
+	RecipePrototype current_recipe;
+	bool recipe_set = false;
+
+	int ingredient_count = Prototypes.max_recipe_ingredients;
+	int[] ingredient_counts = new int[Prototypes.max_recipe_ingredients];
+	bool[] is_item = new bool[Prototypes.max_recipe_ingredients];
+
+	bool waiting_to_output = false;
+	Array<InventoryItem> to_insert_items = new Array<InventoryItem>();
+
+
+	double current_crafting_time = 0d;
+	bool crafting = false;
+
+	NoneFilter none_filter;
 
 	CsgShape3D collider;
 
 	public override void _Ready() {
 		base._Ready();
 
-		input_inventory = new Inventory(5);
-		output_inventory = new Inventory(5);
+		input_inventory = new Inventory(Prototypes.max_recipe_ingredients);
+		input_inventory.OnInventoryChanged += on_input_inventory_changed;
+
+		output_inventory = new Inventory(Prototypes.max_recipe_ingredients);
+
+		ingredient_counts = new int[Prototypes.max_recipe_ingredients];
+
+		is_item = new bool[Prototypes.max_recipe_ingredients];
+
+		((ItemSpecialVoxel) special_voxels["input1"]).set_inventory(input_inventory);
+		((ItemSpecialVoxel) special_voxels["input2"]).set_inventory(input_inventory);
+		((ItemSpecialVoxel) special_voxels["input3"]).set_inventory(input_inventory);
+		((ItemSpecialVoxel) special_voxels["output"]).set_inventory(output_inventory);
+
+		none_filter = new NoneFilter();
 
 		collider = GetNode<CsgBox3D>("CSGBox3D");
 	}
@@ -36,22 +66,84 @@ public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IIn
 	{
 		base.on_build();
 
-		
+		((ItemSpecialVoxel) special_voxels["input1"]).auto_input = false;
+		((ItemSpecialVoxel) special_voxels["input2"]).auto_input = false;
+		((ItemSpecialVoxel) special_voxels["input3"]).auto_input = false;
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
 		base._PhysicsProcess(delta);
 
+		if (recipe_set) {
+			if (crafting) {
+				if (current_crafting_time < current_recipe.time_to_craft) {
+					current_crafting_time += crafting_speed * delta;
+				} else {
+					//GD.Print("product finished!");
+					if (!waiting_to_output) {
+						(Array<InventoryItem>, int) results = current_recipe.get_products();
 
+						to_insert_items = results.Item1;
+
+						waiting_to_output = true;
+					}
+					if (check_output) {
+						if (output_inventory.can_insert(to_insert_items)) {
+							output_inventory.insert(to_insert_items);
+
+							waiting_to_output = false;
+							check_input = true;
+							crafting = false;
+						} 
+
+						check_output = false;
+					}
+				}
+			}
+			
+			if (check_input) {
+				//GD.Print("checking crafter input");
+				//GD.Print(input_inventory);
+				bool input_valid = true;
+				for (int i = 0; i < ingredient_count; i++) {
+					if (is_item[i]) {
+						//GD.Print(i.ToString() + " is an item");
+						if (input_inventory.contents[i] == null || input_inventory.contents[i].count < ingredient_counts[i]) {
+							input_valid = false;
+						}
+					}
+				}
+
+				//GD.Print(input_valid);
+
+				if (input_valid && !crafting) {
+					for (int i = 0; i < ingredient_count; i++) {
+						if (is_item[i]) {
+							input_inventory.contents[i].count -= ingredient_counts[i];
+						}
+					}
+
+					//GD.Print(input_inventory);
+
+					input_inventory.emit_update();
+
+					crafting = true;
+					check_output = true;
+					current_crafting_time = 0;
+				}
+
+				check_input = false;
+			}
+		}
 	}
 
-	public void on_input_inventory_changed () {
-
+	public void on_input_inventory_changed (Inventory inventory) {
+		check_input = true;
 	}
 
-	public void on_output_inventory_changed () {
-		
+	public void on_output_inventory_changed (Inventory inventory) {
+		check_output = true;
 	}
 
 
@@ -76,13 +168,76 @@ public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IIn
 		set_mesh_visibility(false);
 	}
 
+	public void on_recipe_selected (Variant data) {
+		current_recipe = (RecipePrototype) data;
+		GD.Print(current_recipe);
+
+		(Array<InventoryItem>, int) ingredients = current_recipe.get_ingredients();
+		Array<InventoryItem> ingredient_items = ingredients.Item1;
+
+		ingredient_count = current_recipe.ingredients.Count;
+
+		input_inventory.resize(ingredient_count);
+		ingredient_counts = new int[ingredient_count];
+		is_item = new bool[ingredient_count];
+
+		int index = 0;
+		foreach (InventoryItem item in ingredient_items) {
+			GD.Print(item);
+			if (item != null) {
+				GD.Print(index.ToString() + " is an item");
+				input_inventory.set_filter(new ItemFilter(item.name), index);
+				ingredient_counts[index] = item.count;
+				is_item[index] = true;
+			} else {
+				input_inventory.set_filter(none_filter, index);
+				is_item[index] = false;
+			}
+
+			index += 1;
+		}
+
+		(Array<InventoryItem>, int) products = current_recipe.get_products();
+		Array<InventoryItem> product_items = products.Item1;
+
+		int product_count = current_recipe.products.Count;
+
+		output_inventory.resize(product_count);
+
+		index = 0;
+		foreach (InventoryItem item in product_items) {
+			if (item != null) {
+				output_inventory.set_filter(new ItemFilter(item.name), index);
+			} else {
+				output_inventory.set_filter(none_filter, index);
+			}
+
+			index += 1;
+		}
+
+		recipe_set = true;
+
+		((ItemSpecialVoxel) special_voxels["input1"]).auto_input = true;
+		((ItemSpecialVoxel) special_voxels["input2"]).auto_input = true;
+		((ItemSpecialVoxel) special_voxels["input3"]).auto_input = true;
+
+		GD.Print(ingredient_counts);
+
+		Player.instance.clear_active_gui();
+	}
+
 	public void on_interact () {
 		if (is_built) {
-			// if (Player.instance.active_gui is GrowingPlotGUI) {
-			// 	Player.instance.clear_active_gui();
-			// } else {
-			// 	//Player.set_active_gui(GrowingPlotGUI.make(this, Player.instance.gui_parent));
-			// }
+			if (Player.instance.active_gui is CategoryList) {
+				Player.instance.clear_active_gui();
+			} else {
+				if (current_recipe == null) {
+					CategoryList new_instance = CategoryList.make(CategoryListMode.Recipes, Prototypes.get_recipes_categorized(), Player.instance.gui_parent);
+					new_instance.OnChoiceSelected += on_recipe_selected;
+					Player.set_active_gui(new_instance);
+				}
+				//Player.set_active_gui(GrowingPlotGUI.make(this, Player.instance.gui_parent));
+			}
 		}
 	}
 

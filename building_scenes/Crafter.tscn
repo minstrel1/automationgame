@@ -7,7 +7,7 @@
 [sub_resource type="Resource" id="Resource_oxrh8"]
 script = ExtResource("2_sqpm2")
 name = "output"
-voxel_position = Vector3i(0, -1, -1)
+voxel_position = Vector3i(0, 0, -1)
 voxel_flags = 2
 FlagDirections = 32
 SupportDirections = 0
@@ -15,7 +15,7 @@ SupportDirections = 0
 [sub_resource type="Resource" id="Resource_hxreb"]
 script = ExtResource("2_sqpm2")
 name = "input1"
-voxel_position = Vector3i(1, -1, 0)
+voxel_position = Vector3i(1, 0, 0)
 voxel_flags = 1
 FlagDirections = 4
 SupportDirections = 0
@@ -23,7 +23,7 @@ SupportDirections = 0
 [sub_resource type="Resource" id="Resource_ux3w3"]
 script = ExtResource("2_sqpm2")
 name = "input2"
-voxel_position = Vector3i(-1, -1, 0)
+voxel_position = Vector3i(-1, 0, 0)
 voxel_flags = 1
 FlagDirections = 2
 SupportDirections = 0
@@ -31,7 +31,7 @@ SupportDirections = 0
 [sub_resource type="Resource" id="Resource_g74s0"]
 script = ExtResource("2_sqpm2")
 name = "input3"
-voxel_position = Vector3i(0, -1, 1)
+voxel_position = Vector3i(0, 0, 1)
 voxel_flags = 1
 FlagDirections = 64
 SupportDirections = 0
@@ -39,16 +39,16 @@ SupportDirections = 0
 [node name="Crafter" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 script = ExtResource("1_jhcfq")
-grid_height = 4
-grid_offset = Vector3(0, 1.5, 0)
+grid_height = 2
+grid_offset = Vector3(0, 0.5, 0)
 special_voxel_data = [SubResource("Resource_oxrh8"), SubResource("Resource_hxreb"), SubResource("Resource_ux3w3"), SubResource("Resource_g74s0")]
 display_name = "Crafter"
 display_description = "A basic crafting machine."
 building_category = 2
 
 [node name="CSGBox3D" type="CSGBox3D" parent="." node_paths=PackedStringArray("interaction_parent")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 use_collision = true
-size = Vector3(2.9, 3.9, 3)
+size = Vector3(2.9, 1.9, 3)
 script = ExtResource("3_oxrh8")
 interaction_parent = NodePath("..")

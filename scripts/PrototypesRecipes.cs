@@ -13,7 +13,13 @@ public partial class ItemProductPrototype : ProductPrototype {
 }
 
 public partial class ItemIngredientPrototype : IngredientPrototype {
-	public new string type = "item";
+	public override string type {set; get;} = "item";
+	public override string name {set; get;} = "test_item";
+	public override int amount {set; get;}= 1;
+}
+
+public enum RecipeCategory {
+	basic_crafting,
 }
 
 public partial class RecipePrototype : PrototypeBase {
@@ -27,6 +33,11 @@ public partial class RecipePrototype : PrototypeBase {
 	public float time_to_craft = 4.0f;
 
 	public bool unlocked = false;
+
+	public override string ToString()
+	{
+		return "RecipePrototype " + name;
+	}
 
 	public (Godot.Collections.Array<InventoryItem>, int) get_products () { // replace with fluids
 		Godot.Collections.Array<InventoryItem> items = new Godot.Collections.Array<InventoryItem>();
@@ -45,24 +56,41 @@ public partial class RecipePrototype : PrototypeBase {
 		return (items, 0);
 	}
 	
-	public Godot.Collections.Array get_ingredients () {
-		Godot.Collections.Array result = new Godot.Collections.Array();
+	public (Godot.Collections.Array<InventoryItem>, int) get_ingredients () {
+		Godot.Collections.Array<InventoryItem> items = new Godot.Collections.Array<InventoryItem>();
 
+		items.Resize(ingredients.Count);
+		
+		int index = 0;
 		foreach (IngredientPrototype ingredient in ingredients) {
 			if (ingredient.type == "item") {
-				result.Add(InventoryItem.new_item(ingredient.name, ingredient.amount));
+				items[index] = InventoryItem.new_item(ingredient.name, ingredient.amount);
 			}
+
+			index += 1;
 		}
 
-		return result;
+		return (items, 0);
 	}
 
 }
 
 public partial class Prototypes : Node {
+	public static int max_recipe_ingredients = 8;
+
+	public static Dictionary recipe_category_properties = new Dictionary{
+		{"basic_crafting", new Dictionary {
+			{"display_name", "Basic Crafting"},
+			{"icon_texture", "res://item_textures/test_item.png"}
+		}},
+
+	};
+
 	public static Dictionary<string, RecipePrototype> recipes = new Dictionary<string, RecipePrototype> {
 		{"test_product", new RecipePrototype{
 			name = "test_product",
+			display_name = "Test Product",
+			category = "basic_crafting",
 			ingredients = new Array<IngredientPrototype>{
 				new ItemIngredientPrototype{
 					name = "test_item",

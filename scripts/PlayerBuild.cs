@@ -46,8 +46,9 @@ public partial class Player {
 		current_building_instance = null;
 	}
 
-	public void on_building_choice_selected (Dictionary data) {
-		string res_path = (string) data["res_path"];
+	public void on_building_choice_selected (Variant data) {
+		Dictionary new_data = (Dictionary) data;
+		string res_path = (string) new_data["res_path"];
 		if (res_path != null) {
 			try {
 				current_building_scene = GD.Load<PackedScene>(res_path);

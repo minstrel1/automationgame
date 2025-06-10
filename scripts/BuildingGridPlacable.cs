@@ -3,12 +3,12 @@ using Godot;
 using Godot.Collections;
 
 public enum BuildingCategory {
-	Logistics,
-	Agriculture,
-	Production,
-	Structures,
-	Decorations,
-	Miscellaneous
+	logistics,
+	agriculture,
+	production,
+	structures,
+	dectorations,
+	miscellaneous
 }
 
 [GlobalClass]
@@ -84,7 +84,7 @@ public partial class BuildingGridPlacable : Node3D {
 	public string display_description = "A basic growing plot.";
 
 	[Export]
-	public BuildingCategory building_category = BuildingCategory.Miscellaneous;
+	public BuildingCategory building_category = BuildingCategory.miscellaneous;
 
 	[Export]
 	public bool unlocked = true;

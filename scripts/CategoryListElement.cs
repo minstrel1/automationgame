@@ -17,9 +17,12 @@ public partial class CategoryListElement : GUI {
 	public TextureRect icon;
 	public Label text;
 
-	public Dictionary data;
+	public CategoryListMode mode;
 
-	public static CategoryListElement make (CategoryList category_parent, Dictionary data, Control parent) {
+	public Dictionary building_data;
+	public RecipePrototype recipe_data;
+
+	public static CategoryListElement make (CategoryList category_parent, Variant data, CategoryListMode mode, Control parent) {
 		CategoryListElement new_rep = get_first_available_instance();
 
 		if (new_rep == null) {
@@ -33,7 +36,19 @@ public partial class CategoryListElement : GUI {
 
 		new_rep.gui_parent = parent;
 		new_rep.parent_category_list = category_parent;
-		new_rep.data = data;
+		new_rep.mode = mode;
+
+		switch (mode) {
+			case CategoryListMode.Buildings:
+				new_rep.building_data = (Dictionary) data;
+				break;
+
+			case CategoryListMode.Recipes:
+				new_rep.recipe_data = (RecipePrototype) data;
+				break;
+		}
+
+		
 
 		new_rep.in_use = true;
 
@@ -60,14 +75,29 @@ public partial class CategoryListElement : GUI {
 	public void clear () {
 		gui_parent = null;
 		parent_category_list = null;
-		data = null;
+
+		building_data = null;
+		recipe_data = null;
 	}
 
 	public void update_visualization () {
-		if (data != null) {
-			icon.Texture = (Texture2D) data["display_icon"];
-			text.Text = (string) data["display_name"];
+		switch (mode) {
+			case CategoryListMode.Buildings:
+				if (building_data != null) {
+					icon.Texture = (Texture2D) building_data["display_icon"];
+					text.Text = (string) building_data["display_name"];
+				}
+
+				break;
+			
+			case CategoryListMode.Recipes:
+				if (recipe_data != null) {
+					icon.Texture = GD.Load<Texture2D>(recipe_data.icon_texture);
+					text.Text = recipe_data.display_name;
+				}
+				break;
 		}
+		
 	}
 
 	public override void _GuiInput(InputEvent @event)
@@ -79,9 +109,9 @@ public partial class CategoryListElement : GUI {
 			InputEventMouse mouse_event = @event as InputEventMouse;
 
 			
-			if (parent_category_list.current_element_data != this.data) {
+			if (parent_category_list.current_element_text != text.Text) {
 				parent_category_list.current_element = this;
-				parent_category_list.current_element_data = data;
+				parent_category_list.current_element_text = text.Text;
 				parent_category_list.update_lower_visualization();
 			}
 			
@@ -92,7 +122,16 @@ public partial class CategoryListElement : GUI {
 
 			if (mouse_event.Pressed) {
 				AcceptEvent();
-				parent_category_list.choice_selected(data);
+				switch (mode) {
+					case CategoryListMode.Buildings:
+						parent_category_list.choice_selected(building_data);
+						break;
+
+					case CategoryListMode.Recipes:
+						parent_category_list.choice_selected(recipe_data);
+						break;
+				}
+				
 			}
 		}
 	}

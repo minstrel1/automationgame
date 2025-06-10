@@ -55,7 +55,9 @@ public partial class ItemSpecialVoxel : SpecialVoxel {
 			}
 		}
 
-		inventory_count = inventory.inventory_size;
+		if (inventory != null) {
+			inventory_count = inventory.inventory_size;
+		}
 
 		input_index = 0;
 		input_should_check = true;

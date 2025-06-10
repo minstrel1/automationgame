@@ -350,4 +350,14 @@ public partial class Inventory : Node {
 		this.QueueFree();
 	}
 
+	public void resize (int size = 10) {
+		contents.Resize(size);
+		filters.Resize(size);
+		inventory_size = size;
+	}
+
+	public void emit_update () {
+		EmitSignal(SignalName.OnInventoryChanged, this);
+	}
+
 }

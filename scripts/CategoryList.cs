@@ -15,7 +15,7 @@ public partial class CategoryList : GUI {
 	public Array<CategoryListElement> elements = new Array<CategoryListElement>();
 
 	[Signal]
-	public delegate void OnChoiceSelectedEventHandler (Dictionary data);
+	public delegate void OnChoiceSelectedEventHandler (Variant data);
 
 	public GridContainer element_container;
 	public VBoxContainer tab_container;
@@ -28,14 +28,17 @@ public partial class CategoryList : GUI {
 	public TextureRect lower_view_icon;
 	public RichTextLabel lower_view_desc;
 
-	public Dictionary data;
+	public Dictionary building_data;
+	public Dictionary<string, Godot.Collections.Array<RecipePrototype>> recipe_data;
+
+
 	public CategoryListMode mode;
 	public Inventory lower_inventory;
 
-	public string current_category = "Agriculture";
+	public string current_category = "agriculture";
 
 	public CategoryListElement current_element = null;
-	public Dictionary current_element_data = null;
+	public string current_element_text = "";
 
 
 	public override void _Ready()
@@ -60,12 +63,23 @@ public partial class CategoryList : GUI {
 		update_lower_visualization();
 	}
 
-	public static CategoryList make (CategoryListMode mode, Dictionary data, Control gui_parent) {
+	public static CategoryList make (CategoryListMode mode, Variant data, Control gui_parent) {
 		CategoryList new_instance = scene.Instantiate<CategoryList>();
 
 		new_instance.gui_parent = gui_parent;
-		new_instance.data = data;
 		new_instance.mode = mode;
+
+		switch (mode) {
+			case CategoryListMode.Buildings:
+				new_instance.building_data = (Dictionary) data;
+				new_instance.current_category = "agriculture";
+				break;
+			
+			case CategoryListMode.Recipes:
+				new_instance.recipe_data = (Dictionary<string, Godot.Collections.Array<RecipePrototype>>) data;
+				new_instance.current_category = "basic_crafting";
+				break;
+		}
 
 		// foreach (string category_name in data.Keys) {
 		// 	if (((Godot.Collections.Array) data[category_name]).Count > 0) {
@@ -86,16 +100,41 @@ public partial class CategoryList : GUI {
 
 		elements.Clear();
 
-		foreach (Dictionary element_data in ((Godot.Collections.Array) data[current_category])) {
-			elements.Add(CategoryListElement.make(this, element_data, element_container));
+		switch (mode) {
+			case CategoryListMode.Buildings:
+				foreach (Dictionary element_data in ((Godot.Collections.Array) building_data[current_category])) {
+					elements.Add(CategoryListElement.make(this, element_data, mode, element_container));
+				}
+
+				break;
+
+			case CategoryListMode.Recipes:
+				foreach (RecipePrototype recipe_data in recipe_data[current_category]) {
+					elements.Add(CategoryListElement.make(this, recipe_data, mode, element_container));
+				}
+				break;
 		}
+
+		
 	}
 
 	public void update_tab_visualization () {
-		foreach (String category_name in data.Keys) {
-			if (((Godot.Collections.Array) data[category_name]).Count > 0) {
-				CategoryListTab.make(this, Enum.Parse<BuildingCategory>(category_name), tab_container);
-			}
+		switch (mode) {
+			case CategoryListMode.Buildings:
+				foreach (String category_name in building_data.Keys) {
+					if (((Godot.Collections.Array) building_data[category_name]).Count > 0) {
+						CategoryListTab.make(this, category_name, mode, tab_container);
+					}
+				}
+				break;
+
+			case CategoryListMode.Recipes:
+				foreach (String category_name in recipe_data.Keys) {
+					if (recipe_data[category_name].Count > 0) {
+						CategoryListTab.make(this, category_name, mode, tab_container);
+					}
+				}
+				break;
 		}
 	}
 
@@ -115,11 +154,12 @@ public partial class CategoryList : GUI {
 		} else {
 			lower_view.Visible = true;
 
-			Dictionary element_data = current_element.data;
 			int cost_count = 0;
 			
 			switch (mode) {
 				case CategoryListMode.Buildings:
+					Dictionary element_data = current_element.building_data;
+
 					cost_count = ((Godot.Collections.Array) element_data["building_cost"]).Count;
 					
 					lower_inventory = new Inventory(cost_count);
@@ -137,6 +177,14 @@ public partial class CategoryList : GUI {
 					lower_view_desc.Text = (string) element_data["display_description"];
 					lower_view_icon.Texture = (Texture2D) element_data["display_icon"];
 					break;
+
+				case CategoryListMode.Recipes:
+					RecipePrototype recipe_data = current_element.recipe_data;
+
+					lower_view_name.Text = recipe_data.display_name;
+					lower_view_desc.Text = recipe_data.display_description;
+					lower_view_icon.Texture = GD.Load<Texture2D>(recipe_data.icon_texture);
+					break;
 			}
 		}
 	}
@@ -146,7 +194,7 @@ public partial class CategoryList : GUI {
 		base._PhysicsProcess(delta);
 	}
 
-	public void choice_selected (Dictionary data) {
+	public void choice_selected (Variant data) {
 		EmitSignal(CategoryList.SignalName.OnChoiceSelected, data);
 	}
 

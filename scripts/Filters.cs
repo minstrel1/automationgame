@@ -45,3 +45,9 @@ public partial class ItemCategoryFilter : FilterBase {
 	}
 }
 
+public partial class NoneFilter : FilterBase {
+	public override bool match (string test) {
+		return false;
+	}
+}
+

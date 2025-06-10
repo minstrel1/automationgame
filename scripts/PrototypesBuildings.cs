@@ -8,28 +8,28 @@ public partial class Prototypes : Node {
 
 	public static Dictionary buildings;
 
-	public static Dictionary category_properties = new Dictionary{
-		{"Logistics", new Dictionary {
+	public static Dictionary building_category_properties = new Dictionary{
+		{"logistics", new Dictionary {
 			{"display_name", "Logistics"},
 			{"icon_texture", "res://item_textures/test_item.png"}
 		}},
-		{"Agriculture", new Dictionary {
+		{"agriculture", new Dictionary {
 			{"display_name", "Agriculture"},
 			{"icon_texture", "res://item_textures/test_item.png"}
 		}},
-		{"Production", new Dictionary {
+		{"production", new Dictionary {
 			{"display_name", "Production"},
 			{"icon_texture", "res://item_textures/test_item.png"}
 		}},
-		{"Structures", new Dictionary {
+		{"structures", new Dictionary {
 			{"display_name", "Structures"},
 			{"icon_texture", "res://item_textures/test_item.png"}
 		}},
-		{"Decorations", new Dictionary {
+		{"decorations", new Dictionary {
 			{"display_name", "Decorations"},
 			{"icon_texture", "res://item_textures/test_item.png"}
 		}},
-		{"Miscellaneous", new Dictionary {
+		{"miscellaneous", new Dictionary {
 			{"display_name", "Miscellaneous"},
 			{"icon_texture", "res://item_textures/test_item.png"}
 		}},

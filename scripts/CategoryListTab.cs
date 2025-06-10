@@ -17,10 +17,11 @@ public partial class CategoryListTab : GUI {
 	public TextureRect icon;
 	public Label text;
 
-	public BuildingCategory category;
+	public String category;
+	public CategoryListMode mode;
 	public Dictionary category_data;
 
-	public static CategoryListTab make (CategoryList category_parent, BuildingCategory category, Control parent) {
+	public static CategoryListTab make (CategoryList category_parent, string category, CategoryListMode mode, Control parent) {
 		CategoryListTab new_rep = get_first_available_instance();
 
 		if (new_rep == null) {
@@ -34,6 +35,7 @@ public partial class CategoryListTab : GUI {
 
 		new_rep.gui_parent = parent;
 		new_rep.parent_category_list = category_parent;
+		new_rep.mode = mode;
 		new_rep.category = category;
 
 		new_rep.in_use = true;
@@ -54,7 +56,15 @@ public partial class CategoryListTab : GUI {
 		icon = GetNode<TextureRect>("Control/Control");
 		text = GetNode<Label>("Control/Label");
 
-		category_data = (Dictionary) Prototypes.category_properties[Enum.GetName<BuildingCategory>(category)];
+		switch (mode) {
+			case CategoryListMode.Buildings:
+				category_data = (Dictionary) Prototypes.building_category_properties[category];
+				break;
+
+			case CategoryListMode.Recipes:
+				category_data = (Dictionary) Prototypes.recipe_category_properties[category];
+				break;
+		}
 
 		icon.Texture = GD.Load<Texture2D>((string) category_data["icon_texture"]);
 		text.Text = (string) category_data["display_name"];
@@ -66,7 +76,7 @@ public partial class CategoryListTab : GUI {
 	public void clear () {
 		gui_parent = null;
 		parent_category_list = null;
-		category = 0;
+		category = "";
 	}
 
 	public void update_visualization () {
@@ -92,7 +102,7 @@ public partial class CategoryListTab : GUI {
 			InputEventMouseButton mouse_event = @event as InputEventMouseButton;
 
 			if (mouse_event.Pressed) {
-				parent_category_list.current_category = Enum.GetName<BuildingCategory>(category);
+				parent_category_list.current_category = category;
 
 				parent_category_list.update_element_visualization();
 			}

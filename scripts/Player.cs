@@ -229,7 +229,7 @@ public partial class Player : CharacterBody3D {
 		}
 
 		if (Input.IsActionJustPressed("test")) {
-			inventory.insert(new SimpleItem{name = "test_seeds", count = 27});
+			inventory.insert(new SimpleItem{name = "test_item", count = 27});
 		}
 
 		if (Input.IsActionJustPressed("test2")) {
