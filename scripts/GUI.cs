@@ -28,6 +28,7 @@ public partial class GUI : Control {
 
 	public bool in_use = false;
 	public bool readied = false;
+	public bool released = false;
 	
 	public override void _Ready () {
 		int count = 0;
@@ -99,6 +100,7 @@ public partial class GUI : Control {
 	}
 
 	public virtual void release () {
+		released = true;
 		QueueFree();
 	}
 }

@@ -16,13 +16,13 @@ public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IIn
 	[Export]
 	public float crafting_speed = 1.0f;
 
-	Inventory input_inventory;
-	Inventory output_inventory;
+	public Inventory input_inventory;
+	public Inventory output_inventory;
 
 	bool check_input = true;
 	bool check_output = true;
 
-	RecipePrototype current_recipe;
+	public RecipePrototype current_recipe;
 	bool recipe_set = false;
 
 	int ingredient_count = Prototypes.max_recipe_ingredients;
@@ -32,9 +32,8 @@ public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IIn
 	bool waiting_to_output = false;
 	Array<InventoryItem> to_insert_items = new Array<InventoryItem>();
 
-
-	double current_crafting_time = 0d;
-	bool crafting = false;
+	public double current_crafting_time = 0d;
+	public bool crafting = false;
 
 	NoneFilter none_filter;
 
@@ -52,10 +51,19 @@ public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IIn
 
 		is_item = new bool[Prototypes.max_recipe_ingredients];
 
-		((ItemSpecialVoxel) special_voxels["input1"]).set_inventory(input_inventory);
-		((ItemSpecialVoxel) special_voxels["input2"]).set_inventory(input_inventory);
-		((ItemSpecialVoxel) special_voxels["input3"]).set_inventory(input_inventory);
-		((ItemSpecialVoxel) special_voxels["output"]).set_inventory(output_inventory);
+		foreach (SpecialVoxel voxel in special_voxels.Values) {
+			if (voxel.voxel_flags == SpecialVoxelFlags.ItemInput) {
+				((ItemSpecialVoxel) voxel).set_inventory(input_inventory);
+			} else if (voxel.voxel_flags == SpecialVoxelFlags.ItemInput) {
+				((ItemSpecialVoxel) voxel).set_inventory(output_inventory);
+			}
+		}
+
+		// ((ItemSpecialVoxel) special_voxels["input1"]).set_inventory(input_inventory);
+		// ((ItemSpecialVoxel) special_voxels["input2"]).set_inventory(input_inventory);
+		// ((ItemSpecialVoxel) special_voxels["input3"]).set_inventory(input_inventory);
+		// ((ItemSpecialVoxel) special_voxels["output1"]).set_inventory(output_inventory);
+		// ((ItemSpecialVoxel) special_voxels["output2"]).set_inventory(output_inventory);
 
 		none_filter = new NoneFilter();
 
@@ -95,6 +103,7 @@ public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IIn
 							waiting_to_output = false;
 							check_input = true;
 							crafting = false;
+							current_crafting_time = 0;
 						} 
 
 						check_output = false;
@@ -121,12 +130,13 @@ public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IIn
 					for (int i = 0; i < ingredient_count; i++) {
 						if (is_item[i]) {
 							input_inventory.contents[i].count -= ingredient_counts[i];
+							if (input_inventory.contents[i] != null) {
+								input_inventory.contents[i].emit_update();
+							}
 						}
 					}
 
 					//GD.Print(input_inventory);
-
-					input_inventory.emit_update();
 
 					crafting = true;
 					check_output = true;
@@ -166,6 +176,44 @@ public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IIn
 
 	public void on_hover_unfocus () {
 		set_mesh_visibility(false);
+	}
+
+	public void clear_recipe (bool transfer_to_player = false) {
+		if (transfer_to_player) {
+			foreach (InventoryItem item in output_inventory.contents) {
+				if (item != null) {
+					Player.instance.inventory.insert(item);
+				}
+			}
+
+			foreach (InventoryItem item in input_inventory.contents) {
+				if (item != null) {
+					Player.instance.inventory.insert(item);
+				}
+			}
+
+			if (crafting && current_crafting_time < current_recipe.time_to_craft) {
+				for (int i = 0; i < ingredient_count; i++) {
+					if (input_inventory.filters[i] != null) {
+						// This is janky asf and i feel like this could be redone somehow
+						InventoryItem new_item = InventoryItem.new_item(((ItemFilter)input_inventory.filters[i]).name, ingredient_counts[i]);
+						Player.instance.inventory.insert(new_item);
+					}
+				} 
+			}
+		}
+
+		input_inventory.resize(0);
+		output_inventory.resize(0);
+
+		crafting = false;
+
+		current_recipe = null;
+		recipe_set = false;
+
+		((ItemSpecialVoxel) special_voxels["input1"]).auto_input = false;
+		((ItemSpecialVoxel) special_voxels["input2"]).auto_input = false;
+		((ItemSpecialVoxel) special_voxels["input3"]).auto_input = false;
 	}
 
 	public void on_recipe_selected (Variant data) {
@@ -223,7 +271,13 @@ public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IIn
 
 		GD.Print(ingredient_counts);
 
-		Player.instance.clear_active_gui();
+		Player.set_active_gui(CrafterGUI.make(this, Player.instance.gui_parent));
+	}
+
+	public void make_recipe_gui () {
+		CategoryList new_instance = CategoryList.make(CategoryListMode.Recipes, Prototypes.get_recipes_categorized(), Player.instance.gui_parent);
+		new_instance.OnChoiceSelected += on_recipe_selected;
+		Player.set_active_gui(new_instance);
 	}
 
 	public void on_interact () {
@@ -232,11 +286,10 @@ public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IIn
 				Player.instance.clear_active_gui();
 			} else {
 				if (current_recipe == null) {
-					CategoryList new_instance = CategoryList.make(CategoryListMode.Recipes, Prototypes.get_recipes_categorized(), Player.instance.gui_parent);
-					new_instance.OnChoiceSelected += on_recipe_selected;
-					Player.set_active_gui(new_instance);
+					make_recipe_gui();
+				} else {
+					Player.set_active_gui(CrafterGUI.make(this, Player.instance.gui_parent));
 				}
-				//Player.set_active_gui(GrowingPlotGUI.make(this, Player.instance.gui_parent));
 			}
 		}
 	}

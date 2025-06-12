@@ -5,6 +5,8 @@ using Godot.NativeInterop;
 
 public partial class FilterBase : Node {
 
+	public virtual string icon_path {set; get;} = "";
+
 	public FilterBase () {
 
 	}

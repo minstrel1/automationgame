@@ -13,16 +13,18 @@ public partial class Player {
 		return active_gui != null;
 	}
 
-	public void clear_active_gui () {
+	public void clear_active_gui (bool recapture_mouse = true) {
 		if (is_in_gui()) {
 			active_gui.release();
 			active_gui = null;
 		}
-		capture_mouse();
+		if (recapture_mouse) {
+			capture_mouse();
+		}
 	}
 
 	public static void set_active_gui (GUI gui) {
-		instance.clear_active_gui();
+		instance.clear_active_gui(false);
 		instance.active_gui = gui;
 		instance.release_mouse();
 	}

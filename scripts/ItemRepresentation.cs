@@ -17,6 +17,7 @@ public partial class ItemRepresentation : GUI {
 	public static PackedScene scene = GD.Load<PackedScene>("res://gui_scenes/item_representation.tscn");
 
 	public TextureRect background;
+	public TextureRect filter_texture;
 	public TextureRect item_texture;
 	public Label item_count;
 
@@ -55,6 +56,7 @@ public partial class ItemRepresentation : GUI {
 
 		background = GetNode<TextureRect>("Background");
 		item_texture = GetNode<TextureRect>("ItemTexture");
+		filter_texture = GetNode<TextureRect>("FilterTexture");
 		item_count = GetNode<Label>("ItemCount");
 
 		parent_inventory.OnItemSlotChanged += on_inventory_slot_changed;
@@ -87,16 +89,25 @@ public partial class ItemRepresentation : GUI {
 
 			update_visualization();
 		}
-		
 	}
 
 	public void update_visualization () {
 		if (current_item != null) {
+			filter_texture.Texture = null;
+
 			string texture_path = current_item.prototype.icon_texture;
 			item_texture.Texture = GD.Load<Texture2D>(texture_path);
 
 			item_count.Text = current_item.count.ToString();
 		} else {
+			if (parent_inventory != null) {
+				if (parent_inventory.filters[current_index] != null) {
+					if (parent_inventory.filters[current_index].icon_path != "") {
+						filter_texture.Texture = GD.Load<Texture2D>(parent_inventory.filters[current_index].icon_path);
+					}
+				}
+			}
+
 			item_count.Text = "";
 			item_texture.Texture = null;
 		}
