@@ -37,7 +37,6 @@ func adjust_box () -> void:
 		(visualiser.get_surface_override_material(0) as StandardMaterial3D).uv1_scale = Vector3(3 * grid_width, 2 * grid_height, 1 * grid_length)
 		visualiser.position = grid_offset
 
-
 func on_build() -> void:
 	pass
 

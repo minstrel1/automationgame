@@ -54,29 +54,40 @@ public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IIn
 		foreach (SpecialVoxel voxel in special_voxels.Values) {
 			if (voxel.voxel_flags == SpecialVoxelFlags.ItemInput) {
 				((ItemSpecialVoxel) voxel).set_inventory(input_inventory);
-			} else if (voxel.voxel_flags == SpecialVoxelFlags.ItemInput) {
+			} else if (voxel.voxel_flags == SpecialVoxelFlags.ItemOutput) {
 				((ItemSpecialVoxel) voxel).set_inventory(output_inventory);
 			}
 		}
-
-		// ((ItemSpecialVoxel) special_voxels["input1"]).set_inventory(input_inventory);
-		// ((ItemSpecialVoxel) special_voxels["input2"]).set_inventory(input_inventory);
-		// ((ItemSpecialVoxel) special_voxels["input3"]).set_inventory(input_inventory);
-		// ((ItemSpecialVoxel) special_voxels["output1"]).set_inventory(output_inventory);
-		// ((ItemSpecialVoxel) special_voxels["output2"]).set_inventory(output_inventory);
 
 		none_filter = new NoneFilter();
 
 		collider = GetNode<CsgBox3D>("CSGBox3D");
 	}
 
-	public override void on_build()
-	{
+	public override void on_build() {
 		base.on_build();
 
-		((ItemSpecialVoxel) special_voxels["input1"]).auto_input = false;
-		((ItemSpecialVoxel) special_voxels["input2"]).auto_input = false;
-		((ItemSpecialVoxel) special_voxels["input3"]).auto_input = false;
+		foreach (SpecialVoxel voxel in special_voxels.Values) {
+		
+		}
+
+		set_auto_inputs(false);
+	}
+
+	public void set_auto_inputs (bool value) {
+		foreach (SpecialVoxel voxel in special_voxels.Values) {
+			if (voxel.voxel_flags == SpecialVoxelFlags.ItemInput) {
+				((ItemSpecialVoxel) voxel).auto_input = value;
+			}
+		}
+	}
+
+	public void set_auto_outputs (bool value) {
+		foreach (SpecialVoxel voxel in special_voxels.Values) {
+			if (voxel.voxel_flags == SpecialVoxelFlags.ItemOutput) {
+				((ItemSpecialVoxel) voxel).auto_output = value;
+			}
+		}
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -211,9 +222,7 @@ public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IIn
 		current_recipe = null;
 		recipe_set = false;
 
-		((ItemSpecialVoxel) special_voxels["input1"]).auto_input = false;
-		((ItemSpecialVoxel) special_voxels["input2"]).auto_input = false;
-		((ItemSpecialVoxel) special_voxels["input3"]).auto_input = false;
+		set_auto_inputs(false);
 	}
 
 	public void on_recipe_selected (Variant data) {
@@ -265,9 +274,7 @@ public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IIn
 
 		recipe_set = true;
 
-		((ItemSpecialVoxel) special_voxels["input1"]).auto_input = true;
-		((ItemSpecialVoxel) special_voxels["input2"]).auto_input = true;
-		((ItemSpecialVoxel) special_voxels["input3"]).auto_input = true;
+		set_auto_inputs(true);
 
 		GD.Print(ingredient_counts);
 
