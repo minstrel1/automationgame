@@ -4,4 +4,7 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
 	<LangVersion>preview</LangVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="LimboConsole.Sharp" Version="0.0.1-beta-008" />
+  </ItemGroup>
 </Project>

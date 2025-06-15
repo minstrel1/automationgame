@@ -2,6 +2,7 @@ using System;
 using Godot;
 using Godot.Collections;
 using Godot.NativeInterop;
+using Limbo.Console.Sharp;
 
 [GlobalClass]
 public partial class Player : CharacterBody3D {
@@ -85,6 +86,8 @@ public partial class Player : CharacterBody3D {
 		init_build_mode();
 
 		capture_mouse();
+
+		RegisterConsoleCommands();
 	}
 
 	public override void _Process(double delta)
@@ -371,4 +374,6 @@ public partial class Player : CharacterBody3D {
 	public void on_interact_target_changed () {
 
 	}
+
+	
 }

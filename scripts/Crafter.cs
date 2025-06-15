@@ -15,6 +15,10 @@ public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IIn
 	public string interact_name = "Crafter";
 	[Export]
 	public float crafting_speed = 1.0f;
+	[Export]
+	public Array<String> recipe_subcategories = new Array<string>();
+
+	public SubcategoryFilter recipe_filter;
 
 	public Inventory input_inventory;
 	public Inventory output_inventory;
@@ -60,6 +64,7 @@ public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IIn
 		}
 
 		none_filter = new NoneFilter();
+		recipe_filter = new SubcategoryFilter(recipe_subcategories);
 
 		collider = GetNode<CsgBox3D>("CSGBox3D");
 	}
@@ -282,7 +287,8 @@ public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IIn
 	}
 
 	public void make_recipe_gui () {
-		CategoryList new_instance = CategoryList.make(CategoryListMode.Recipes, Prototypes.get_recipes_categorized(), Player.instance.gui_parent);
+		GD.Print(Prototypes.get_recipes_categorized(recipe_filter));
+		CategoryList new_instance = CategoryList.make(CategoryListMode.Recipes, Prototypes.get_recipes_categorized(recipe_filter), Player.instance.gui_parent);
 		new_instance.OnChoiceSelected += on_recipe_selected;
 		Player.set_active_gui(new_instance);
 	}

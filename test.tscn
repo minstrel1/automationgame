@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=4 uid="uid://ibpbfdj0iv00"]
+[gd_scene load_steps=29 format=4 uid="uid://ibpbfdj0iv00"]
 
 [ext_resource type="Script" uid="uid://balvvjf5ljuew" path="res://scripts/Player.cs" id="1_ykrsh"]
 [ext_resource type="Script" uid="uid://df07k7veekgso" path="res://scripts/RayCast3DExtendable.cs" id="3_g14j6"]
@@ -79,10 +79,20 @@ height = 2.5
 outline_size = 5
 outline_color = Color(0, 0, 0, 1)
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_mf4mk"]
+[sub_resource type="Gradient" id="Gradient_5tkv4"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_0m0f1"]
+gradient = SubResource("Gradient_5tkv4")
+fill_from = Vector2(1, 0)
+
+[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_b0q6j"]
+turbidity = 0.0
+sun_disk_scale = 0.0
+energy_multiplier = 2.4
+night_sky = SubResource("GradientTexture2D_0m0f1")
 
 [sub_resource type="Sky" id="Sky_37kl0"]
-sky_material = SubResource("ProceduralSkyMaterial_mf4mk")
+sky_material = SubResource("PhysicalSkyMaterial_b0q6j")
 
 [sub_resource type="Environment" id="Environment_8uh7m"]
 background_mode = 2
@@ -699,7 +709,7 @@ horizontal_alignment = 2
 environment = SubResource("Environment_8uh7m")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.786466, -0.404532, 0.466717, -0.123767, 0.637103, 0.760777, -0.605105, -0.65609, 0.450992, 0, 20.8424, 8.50293)
+transform = Transform3D(0.783936, -0.392182, 0.481288, -0.138896, 0.644781, 0.751642, -0.605106, -0.656088, 0.450994, 0, 20.8424, 8.50293)
 shadow_enabled = true
 directional_shadow_max_distance = 250.0
 
@@ -725,3 +735,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -46.7814)
 visible = false
 mesh = SubResource("BoxMesh_b0q6j")
 surface_material_override/0 = ExtResource("12_0m0f1")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.54828, 0)
+visible = false
+omni_range = 27.4347

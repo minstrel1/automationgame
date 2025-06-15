@@ -116,13 +116,14 @@ public partial class Inventory : Node {
 		while (pos_to_insert != -1) {
 
 			if (contents[pos_to_insert] == null) {
-				InventoryItem new_item = InventoryItem.new_item(item.name, item.count);
+				int new_item_count = Math.Min(item.count, item.stack_size);
+				InventoryItem new_item = InventoryItem.new_item(item.name, new_item_count);
 				contents[pos_to_insert] = new_item;
 				new_item.parent_inventory = this;
 				new_item.current_index = pos_to_insert;
-				items_inserted += new_item.count;
+				items_inserted += new_item_count;
 
-				item.count -= new_item.count;
+				item.count -= new_item_count;
 
 				changed_indexes.Add(pos_to_insert);
 

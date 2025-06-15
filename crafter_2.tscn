@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bohjv6kuup8i8"]
+
+[ext_resource type="Script" uid="uid://bh7x52cfe24xn" path="res://scripts/Crafter.cs" id="1_pj235"]
+
+[node name="smelter" type="Node3D"]
+script = ExtResource("1_pj235")

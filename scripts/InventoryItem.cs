@@ -45,7 +45,7 @@ public partial class InventoryItem : Node {
 			this.prototype = data;
 
 			this.name = (string) data.name;
-			this.count = Math.Min(new_count, (int) data.stack_size);
+			this.count = new_count;
 			this.stack_size = (int) data.stack_size;
 		} else {
 			GD.Print("This item doesn't exist.");

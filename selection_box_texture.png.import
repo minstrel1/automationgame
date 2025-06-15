@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://37p1hqfi6o7s"
 path.s3tc="res://.godot/imported/selection_box_texture.png-8a290eb524e33d688e828ccfc78d20ae.s3tc.ctex"
+path.etc2="res://.godot/imported/selection_box_texture.png-8a290eb524e33d688e828ccfc78d20ae.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://selection_box_texture.png"
-dest_files=["res://.godot/imported/selection_box_texture.png-8a290eb524e33d688e828ccfc78d20ae.s3tc.ctex"]
+dest_files=["res://.godot/imported/selection_box_texture.png-8a290eb524e33d688e828ccfc78d20ae.s3tc.ctex", "res://.godot/imported/selection_box_texture.png-8a290eb524e33d688e828ccfc78d20ae.etc2.ctex"]
 
 [params]
 

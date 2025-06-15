@@ -5,7 +5,7 @@ using Godot.Collections;
 using Godot.NativeInterop;
 
 public enum RecipeCategory {
-	basic_crafting,
+	components,
 }
 
 
@@ -14,8 +14,8 @@ public partial class Prototypes : Node {
 	public static int max_recipe_ingredients = 8;
 
 	public static Dictionary recipe_category_properties = new Dictionary{
-		{"basic_crafting", new Dictionary {
-			{"display_name", "Basic Crafting"},
+		{"components", new Dictionary {
+			{"display_name", "Components"},
 			{"icon_texture", "res://item_textures/test_item.png"}
 		}},
 
@@ -25,7 +25,8 @@ public partial class Prototypes : Node {
 		{"test_product", new RecipePrototype{
 			name = "test_product",
 			display_name = "Test Product",
-			category = "basic_crafting",
+			category = "components",
+			subcategory = "basic_crafting",
 			ingredients = new Array<IngredientPrototype>{
 				new ItemIngredientPrototype{
 					name = "test_item",

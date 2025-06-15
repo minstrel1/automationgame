@@ -1,0 +1,72 @@
+[gd_scene load_steps=10 format=3 uid="uid://bid7gwg13u1dc"]
+
+[ext_resource type="Script" uid="uid://bh7x52cfe24xn" path="res://scripts/Crafter.cs" id="1_uoii8"]
+[ext_resource type="Script" uid="uid://bg67704cqo5ma" path="res://scripts/SpecialVoxelData.cs" id="2_jch8a"]
+[ext_resource type="Script" uid="uid://l7vn0rr5n8ew" path="res://scripts/InteractableDummy.cs" id="3_f60qr"]
+
+[sub_resource type="Resource" id="Resource_f60qr"]
+script = ExtResource("2_jch8a")
+name = "input"
+voxel_position = Vector3i(0, -2, 3)
+voxel_flags = 1
+FlagDirections = 64
+SupportDirections = 0
+
+[sub_resource type="Resource" id="Resource_s1nv5"]
+script = ExtResource("2_jch8a")
+name = "output"
+voxel_position = Vector3i(0, -2, -3)
+voxel_flags = 2
+FlagDirections = 32
+SupportDirections = 0
+
+[sub_resource type="Resource" id="Resource_i0ufs"]
+script = ExtResource("2_jch8a")
+name = "fluid_output1"
+voxel_position = Vector3i(2, -2, -3)
+voxel_flags = 5
+FlagDirections = 32
+SupportDirections = 0
+
+[sub_resource type="Resource" id="Resource_4gk44"]
+script = ExtResource("2_jch8a")
+name = "fluid_output2"
+voxel_position = Vector3i(-2, -2, -3)
+voxel_flags = 5
+FlagDirections = 32
+SupportDirections = 0
+
+[sub_resource type="Resource" id="Resource_kltfs"]
+script = ExtResource("2_jch8a")
+name = "fluid_input1"
+voxel_position = Vector3i(2, -2, 3)
+voxel_flags = 4
+FlagDirections = 64
+SupportDirections = 0
+
+[sub_resource type="Resource" id="Resource_852yx"]
+script = ExtResource("2_jch8a")
+name = "fluid_input2"
+voxel_position = Vector3i(-2, -2, 3)
+voxel_flags = 4
+FlagDirections = 64
+SupportDirections = 0
+
+[node name="smelter" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00644732, 0.510663, 0.00361347)
+script = ExtResource("1_uoii8")
+grid_width = 7
+grid_height = 5
+grid_length = 7
+grid_offset = Vector3(0, 2, 0)
+special_voxel_data = [SubResource("Resource_f60qr"), SubResource("Resource_s1nv5"), SubResource("Resource_i0ufs"), SubResource("Resource_4gk44"), SubResource("Resource_kltfs"), SubResource("Resource_852yx")]
+display_name = "Smelter"
+display_description = "A basic smelter."
+building_category = 2
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." node_paths=PackedStringArray("interaction_parent")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+use_collision = true
+size = Vector3(7, 5, 7)
+script = ExtResource("3_f60qr")
+interaction_parent = NodePath("..")

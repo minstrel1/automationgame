@@ -12,4 +12,5 @@ public partial class PrototypeBase : GodotObject {
 	public string display_description = "This is a thing.";
 
 	public string category = "";
+	public string subcategory = "";
 }

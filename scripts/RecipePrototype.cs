@@ -7,7 +7,8 @@ using Godot.NativeInterop;
 public partial class RecipePrototype : PrototypeBase {
 	public string icon_texture = "res://item_textures/test_item.png";
 
-	public new string category = "basic_crafting";
+	public new string category = "components";
+	public new string subcategory = "basic_crafting";
 
 	public Godot.Collections.Array<IngredientPrototype> ingredients = new Godot.Collections.Array<IngredientPrototype>();
 	public Godot.Collections.Array<ProductPrototype> products = new Godot.Collections.Array<ProductPrototype>();

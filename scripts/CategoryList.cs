@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Godot;
 using Godot.Collections;
 
@@ -28,6 +29,8 @@ public partial class CategoryList : GUI {
 	public TextureRect lower_view_icon;
 	public RichTextLabel lower_view_desc;
 
+	public Control unavailable_recipes_message;
+
 	public Dictionary building_data;
 	public Dictionary<string, Godot.Collections.Array<RecipePrototype>> recipe_data;
 
@@ -53,11 +56,17 @@ public partial class CategoryList : GUI {
 		lower_view_icon = GetNode<TextureRect>("VBoxContainer/LowerView/Control/Control");
 		lower_view_desc = GetNode<RichTextLabel>("VBoxContainer/LowerView/RichTextLabel");
 
+		unavailable_recipes_message = GetNode<Control>("UnavailableRecipes");
+		unavailable_recipes_message.Visible = false;
+
 		Array<GUIDummy> inventory_result = pop_dummy_type("InventoryGUI");
 		GUIDummyData result = remove_dummy(inventory_result[0]);
 
 		lower_inventory_parent = result.parent;
-
+		
+		if (current_category == "") {
+			unavailable_recipes_message.Visible = true;
+		}
 		update_element_visualization();
 		update_tab_visualization();
 		update_lower_visualization();
@@ -73,20 +82,27 @@ public partial class CategoryList : GUI {
 			case CategoryListMode.Buildings:
 				new_instance.building_data = (Dictionary) data;
 				new_instance.current_category = "agriculture";
+				if (!new_instance.building_data.ContainsKey(new_instance.current_category)) {
+					if (new_instance.building_data.Keys.Count > 0) {
+						new_instance.current_category = (string) new_instance.building_data.Keys.ToArray<Variant>()[0];
+					} else {
+						new_instance.current_category = "";
+					}
+				}
 				break;
 			
 			case CategoryListMode.Recipes:
 				new_instance.recipe_data = (Dictionary<string, Godot.Collections.Array<RecipePrototype>>) data;
-				new_instance.current_category = "basic_crafting";
+				new_instance.current_category = "components";
+				if (!new_instance.recipe_data.ContainsKey(new_instance.current_category)) {
+					if (new_instance.recipe_data.Keys.Count > 0) {
+						new_instance.current_category = new_instance.recipe_data.Keys.ToArray<String>()[0];
+					} else {
+						new_instance.current_category = "";
+					}
+				}
 				break;
 		}
-
-		// foreach (string category_name in data.Keys) {
-		// 	if (((Godot.Collections.Array) data[category_name]).Count > 0) {
-		// 		new_instance.current_category = category_name;
-		// 		break;
-		// 	}
-		// }
 
 		new_instance.gui_parent.AddChild(new_instance);
 
@@ -102,20 +118,23 @@ public partial class CategoryList : GUI {
 
 		switch (mode) {
 			case CategoryListMode.Buildings:
-				foreach (Dictionary element_data in ((Godot.Collections.Array) building_data[current_category])) {
-					elements.Add(CategoryListElement.make(this, element_data, mode, element_container));
+				if (current_category != "") {
+					foreach (Dictionary element_data in ((Godot.Collections.Array) building_data[current_category])) {
+						elements.Add(CategoryListElement.make(this, element_data, mode, element_container));
+					}
 				}
 
 				break;
 
 			case CategoryListMode.Recipes:
-				foreach (RecipePrototype recipe_data in recipe_data[current_category]) {
-					elements.Add(CategoryListElement.make(this, recipe_data, mode, element_container));
+				if (current_category != "") {
+					foreach (RecipePrototype recipe_data in recipe_data[current_category]) {
+						elements.Add(CategoryListElement.make(this, recipe_data, mode, element_container));
+					}
 				}
+
 				break;
 		}
-
-		
 	}
 
 	public void update_tab_visualization () {
@@ -126,6 +145,7 @@ public partial class CategoryList : GUI {
 						CategoryListTab.make(this, category_name, mode, tab_container);
 					}
 				}
+				
 				break;
 
 			case CategoryListMode.Recipes:
@@ -134,6 +154,7 @@ public partial class CategoryList : GUI {
 						CategoryListTab.make(this, category_name, mode, tab_container);
 					}
 				}
+				
 				break;
 		}
 	}
