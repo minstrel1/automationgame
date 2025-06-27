@@ -231,6 +231,33 @@ public partial class Tools {
 		return result;
 	}
 
+	public static BuildDirectionFlags enum_to_flags (BuildDirection enums) {
+		BuildDirectionFlags result = 0;
+		
+		switch (enums) {
+			case BuildDirection.Left:
+				result |= BuildDirectionFlags.Left;
+				break;
+			case BuildDirection.Right:
+				result |= BuildDirectionFlags.Right;
+				break;
+			case BuildDirection.Up:
+				result |= BuildDirectionFlags.Up;
+				break;
+			case BuildDirection.Down:
+				result |= BuildDirectionFlags.Down;
+				break;
+			case BuildDirection.Forward:
+				result |= BuildDirectionFlags.Forward;
+				break;
+			case BuildDirection.Back:
+				result |= BuildDirectionFlags.Back;
+				break;
+		}
+
+		return result;
+	}
+
 	public static BuildDirection get_enum_opposite (BuildDirection direction) {
 		switch (direction) {
 			case BuildDirection.Left:
@@ -288,7 +315,7 @@ public partial class Tools {
 				return to == SpecialVoxelFlags.FluidInput || to == SpecialVoxelFlags.FluidInputOutput;
 
 			case SpecialVoxelFlags.FluidInputOutput:
-				return to == SpecialVoxelFlags.FluidInput || to == SpecialVoxelFlags.FluidOutput;
+				return to == SpecialVoxelFlags.FluidInput || to == SpecialVoxelFlags.FluidOutput || to == SpecialVoxelFlags.FluidInputOutput;
 		}
 		return false;
 	}

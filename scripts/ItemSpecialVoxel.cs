@@ -29,6 +29,8 @@ public partial class ItemSpecialVoxel : SpecialVoxel {
 	public override void update_voxel_connections() {
 		base.update_voxel_connections();
 
+		ulong total_start = Time.GetTicksUsec();
+
 		if (target_inventory != null) {
 			target_inventory.OnInventoryChanged -= on_inventory_changed;
 		}
@@ -66,6 +68,9 @@ public partial class ItemSpecialVoxel : SpecialVoxel {
 		output_should_check = true;
 
 		any_filter = new FilterBase();
+
+		ulong time = Time.GetTicksUsec() - total_start;
+		//GD.Print("ITEMSPECIALVOXEL UPDATE TIME:" + time.ToString());
 	}
 
 	public override void _PhysicsProcess(double delta) {

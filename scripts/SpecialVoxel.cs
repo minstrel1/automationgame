@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Godot;
 using Godot.Collections;
 using Godot.NativeInterop;
@@ -60,9 +61,15 @@ public partial class SpecialVoxel : Node3D {
 	public Vector3I placed_voxel_pos;
 	public BuildingGrid parent_grid;
 
-	public Array<SpecialVoxel> connected_voxels;
+	public Array<SpecialVoxel> connected_voxels = new Array<SpecialVoxel>();
+
+	private Array<BuildDirection> directions = new Array<BuildDirection>();
+	private Array<Vector3I> test_positions = new Array<Vector3I>();
+	private Array<BuildDirectionFlags> opposites = new Array<BuildDirectionFlags>();
+	private SpecialVoxel[] new_voxels = new SpecialVoxel[6];
 
 	public bool connections_updated_this_frame = false;
+	public bool connections_changed_this_frame = false;
 
 	public void on_property_changed () {
 		
@@ -78,6 +85,8 @@ public partial class SpecialVoxel : Node3D {
 	public void update_flags () {
 		flag_directions = (BuildDirectionFlags) FlagDirections;
 		support_directions = (BuildDirectionFlags) SupportDirections;
+
+		
 	}
 
 	public virtual void update_voxel_connections () {
@@ -86,32 +95,64 @@ public partial class SpecialVoxel : Node3D {
 			return;
 		}
 
-		connected_voxels = new Array<SpecialVoxel>();
+		ulong total_start = Time.GetTicksUsec();
 
-		Array<BuildDirection> directions = Tools.flags_to_enum(placed_voxel_data.special_directions);
+		connections_changed_this_frame = false;
 
-		foreach (BuildDirection direction in directions) {
-			Vector3 normal = Tools.enum_to_normal(direction);
-			Vector3I test_pos = Tools.v3_to_v3I(placed_voxel_pos + normal);
+		//connected_voxels.Clear();
 
-			BuildDirection opposite = Tools.get_enum_opposite(direction);
+		System.Array.Clear(new_voxels);
 
-			if (parent_grid.is_position_valid(test_pos)) {
-				VoxelData test_data = parent_grid.get_block(test_pos);
+		//Array<BuildDirection> directions = Tools.flags_to_enum(placed_voxel_data.special_directions);
+
+		// foreach (BuildDirection direction in directions) {
+		// 	Vector3 normal = Tools.enum_to_normal(direction);
+		// 	Vector3I test_pos = Tools.v3_to_v3I(placed_voxel_pos + normal);
+
+		// 	BuildDirection opposite = Tools.get_enum_opposite(direction);
+
+		// 	if (parent_grid.is_position_valid(test_pos)) {
+		// 		VoxelData test_data = parent_grid.get_block(test_pos);
+
+		// 		if (test_data.is_special_voxel) {
+		// 			if (Tools.is_special_compatible(voxel_flags, test_data.voxel_flags)) {
+		// 				if (Tools.flags_to_enum(test_data.special_voxel.flag_directions).Contains(opposite)) {
+		// 					new_voxels.Add(test_data.special_voxel);
+		// 				}
+		// 			}
+		// 		}
+		// 	}
+		// }
+		
+		for (int i = 0; i < directions.Count; i++) {
+			if (parent_grid.is_position_valid(test_positions[i])) {
+				VoxelData test_data = parent_grid.get_block(test_positions[i]);
 
 				if (test_data.is_special_voxel) {
 					if (Tools.is_special_compatible(voxel_flags, test_data.voxel_flags)) {
-						if (Tools.flags_to_enum(test_data.special_voxel.flag_directions).Contains(opposite)) {
-							connected_voxels.Add(test_data.special_voxel);
+						if (test_data.special_voxel.flag_directions == BuildDirectionFlags.Any || (test_data.special_voxel.flag_directions & opposites[i]) > 0) {
+							new_voxels[i] = test_data.special_voxel;
 						}
 					}
 				}
 			}
 		}
 
-		GD.Print(name + " connected");
-		GD.Print(connected_voxels);
+		ulong time = Time.GetTicksUsec() - total_start;
+		//GD.Print("SPECIAL VOXEL UPDATE TIME:" + time.ToString());
+
+		if (!connected_voxels.SequenceEqual(new_voxels)) {
+			//GD.Print("connections changed");
+			connected_voxels.Clear();
+			connected_voxels.AddRange(new_voxels);
+			connections_changed_this_frame = true;
+		}
+
+		// GD.Print(name + " connected");
+		// GD.Print(connected_voxels);
 		connections_updated_this_frame = true;
+
+		
 	}
 
 	public virtual void update () {
@@ -119,6 +160,12 @@ public partial class SpecialVoxel : Node3D {
 	}
 
 	public virtual void on_build () {
-		
+		directions = Tools.flags_to_enum(placed_voxel_data.special_directions);
+
+		foreach (BuildDirection direction in directions) {
+			test_positions.Add(Tools.v3_to_v3I(placed_voxel_pos + Tools.enum_to_normal(direction)));
+
+			opposites.Add(Tools.enum_to_flags(Tools.get_enum_opposite(direction)));
+		}
 	}
 }

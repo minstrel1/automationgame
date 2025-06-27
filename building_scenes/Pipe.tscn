@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://8xloqkx34tsd"]
+
+[ext_resource type="Script" uid="uid://cxcyo6e7i7def" path="res://scripts/Pipe.cs" id="1_knl5y"]
+[ext_resource type="Script" uid="uid://bg67704cqo5ma" path="res://scripts/SpecialVoxelData.cs" id="2_pe2e6"]
+[ext_resource type="Script" uid="uid://l7vn0rr5n8ew" path="res://scripts/InteractableDummy.cs" id="3_a82ks"]
+
+[sub_resource type="Resource" id="Resource_a82ks"]
+script = ExtResource("2_pe2e6")
+name = "voxel"
+voxel_position = Vector3i(0, 0, 0)
+voxel_flags = 6
+FlagDirections = 1
+SupportDirections = 0
+
+[node name="Pipe" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+script = ExtResource("1_knl5y")
+grid_width = 1
+grid_height = 1
+grid_length = 1
+special_voxel_data = [SubResource("Resource_a82ks")]
+display_name = "Pipe"
+display_description = "A basic pipe."
+building_category = 0
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." node_paths=PackedStringArray("interaction_parent")]
+use_collision = true
+script = ExtResource("3_a82ks")
+interaction_parent = NodePath("..")

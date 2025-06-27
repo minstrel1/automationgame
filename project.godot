@@ -22,6 +22,7 @@ Globals="*res://scripts/Globals.cs"
 Prototypes="*res://scripts/Prototypes.cs"
 WorldTime="*res://scripts/WorldTime.cs"
 LimboConsole="*res://addons/limbo_console/limbo_console.gd"
+FluidSystemManager="*res://scripts/FluidSystemManager.cs"
 
 [display]
 
@@ -144,6 +145,7 @@ limbo_console_search_history={
 
 3d/run_on_separate_thread=true
 3d/physics_engine="Jolt Physics"
+jolt_physics_3d/limits/temporary_memory_buffer_size=256
 common/physics_interpolation=true
 
 [rendering]

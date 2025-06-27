@@ -1,0 +1,53 @@
+[gd_scene load_steps=8 format=3 uid="uid://bbgyj8qbg5lqs"]
+
+[ext_resource type="Script" uid="uid://cdrsqa5hpfuhu" path="res://scripts/FluidTank.cs" id="1_572ty"]
+[ext_resource type="Script" uid="uid://bg67704cqo5ma" path="res://scripts/SpecialVoxelData.cs" id="2_5arg6"]
+[ext_resource type="Script" uid="uid://l7vn0rr5n8ew" path="res://scripts/InteractableDummy.cs" id="3_b87sb"]
+
+[sub_resource type="Resource" id="Resource_ht6cn"]
+script = ExtResource("2_5arg6")
+name = "voxel"
+voxel_position = Vector3i(0, -1, 1)
+voxel_flags = 6
+FlagDirections = 64
+SupportDirections = 0
+
+[sub_resource type="Resource" id="Resource_wspvg"]
+script = ExtResource("2_5arg6")
+name = "voxel1"
+voxel_position = Vector3i(0, -1, -1)
+voxel_flags = 6
+FlagDirections = 32
+SupportDirections = 0
+
+[sub_resource type="Resource" id="Resource_70aj5"]
+script = ExtResource("2_5arg6")
+name = "voxel2"
+voxel_position = Vector3i(1, -1, 0)
+voxel_flags = 6
+FlagDirections = 4
+SupportDirections = 0
+
+[sub_resource type="Resource" id="Resource_r6qmw"]
+script = ExtResource("2_5arg6")
+name = "voxel3"
+voxel_position = Vector3i(-1, -1, 0)
+voxel_flags = 6
+FlagDirections = 2
+SupportDirections = 0
+
+[node name="FluidTank" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+script = ExtResource("1_572ty")
+grid_offset = Vector3(0, 1, 0)
+special_voxel_data = [SubResource("Resource_ht6cn"), SubResource("Resource_wspvg"), SubResource("Resource_70aj5"), SubResource("Resource_r6qmw")]
+display_name = "Fluid Tank"
+display_description = "A basic fluid tank."
+building_category = 0
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." node_paths=PackedStringArray("interaction_parent")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+use_collision = true
+size = Vector3(3, 3, 3)
+script = ExtResource("3_b87sb")
+interaction_parent = NodePath("..")

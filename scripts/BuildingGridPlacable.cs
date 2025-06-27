@@ -11,6 +11,13 @@ public enum BuildingCategory {
 	miscellaneous
 }
 
+public enum BuildingState {
+	placement,
+	pre_built,
+	built,
+	pre_remove,
+}
+
 [GlobalClass]
 [Tool]
 public partial class BuildingGridPlacable : Node3D {
@@ -126,6 +133,8 @@ public partial class BuildingGridPlacable : Node3D {
 	public Array<BuildingGridChunk> occupied_chunks;
 
 	public Dictionary<string, SpecialVoxel> special_voxels = new Dictionary<string, SpecialVoxel>();
+
+	public bool chunk_updated_this_frame = false;
 
 	public override void _Ready() {
 		if (special_voxel_data != null) {
@@ -545,6 +554,8 @@ public partial class BuildingGridPlacable : Node3D {
 	{
 		base._PhysicsProcess(delta);
 
+		chunk_updated_this_frame = false;
+
 		foreach (string name in special_voxels.Keys) {
 			special_voxels[name].update();
 		}
@@ -555,12 +566,17 @@ public partial class BuildingGridPlacable : Node3D {
 	}
 
 	public virtual void on_chunk_changed (BuildingGridChunk chunk) {
-		GD.Print(chunk + " changed");
+		//GD.Print(chunk + " changed");
 
-		foreach (string name in special_voxels.Keys) {
-			//GD.Print(special_voxel.ToString() + " updating");
-			special_voxels[name].update_voxel_connections();
+		if (!chunk_updated_this_frame) {
+			foreach (SpecialVoxel voxel in special_voxels.Values) {
+				voxel.update_voxel_connections();
+			}
+
+			chunk_updated_this_frame = true;
 		}
+
+		
 	}
 
 }

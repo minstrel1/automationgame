@@ -220,7 +220,9 @@ public partial class BuildingGrid : StaticBody3D {
 		return chunk_data[pos.X][pos.Y][pos.Z];
 	}
 
-	public Array<BuildingGridChunk> set_area (Vector3I from, Vector3I to, VoxelData data) {
+	
+
+	public Godot.Collections.Dictionary<BuildingGridChunk, bool> set_area (Vector3I from, Vector3I to, VoxelData data) {
 		int temp = 0;
 		if (from.X > to.X) {
 			temp = from.X;
@@ -238,15 +240,49 @@ public partial class BuildingGrid : StaticBody3D {
 			to.Z = temp;
 		}
 
-		Array<BuildingGridChunk> affected_chunks = new Array<BuildingGridChunk>();
+		Godot.Collections.Dictionary<BuildingGridChunk, bool> affected_chunks = new Godot.Collections.Dictionary<BuildingGridChunk, bool>();
 
 		for (int x = from.X; x <= to.X; x++) {
 			for (int y = from.Y; y <= to.Y; y++) {
 				for (int z = from.Z; z <= to.Z; z++) {
 					if (is_position_valid(x, y, z)) {
 						BuildingGridChunk chunk = set_block(x, y, z, data);
-						if (!affected_chunks.Contains(chunk)) {
-							affected_chunks.Add(chunk);
+						affected_chunks[chunk] = true;
+
+						if (x % chunk_size == chunk_size - 1) {
+							if (chunk.chunk_right != null) {
+								affected_chunks[chunk.chunk_right] = true;
+							}
+						}
+
+						if (x % chunk_size == 0) {
+							if (chunk.chunk_left != null) {
+								affected_chunks[chunk.chunk_left] = true;
+							}
+						}
+
+						if (y % chunk_size == chunk_size - 1) {
+							if (chunk.chunk_up != null) {
+								affected_chunks[chunk.chunk_up] = true;
+							}
+						}
+
+						if (y % chunk_size == 0) {
+							if (chunk.chunk_down != null) {
+								affected_chunks[chunk.chunk_down] = true;
+							}
+						}
+
+						if (z % chunk_size == chunk_size - 1) {
+							if (chunk.chunk_back != null) {
+								affected_chunks[chunk.chunk_back] = true;
+							}
+						}
+
+						if (z % chunk_size == 0) {
+							if (chunk.chunk_forward != null) {
+								affected_chunks[chunk.chunk_forward] = true;
+							}
 						}
 					}
 				}
@@ -377,6 +413,8 @@ public partial class BuildingGrid : StaticBody3D {
 
 	public bool place (BuildingGridPlacable placable, Vector3I grid_pos, Vector3 normal, int rotation) {
 
+		ulong total_start = Time.GetTicksUsec();
+
 		placable.Position = Tools.v3I_to_v3(grid_pos) + new Vector3(0.5f, 0.5f, 0.5f);
 		placable.Rotation = new Vector3(0, 0, 0);
 
@@ -403,7 +441,7 @@ public partial class BuildingGrid : StaticBody3D {
 			voxel_flags = SpecialVoxelFlags.None
 		};
 
-		Godot.Collections.Array<BuildingGridChunk> affected_chunks = set_area(corner_1, corner_2, data);
+		Godot.Collections.Dictionary<BuildingGridChunk, bool> affected_chunks = set_area(corner_1, corner_2, data);
 
 		foreach (string name in placable.special_voxels.Keys) {
 			SpecialVoxel special_voxel = placable.special_voxels[name];
@@ -439,11 +477,19 @@ public partial class BuildingGrid : StaticBody3D {
 
 		placable.on_build();
 
-		foreach (BuildingGridChunk chunk in affected_chunks) {
+		ulong time = Time.GetTicksUsec() - total_start;
+		GD.Print("PLACE TIME:" + time.ToString());
+
+		ulong chunk_start = Time.GetTicksUsec();
+
+		foreach (BuildingGridChunk chunk in affected_chunks.Keys) {
 			placable.occupied_chunks.Add(chunk);
-			chunk.OnChunkChanged += placable.on_chunk_changed;
+			chunk.on_chunk_changed_subscribers.Add(placable);
 			chunk.on_chunk_changed();
 		}
+
+		time = Time.GetTicksUsec() - chunk_start;
+		GD.Print("TOTAL CHUNK TIME:" + time.ToString());
 
 		return true;
 	}
@@ -458,6 +504,7 @@ public partial class BuildingGrid : StaticBody3D {
 					BuildingGridChunk new_instance = new BuildingGridChunk();
 
 					new_instance.Position = new Vector3(x * chunk_size, y * chunk_size, z * chunk_size);
+					new_instance.chunk_size = chunk_size;
 					new_instance.chunk_pos = new Vector3I(x, y, z);
 
 					new_instance.Name = String.Format("Chunk {0} {1} {2}", x, y, z);

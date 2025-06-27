@@ -42,8 +42,8 @@ public partial class BuildingGridChunk : StaticBody3D {
 
 	public bool mesh_gen_this_frame = false;
 
-	[Signal]
-	public delegate void OnChunkChangedEventHandler (BuildingGridChunk chunk);
+
+	public Godot.Collections.Array<BuildingGridPlacable> on_chunk_changed_subscribers = new Godot.Collections.Array<BuildingGridPlacable>();
 
 	public override void _Ready()
 	{
@@ -118,16 +118,29 @@ public partial class BuildingGridChunk : StaticBody3D {
 
 	public void on_chunk_changed () {
 		
+		ulong total_start = Time.GetTicksUsec();
+
 		generate_mesh();
-		generate_mesh_neighbors();
+		//generate_mesh_neighbors();
+
+		ulong time = Time.GetTicksUsec() - total_start;
+		GD.Print(Name + " MESH TIME: " + time.ToString());
+
+		total_start = Time.GetTicksUsec();
 
 		emit();
-		emit_neighbors();
+		//emit_neighbors();
+
+		time = Time.GetTicksUsec() - total_start;
+		GD.Print(Name + " EMIT TIME: " + time.ToString());
 
 	}
 
 	public void emit () {
-		EmitSignal(BuildingGridChunk.SignalName.OnChunkChanged, this);
+		foreach (BuildingGridPlacable subscriber in on_chunk_changed_subscribers) {
+			subscriber.on_chunk_changed(this);
+		}
+		//EmitSignal(BuildingGridChunk.SignalName.OnChunkChanged, this);
 	}
 
 	public void emit_neighbors () {
@@ -397,9 +410,13 @@ public partial class BuildingGridChunk : StaticBody3D {
 
 		mesh = new ArrayMesh();
 		//mesh.ClearSurfaces();
-		vertices = new Vector3[max_faces * 4];
-		indices = new Int32[max_faces * 6]; 
-		uvs = new Vector2[max_faces * 4];
+		Array.Clear(vertices);
+		Array.Clear(indices);
+		Array.Clear(uvs);
+		Array.Clear(collision_vertices);
+		// vertices = new Vector3[max_faces * 4];
+		// indices = new Int32[max_faces * 6]; 
+		// uvs = new Vector2[max_faces * 4];
 
 		face_count = 0;
 		voxel_count = 0;
@@ -421,7 +438,7 @@ public partial class BuildingGridChunk : StaticBody3D {
 			}
 		}
 		ulong time = Time.GetTicksUsec() - start;
-		//GD.Print("C# ARRAY TIME:" + time.ToString());
+		//GD.Print("ARRAY TIME:" + time.ToString());
 
 		
 		Godot.Collections.Array array = new Godot.Collections.Array();
@@ -437,7 +454,8 @@ public partial class BuildingGridChunk : StaticBody3D {
 
 		start = Time.GetTicksUsec();
 		if (collision_vertices[1] != Vector3.Zero) {
-			collision_polygon.SetFaces(collision_vertices);
+			collision_polygon.CallDeferred(ConcavePolygonShape3D.MethodName.SetFaces, collision_vertices);
+			//collision_polygon.SetFaces(collision_vertices);
 		} else {
 			//GD.Print("skipping collision for " + Name);
 		}
