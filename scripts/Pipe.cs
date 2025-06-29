@@ -45,7 +45,13 @@ public partial class Pipe : BuildingGridPlacable, IInteractable {
 	}
 
 	public void on_interact () {
-
+		if (is_built) {
+			if (Player.instance.active_gui is FluidContainerGUI) {
+				Player.instance.clear_active_gui();
+			} else {
+				Player.set_active_gui(FluidContainerGUI.make(container, Player.instance.gui_parent));
+			}
+		}
 	}
 
 	public string get_interact_text () {
