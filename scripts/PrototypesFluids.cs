@@ -13,5 +13,12 @@ public partial class Prototypes : Node {
 			display_description = "This is a test fluid.",
 			icon_texture = "res://item_textures/fluid.png",
 		}}, 
+		{"water", new FluidPrototype {
+			name = "water",
+			category = "miscellaneous",
+			display_name = "Water",
+			display_description = "It's water.",
+			icon_texture = "res://item_textures/water.png",
+		}}, 
 	};
 }

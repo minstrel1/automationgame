@@ -59,16 +59,7 @@ public partial class FluidSpecialVoxel : SpecialVoxel {
 													GD.Print("incompatible systems");
 												}
 												
-											}
-											
-											// if (parent_container.connected_system == null) {
-											// 	fluid_voxel.parent_container.connected_system.add_container(parent_container);
-											// 	GD.Print("found a system???");
-											// } else {
-											// 	GD.Print("found another system???");
-											// 	parent_container.connected_system.merge_system(fluid_voxel.parent_container.connected_system);
-											// }
-											
+											}											
 										}
 
 										break;
@@ -85,13 +76,13 @@ public partial class FluidSpecialVoxel : SpecialVoxel {
 										break;
 
 									case SpecialVoxelFlags.FluidOutput:
-										if (fluid_voxel.parent_container != null && fluid_voxel.parent_container.connected_system != null) {
-											if (parent_container.connected_system != null) {
-												if (fluid_voxel.parent_container.connected_system.is_system_compatible(parent_container.connected_system)) {
-													fluid_voxel.parent_container.connected_system.add_output(parent_container.connected_system);
-												}
-											}
-										}
+										// if (fluid_voxel.parent_container != null && fluid_voxel.parent_container.connected_system != null) {
+										// 	if (parent_container.connected_system != null) {
+										// 		if (fluid_voxel.parent_container.connected_system.is_system_compatible(parent_container.connected_system)) {
+										// 			fluid_voxel.parent_container.connected_system.add_output(parent_container.connected_system);
+										// 		}
+										// 	}
+										// }
 										
 										break;
 								}
@@ -105,27 +96,25 @@ public partial class FluidSpecialVoxel : SpecialVoxel {
 							if (voxel is FluidSpecialVoxel) {
 								FluidSpecialVoxel fluid_voxel = (FluidSpecialVoxel) voxel;
 
-								if (fluid_voxel.parent_container != null && fluid_voxel.parent_container.connected_system != null) {
-									fluid_voxel.parent_container.connected_system.add_output(parent_container.connected_system);
-								}
+								// if (fluid_voxel.parent_container != null && fluid_voxel.parent_container.connected_system != null) {
+								// 	fluid_voxel.parent_container.connected_system.add_output(parent_container.connected_system);
+								// }
 							}
 						}
 
 						break;
 
 					case SpecialVoxelFlags.FluidOutput:
-						if (parent_container.connected_system == null) {
-							parent_container.connected_system = new FluidSystem();
-							parent_container.connected_system.add_container(parent_container);
-						} 
-
 						foreach (SpecialVoxel voxel in connected_voxels) {
 							if (voxel is FluidSpecialVoxel) {
 								FluidSpecialVoxel fluid_voxel = (FluidSpecialVoxel) voxel;
 
-								if (fluid_voxel.parent_container != null && fluid_voxel.parent_container.connected_system != null) {
-									fluid_voxel.parent_container.connected_system.add_output(parent_container.connected_system);
+								if (fluid_voxel.voxel_flags == SpecialVoxelFlags.FluidInput || fluid_voxel.voxel_flags == SpecialVoxelFlags.FluidInputOutput) {
+									if (fluid_voxel.parent_container != null && fluid_voxel.parent_container.connected_system != null) {
+										parent_container.connected_system.add_output(fluid_voxel.parent_container.connected_system);
+									}
 								}
+
 							}
 						}
 						break;

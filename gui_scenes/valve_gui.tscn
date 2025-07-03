@@ -1,0 +1,148 @@
+[gd_scene load_steps=9 format=3 uid="uid://dqcxxon3cykma"]
+
+[ext_resource type="Texture2D" uid="uid://x23a144snyot" path="res://textures/oxygen_under.png" id="1_jwui2"]
+[ext_resource type="Script" uid="uid://du3p20pbmtt4i" path="res://scripts/ValveGUI.cs" id="1_qi5yc"]
+[ext_resource type="Texture2D" uid="uid://b3e53ahpsap14" path="res://item_textures/test_item.png" id="1_sg8qt"]
+[ext_resource type="Texture2D" uid="uid://csiskm3kp0xgl" path="res://item_textures/wrench.svg" id="2_jm4oj"]
+[ext_resource type="Texture2D" uid="uid://bgksw3i64fp7c" path="res://textures/oxygen_over.png" id="2_qi5yc"]
+[ext_resource type="Texture2D" uid="uid://3g6bl6rfdqjn" path="res://textures/oxygen_progress.png" id="3_ugpdt"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_30cmd"]
+color = Color(1, 1, 1, 1)
+grow_begin = -5.0
+grow_end = -5.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jwui2"]
+bg_color = Color(0.689699, 0.6897, 0.689699, 0.494118)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="Control" type="PanelContainer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -83.5
+offset_right = 200.0
+offset_bottom = 16.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qi5yc")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Valve"
+horizontal_alignment = 1
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_30cmd")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Control2" type="Control" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="VBoxContainer/VBoxContainer/HBoxContainer/Control2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -75.0
+offset_right = 75.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+max_value = 600.0
+step = 0.001
+value = 42.515
+fill_mode = 4
+nine_patch_stretch = true
+texture_under = ExtResource("1_jwui2")
+texture_over = ExtResource("2_qi5yc")
+texture_progress = ExtResource("3_ugpdt")
+tint_progress = Color(0.18, 0.685667, 1, 1)
+
+[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer/Control2/TextureProgressBar"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -30.5
+offset_top = -19.5
+offset_right = 30.5
+offset_bottom = 19.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 24
+text = "600 L/s"
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Container" type="Control" parent="VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Container"]
+layout_mode = 2
+offset_right = 50.0
+offset_bottom = 50.0
+grow_vertical = 2
+texture = ExtResource("1_sg8qt")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Container/TextureRect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 5.0
+offset_top = -11.5
+offset_bottom = 11.5
+grow_vertical = 2
+text = "Boner"
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Container"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -55.0
+offset_top = -25.0
+offset_right = -5.0
+offset_bottom = 25.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_jwui2")
+
+[node name="Button" type="TextureRect" parent="VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/Container/PanelContainer"]
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("2_jm4oj")
+expand_mode = 1

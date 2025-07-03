@@ -8,15 +8,17 @@ using Godot.NativeInterop;
 #if TOOLS
 [Tool]
 #endif
-public partial class Valve : BuildingGridPlacable, IInteractable {
+public partial class WaterCollector : BuildingGridPlacable, IInteractable {
 
-	[ExportCategory("Valve Properties")]
+	[ExportCategory("Water Collector Properties")]
 	[Export]
-	public string interact_name = "Valve";
+	public string interact_name = "Water Collector";
 	[Export]
 	public float volume = 100.0f;
 	[Export]
-	public float flow_rate = 600.0f;
+	public float max_water_per_second = 50.0f;
+
+	public float water_made_this_frame;
 
 	public FluidContainer container;
 
@@ -24,10 +26,7 @@ public partial class Valve : BuildingGridPlacable, IInteractable {
 		base._Ready();
 
 		container = new FluidContainer(volume);
-		//container.set_fluid_filter("test_fluid");
-		//container.current_amount = new RandomNumberGenerator().RandfRange(0.1f, 99.9f);
 
-		((FluidSpecialVoxel) special_voxels["input"]).set_container(container);
 		((FluidSpecialVoxel) special_voxels["output"]).set_container(container);
 	}
 
@@ -37,6 +36,13 @@ public partial class Valve : BuildingGridPlacable, IInteractable {
 
 	public override void _PhysicsProcess(double delta) {
 		base._PhysicsProcess(delta);
+
+		if (is_built) {
+			water_made_this_frame = container.insert("water", max_water_per_second * (float) delta);
+			//GD.Print(water_made_this_frame);
+		}
+
+		
 	}
 
 	public void on_hover_focus () {
@@ -49,10 +55,10 @@ public partial class Valve : BuildingGridPlacable, IInteractable {
 
 	public void on_interact () {
 		if (is_built) {
-			if (Player.instance.active_gui is ValveGUI) {
+			if (Player.instance.active_gui is FluidContainerGUI) {
 				Player.instance.clear_active_gui();
 			} else {
-				Player.set_active_gui(ValveGUI.make(this, Player.instance.gui_parent));
+				Player.set_active_gui(FluidContainerGUI.make(container, Player.instance.gui_parent));
 			}
 		}
 	}

@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://blqke4xy764rm"]
+[gd_scene load_steps=7 format=3 uid="uid://blqke4xy764rm"]
 
 [ext_resource type="Script" uid="uid://c30j33knwahdd" path="res://scripts/Valve.cs" id="1_fkygf"]
 [ext_resource type="Script" uid="uid://bg67704cqo5ma" path="res://scripts/SpecialVoxelData.cs" id="2_kbwwl"]
+[ext_resource type="Script" uid="uid://l7vn0rr5n8ew" path="res://scripts/InteractableDummy.cs" id="3_fli45"]
 
 [sub_resource type="Resource" id="Resource_fli45"]
 script = ExtResource("2_kbwwl")
@@ -36,10 +37,12 @@ display_name = "Valve"
 display_description = "A valve."
 building_category = 0
 
-[node name="CSGBox3D" type="CSGBox3D" parent="."]
+[node name="CSGBox3D" type="CSGBox3D" parent="." node_paths=PackedStringArray("interaction_parent")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.5)
 use_collision = true
 size = Vector3(1, 1, 2)
+script = ExtResource("3_fli45")
+interaction_parent = NodePath("..")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.732614, 0.680644, 0, -0.680644, 0.732614, 0, 0.630254, 0.166712)

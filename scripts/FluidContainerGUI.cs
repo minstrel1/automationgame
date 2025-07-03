@@ -29,7 +29,7 @@ public partial class FluidContainerGUI : GUI {
 		system_label = GetNode<Label>("VBoxContainer/System/TextureRect/Label");
 		system_icon = GetNode<TextureRect>("VBoxContainer/System/TextureRect");
 
-
+	
 
 		Player.instance.lock_controls();
 

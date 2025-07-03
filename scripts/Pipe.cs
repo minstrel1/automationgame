@@ -22,8 +22,8 @@ public partial class Pipe : BuildingGridPlacable, IInteractable {
 		base._Ready();
 
 		container = new FluidContainer(volume);
-		container.set_fluid_filter("test_fluid");
-		container.current_amount = new RandomNumberGenerator().RandfRange(0.1f, 99.9f);
+		//container.set_fluid_filter("test_fluid");
+		//container.current_amount = new RandomNumberGenerator().RandfRange(0.1f, 99.9f);
 
 		((FluidSpecialVoxel) special_voxels["voxel"]).set_container(container);
 	}

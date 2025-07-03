@@ -20,8 +20,8 @@ public partial class FluidSystem : Node {
 	public float total_volume = 0;
 	public float total_amount = 0;
 
-	public float flow_rate = 1000.0f;
-	public static float min_flow_rate = 5.0f * 1.0f / 60.0f;
+	public float flow_rate = 600.0f;
+	public static float min_flow_rate = 5.0f * (1.0f / 60.0f);
 
 	public float flow_rate_this_frame = 0.0f;
 
@@ -43,20 +43,25 @@ public partial class FluidSystem : Node {
 		flow_rate_this_frame = 0;
 
 		if (connected_outputs.Count > 0) {
-			//GD.Print("we have " + connected_outputs.Count.ToString() + " outputs");
-
 			amount_to_remove = 0;
+
 			foreach (FluidSystem system in connected_outputs) {
 				amount_to_remove = Math.Min(Math.Max(min_flow_rate, (total_amount / total_volume) * flow_rate * (float) delta), total_amount);
-
 				if (system != null) {
-					flow_rate_this_frame = system.insert(current_fluid, amount_to_remove);
-					total_amount -= flow_rate_this_frame;
+					amount_to_remove = system.insert(current_fluid, amount_to_remove);
+					flow_rate_this_frame += amount_to_remove;
+					total_amount -= amount_to_remove;
 				} else {
 					GD.Print("WHAT???");
 				}
 				
 			}
+
+			if (total_amount < 0.000000) {
+				total_amount = 0;
+				current_fluid = "";
+			}
+
 			update_amounts();
 		}
 		//GD.Print("this is a system?");
@@ -185,6 +190,7 @@ public partial class FluidSystem : Node {
 
 		foreach (FluidContainer container in connected_containers) {
 			container.current_amount = container.volume * percent_full;
+			container.current_fluid = current_fluid;
 		}
 	}
 
@@ -259,7 +265,7 @@ public partial class FluidSystem : Node {
 		foreach (FluidSystem input in system.connected_inputs) {
 			index = input.connected_outputs.IndexOf(system);
 
-			if (!input.connected_outputs.Contains(this)) {
+			if (index != -1) {
 				input.connected_outputs[index] = this;
 			}
 		}

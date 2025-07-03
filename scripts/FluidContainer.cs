@@ -35,4 +35,8 @@ public partial class FluidContainer : Node {
 
 		return false;
 	}
+
+	public float insert (string fluid, float amount) {
+		return connected_system.insert(fluid, amount);
+	}
 }
