@@ -506,7 +506,11 @@ public partial class BuildingGridPlacable : Node3D {
 	}
 
 	public void set_mesh_visibility (bool value) {
-		visualiser.Visible = value;
+		if (visualiser != null && IsInstanceValid(visualiser)) {
+			visualiser.Visible = value;
+		} else {
+			GD.Print("visualiser is null");
+		}
 	}
 
 	public void clear_special_visualisers () {

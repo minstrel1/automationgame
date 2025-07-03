@@ -9,6 +9,12 @@ public partial class FluidContainerGUI : GUI {
 
 	public static PackedScene scene = GD.Load<PackedScene>("res://gui_scenes/fluid_container_gui.tscn");
 
+	public Label container_label;
+	public TextureRect container_icon;
+
+	public Label system_label;
+	public TextureRect system_icon;
+
 	public override void _Ready()
 	{
 		base._Ready();
@@ -17,8 +23,27 @@ public partial class FluidContainerGUI : GUI {
 
 		// GUIDummyData result = remove_dummy(inventory_result[0]);
 
+		container_label = GetNode<Label>("VBoxContainer/Container/TextureRect/Label");
+		container_icon = GetNode<TextureRect>("VBoxContainer/Container/TextureRect");
+
+		system_label = GetNode<Label>("VBoxContainer/System/TextureRect/Label");
+		system_icon = GetNode<TextureRect>("VBoxContainer/System/TextureRect");
+
+
+
 		Player.instance.lock_controls();
 
+	}
+
+	public override void _PhysicsProcess(double delta)
+	{
+		base._PhysicsProcess(delta);
+
+		container_label.Text = String.Format("{0:F4} / {1:F4}", fluid_container.current_amount, fluid_container.volume);
+
+		if (fluid_container.connected_system != null) {
+			system_label.Text = String.Format("{0:F4} / {1:F4}", fluid_container.connected_system.total_amount, fluid_container.connected_system.total_volume);
+		} 
 	}
 
 	public static FluidContainerGUI make (FluidContainer fluid_container, Control gui_parent) {

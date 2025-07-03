@@ -10,6 +10,8 @@ public partial class FluidSystem : Node {
 
 	public Godot.Collections.Array<FluidContainer> filtered_containers = new Array<FluidContainer>();
 
+	public Godot.Collections.Array<FluidSystem> connected_inputs = new Array<FluidSystem>();
+
 	public Godot.Collections.Array<FluidSystem> connected_outputs = new Array<FluidSystem>(); // EXCLUSIVELY FOR OUTPUTTING
 
 	public string current_fluid = "";
@@ -18,15 +20,44 @@ public partial class FluidSystem : Node {
 	public float total_volume = 0;
 	public float total_amount = 0;
 
+	public float flow_rate = 1000.0f;
+	public static float min_flow_rate = 5.0f * 1.0f / 60.0f;
+
+	public float flow_rate_this_frame = 0.0f;
+
+	public float percent_full = 0f;
+
 	public FluidSystem () {
 		FluidSystemManager.Instance.add_system(this);
 	}
 
+	public float amount_to_remove = 0f;
+
 	public override void _PhysicsProcess(double delta) {
 		base._PhysicsProcess(delta);
 
-		foreach (FluidContainer container in connected_containers) {
-			container.new_system_this_frame = false;
+		for (int i = 0; i < connected_containers.Count; i++) {
+			connected_containers[i].new_system_this_frame = false;
+		}
+
+		flow_rate_this_frame = 0;
+
+		if (connected_outputs.Count > 0) {
+			//GD.Print("we have " + connected_outputs.Count.ToString() + " outputs");
+
+			amount_to_remove = 0;
+			foreach (FluidSystem system in connected_outputs) {
+				amount_to_remove = Math.Min(Math.Max(min_flow_rate, (total_amount / total_volume) * flow_rate * (float) delta), total_amount);
+
+				if (system != null) {
+					flow_rate_this_frame = system.insert(current_fluid, amount_to_remove);
+					total_amount -= flow_rate_this_frame;
+				} else {
+					GD.Print("WHAT???");
+				}
+				
+			}
+			update_amounts();
 		}
 		//GD.Print("this is a system?");
 	}
@@ -150,7 +181,7 @@ public partial class FluidSystem : Node {
 	}
 
 	public void update_amounts () {
-		float percent_full = total_amount / total_volume;
+		percent_full = total_amount / total_volume;
 
 		foreach (FluidContainer container in connected_containers) {
 			container.current_amount = container.volume * percent_full;
@@ -166,6 +197,29 @@ public partial class FluidSystem : Node {
 		if (!connected_outputs.Contains(system)) {
 			connected_outputs.Add(system);
 		}
+
+		if (!system.connected_inputs.Contains(this)) {
+			system.connected_inputs.Add(this);
+		}
+	}
+
+	public float insert_difference;
+
+	public float insert (string fluid, float amount) {
+		if (current_fluid == "") {
+			current_fluid = fluid;
+			insert_difference = Math.Min(total_volume - total_amount, amount);
+			total_amount += insert_difference;
+			update_amounts();
+			return insert_difference;
+		} else if (current_fluid == fluid) {
+			insert_difference = Math.Min(total_volume - total_amount, amount);
+			total_amount += insert_difference;
+			update_amounts();
+			return insert_difference;
+		}
+
+		return 0;
 	}
 
 	public void merge_system (FluidSystem system) {
@@ -174,10 +228,39 @@ public partial class FluidSystem : Node {
 			return;
 		}
 
+		if (system.current_fluid != null) {
+			current_fluid = system.current_fluid;
+		}
+
+		if (system.fluid_filter != null) {
+			fluid_filter = system.fluid_filter;
+
+			foreach (FluidContainer container in system.filtered_containers) {
+				if (!filtered_containers.Contains(container)) {
+					filtered_containers.Add(container);
+				}
+			}
+		}
+
 		foreach (FluidContainer container in system.connected_containers) {
 			if (!connected_containers.Contains(container)) {
 				connected_containers.Add(container);
 				container.connected_system = this;
+			}
+		}
+
+		foreach (FluidSystem output in system.connected_outputs) {
+			if (output != this && !connected_outputs.Contains(output)) {
+				connected_outputs.Add(output);
+			}
+		}
+
+		int index = 0;
+		foreach (FluidSystem input in system.connected_inputs) {
+			index = input.connected_outputs.IndexOf(system);
+
+			if (!input.connected_outputs.Contains(this)) {
+				input.connected_outputs[index] = this;
 			}
 		}
 

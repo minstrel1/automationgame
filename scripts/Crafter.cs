@@ -50,6 +50,7 @@ public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IIn
 		input_inventory.OnInventoryChanged += on_input_inventory_changed;
 
 		output_inventory = new Inventory(Prototypes.max_recipe_ingredients);
+		output_inventory.OnInventoryChanged += on_output_inventory_changed;
 
 		ingredient_counts = new int[Prototypes.max_recipe_ingredients];
 

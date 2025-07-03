@@ -20,7 +20,6 @@ public partial class FluidSpecialVoxel : SpecialVoxel {
 		if (parent_container != null) {
 
 			if (connections_changed_this_frame) {
-				//GD.Print("connections changed");
 
 				// if (!parent_container.new_system_this_frame) {
 				// 	if (parent_container.connected_system != null) {

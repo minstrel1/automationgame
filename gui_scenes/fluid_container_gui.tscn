@@ -1,8 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://dg4vewr26oyof"]
+[gd_scene load_steps=7 format=3 uid="uid://dg4vewr26oyof"]
 
 [ext_resource type="Texture2D" uid="uid://b3e53ahpsap14" path="res://item_textures/test_item.png" id="1_5qvoi"]
 [ext_resource type="Script" uid="uid://cs5n3dsrc1qln" path="res://scripts/FluidContainerGUI.cs" id="1_lsd7r"]
 [ext_resource type="Texture2D" uid="uid://csiskm3kp0xgl" path="res://item_textures/wrench.svg" id="2_lsd7r"]
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_lsd7r"]
+color = Color(1, 1, 1, 1)
+grow_begin = -5.0
+grow_end = -5.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tqq08"]
 bg_color = Color(0.689699, 0.6897, 0.689699, 0.494118)
@@ -10,6 +15,11 @@ corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxLine" id="StyleBoxLine_tqq08"]
+color = Color(1, 1, 1, 1)
+grow_begin = -5.0
+grow_end = -5.0
 
 [node name="Control" type="PanelContainer"]
 custom_minimum_size = Vector2(400, 0)
@@ -30,11 +40,15 @@ layout_mode = 2
 text = "Fluid Container"
 horizontal_alignment = 1
 
-[node name="Control" type="Control" parent="VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_lsd7r")
+
+[node name="Container" type="Control" parent="VBoxContainer"]
 custom_minimum_size = Vector2(400, 60)
 layout_mode = 2
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Control"]
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/Container"]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
@@ -46,7 +60,7 @@ grow_vertical = 2
 texture = ExtResource("1_5qvoi")
 expand_mode = 1
 
-[node name="Label" type="Label" parent="VBoxContainer/Control/TextureRect"]
+[node name="Label" type="Label" parent="VBoxContainer/Container/TextureRect"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 1.0
@@ -59,7 +73,7 @@ offset_bottom = 11.5
 grow_vertical = 2
 text = "Boner"
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control"]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Container"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 1.0
@@ -74,7 +88,61 @@ grow_horizontal = 0
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_tqq08")
 
-[node name="Button" type="TextureRect" parent="VBoxContainer/Control/PanelContainer"]
+[node name="Button" type="TextureRect" parent="VBoxContainer/Container/PanelContainer"]
+layout_mode = 2
+mouse_filter = 0
+texture = ExtResource("2_lsd7r")
+expand_mode = 1
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxLine_tqq08")
+
+[node name="System" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(400, 60)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/System"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -30.0
+offset_right = 60.0
+offset_bottom = 30.0
+grow_vertical = 2
+texture = ExtResource("1_5qvoi")
+expand_mode = 1
+
+[node name="Label" type="Label" parent="VBoxContainer/System/TextureRect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 5.0
+offset_top = -11.5
+offset_bottom = 11.5
+grow_vertical = 2
+text = "Boner"
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/System"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -55.0
+offset_top = -25.0
+offset_right = -5.0
+offset_bottom = 25.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_tqq08")
+
+[node name="Button" type="TextureRect" parent="VBoxContainer/System/PanelContainer"]
 layout_mode = 2
 mouse_filter = 0
 texture = ExtResource("2_lsd7r")

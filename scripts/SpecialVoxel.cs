@@ -130,7 +130,7 @@ public partial class SpecialVoxel : Node3D {
 
 				if (test_data.is_special_voxel) {
 					if (Tools.is_special_compatible(voxel_flags, test_data.voxel_flags)) {
-						if (test_data.special_voxel.flag_directions == BuildDirectionFlags.Any || (test_data.special_voxel.flag_directions & opposites[i]) > 0) {
+						if (test_data.special_directions == BuildDirectionFlags.Any || (test_data.special_directions & opposites[i]) > 0) {
 							new_voxels[i] = test_data.special_voxel;
 						}
 					}

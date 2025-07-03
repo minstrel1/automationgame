@@ -8,13 +8,13 @@ using Godot.NativeInterop;
 #if TOOLS
 [Tool]
 #endif
-public partial class FluidTank : BuildingGridPlacable, IInteractable {
+public partial class Valve : BuildingGridPlacable, IInteractable {
 
-	[ExportCategory("Tank Properties")]
+	[ExportCategory("Valve Properties")]
 	[Export]
-	public string interact_name = "Fluid Tank";
+	public string interact_name = "Valve";
 	[Export]
-	public float volume = 10000.0f;
+	public float volume = 100.0f;
 
 	public FluidContainer container;
 
@@ -25,13 +25,8 @@ public partial class FluidTank : BuildingGridPlacable, IInteractable {
 		//container.set_fluid_filter("test_fluid");
 		//container.current_amount = new RandomNumberGenerator().RandfRange(0.1f, 99.9f);
 
-		foreach (SpecialVoxel voxel in special_voxels.Values) {
-			if (voxel.voxel_flags == SpecialVoxelFlags.FluidInputOutput) {
-				((FluidSpecialVoxel) voxel).set_container(container);
-			}
-		}
-
-		//((FluidSpecialVoxel) special_voxels["voxel"]).set_container(container);
+		((FluidSpecialVoxel) special_voxels["input"]).set_container(container);
+		((FluidSpecialVoxel) special_voxels["output"]).set_container(container);
 	}
 
 	public override void on_build() {
@@ -43,11 +38,11 @@ public partial class FluidTank : BuildingGridPlacable, IInteractable {
 	}
 
 	public void on_hover_focus () {
-		set_mesh_visibility(true);
+		//set_mesh_visibility(true);
 	}
 
 	public void on_hover_unfocus () {
-		set_mesh_visibility(false);
+		//set_mesh_visibility(false);
 	}
 
 	public void on_interact () {

@@ -25,5 +25,6 @@ building_category = 0
 
 [node name="CSGBox3D" type="CSGBox3D" parent="." node_paths=PackedStringArray("interaction_parent")]
 use_collision = true
+size = Vector3(0.9, 0.9, 0.9)
 script = ExtResource("3_a82ks")
 interaction_parent = NodePath("..")

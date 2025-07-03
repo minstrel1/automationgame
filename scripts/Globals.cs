@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Runtime;
 using Godot;
 using Godot.Collections;
 using Godot.NativeInterop;
@@ -29,5 +30,15 @@ public partial class Globals : Node {
 	public override void _Ready()
 	{
 		Instance = this;
+
+		GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
+		
+	}
+
+	public override void _PhysicsProcess(double delta)
+	{
+		base._PhysicsProcess(delta);
+
+		GC.Collect(GC.MaxGeneration, GCCollectionMode.Default, blocking: false);
 	}
 }

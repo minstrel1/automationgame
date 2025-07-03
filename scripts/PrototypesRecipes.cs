@@ -27,6 +27,7 @@ public partial class Prototypes : Node {
 			display_name = "Test Product",
 			category = "components",
 			subcategory = "basic_crafting",
+			time_to_craft = 0.3f,
 			ingredients = new Array<IngredientPrototype>{
 				new ItemIngredientPrototype{
 					name = "test_item",
