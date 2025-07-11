@@ -16,6 +16,11 @@ public partial class Player {
 	public PanelContainer interact_label_container;
 	public Label interact_label;
 
+	public PanelContainer demolish_count_container;
+	public Label demolish_count_label;
+
+	public ProgressBar demolish_bar;
+
 	public void ready_hud () {
 		player_hud = GetNode<Control>("PlayerHUD");
 		clock_label = GetNode<Label>("PlayerHUD/Control/Label");
@@ -27,6 +32,11 @@ public partial class Player {
 
 		interact_label_container = GetNode<PanelContainer>("PlayerHUD/Control3/PanelContainer");
 		interact_label = GetNode<Label>("PlayerHUD/Control3/PanelContainer/Label");
+
+		demolish_count_container = GetNode<PanelContainer>("PlayerHUD/Control3/PanelContainer2");
+		demolish_count_label = GetNode<Label>("PlayerHUD/Control3/PanelContainer2/Label");
+
+		demolish_bar = GetNode<ProgressBar>("PlayerHUD/Control3/PanelContainer3/DemolishBar");
 	}
 
 	public void update_hud () {
@@ -43,11 +53,29 @@ public partial class Player {
 
 		fps_label.Text = "FPS: " + Engine.GetFramesPerSecond().ToString();
 
-		if (is_interact_valid() && !is_in_gui()) {
+		if (is_interact_valid() && !is_in_gui() && current_build_mode == BuildingMode.disabled) {
 			interact_label_container.Visible = true;
+			interact_label.Visible = true;
 			interact_label.Text = "Press E to " + (interact_cast_result as IInteractable).get_interact_text();
 		} else {
 			interact_label_container.Visible = false;
+			interact_label.Visible = false;
+		}
+
+		if (!is_in_gui() && current_build_mode == BuildingMode.demolishing) {
+			demolish_count_container.Visible = true;
+			demolish_count_label.Visible = true;
+			demolish_count_label.Text = demolish_targets.Count.ToString() + " / " + max_demolish_targets.ToString();
+		} else {
+			demolish_count_container.Visible = false;
+			demolish_count_label.Visible = false;
+		}
+
+		if (current_demolish_time > 0.01) {
+			demolish_bar.Visible = true;
+			demolish_bar.Value = current_demolish_time;
+		} else {
+			demolish_bar.Visible = false;
 		}
 
 	}

@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=4 uid="uid://ibpbfdj0iv00"]
+[gd_scene load_steps=30 format=4 uid="uid://ibpbfdj0iv00"]
 
 [ext_resource type="Script" uid="uid://balvvjf5ljuew" path="res://scripts/Player.cs" id="1_ykrsh"]
 [ext_resource type="Script" uid="uid://df07k7veekgso" path="res://scripts/RayCast3DExtendable.cs" id="3_g14j6"]
@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://3g6bl6rfdqjn" path="res://textures/oxygen_progress.png" id="7_b0q6j"]
 [ext_resource type="Material" uid="uid://bynkxa8q587h7" path="res://building_grid_placable_box.tres" id="12_0m0f1"]
 [ext_resource type="Material" uid="uid://b640f8sx4x12o" path="res://test_voxel_texture.tres" id="12_5tkv4"]
+[ext_resource type="PackedScene" uid="uid://b60igm2htfui4" path="res://hummingbot.tscn" id="13_0m0f1"]
 
 [sub_resource type="PrismMesh" id="PrismMesh_5tkv4"]
 size = Vector3(149.185, 1000, 21.44)
@@ -73,6 +74,7 @@ _surfaces = [{
 }]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_mf4mk"]
+radius = 0.4
 height = 2.5
 
 [sub_resource type="LabelSettings" id="LabelSettings_00tp4"]
@@ -616,15 +618,16 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -100.0
-offset_top = -75.0
-offset_right = 100.0
-offset_bottom = 75.0
+offset_left = -200.0
+offset_top = -125.0
+offset_right = 200.0
+offset_bottom = 125.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="Player/PlayerHUD/Control3"]
+visible = false
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -643,13 +646,57 @@ layout_mode = 2
 text = "Press E to Dingaling"
 horizontal_alignment = 1
 
+[node name="PanelContainer2" type="PanelContainer" parent="Player/PlayerHUD/Control3"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -76.0
+offset_top = -24.935
+offset_right = 76.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="Player/PlayerHUD/Control3/PanelContainer2"]
+layout_mode = 2
+text = "0 / 50"
+horizontal_alignment = 1
+
+[node name="PanelContainer3" type="Control" parent="Player/PlayerHUD/Control3"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -120.0
+offset_top = 7.0
+offset_right = 120.0
+offset_bottom = 30.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="DemolishBar" type="ProgressBar" parent="Player/PlayerHUD/Control3/PanelContainer3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+max_value = 1.0
+step = 0.001
+value = 0.49
+show_percentage = false
+
 [node name="PlayerGUI" type="Control" parent="Player"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -2.0
-offset_bottom = -2.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -721,7 +768,7 @@ libraries = {
 }
 
 [node name="BuildingGrid" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -79.7698, -0.514008, -30.3703)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -79.7698, -0.524486, -30.3703)
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("5_ykrsh")
@@ -740,3 +787,6 @@ surface_material_override/0 = ExtResource("12_0m0f1")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.54828, 0)
 visible = false
 omni_range = 27.4347
+
+[node name="dumbass birb" parent="." instance=ExtResource("13_0m0f1")]
+transform = Transform3D(0.465, 0, 0, 0, 0.465, 0, 0, 0, 0.465, 6.98188, 0.15025, -31.7453)

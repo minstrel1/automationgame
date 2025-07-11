@@ -48,7 +48,7 @@ public partial class Valve : BuildingGridPlacable, IInteractable {
 	}
 
 	public void on_interact () {
-		if (is_built) {
+		if (current_building_state == BuildingState.built) {
 			if (Player.instance.active_gui is ValveGUI) {
 				Player.instance.clear_active_gui();
 			} else {

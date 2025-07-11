@@ -295,7 +295,7 @@ public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IIn
 	}
 
 	public void on_interact () {
-		if (is_built) {
+		if (current_building_state == BuildingState.built) {
 			if (Player.instance.active_gui is CategoryList) {
 				Player.instance.clear_active_gui();
 			} else {

@@ -55,7 +55,7 @@ public partial class Chest : BuildingGridPlacable, IBuildingWithInventory, IInte
 	}
 
 	public void on_interact () {
-		if (is_built) {
+		if (current_building_state == BuildingState.built) {
 			if (Player.instance.active_gui is ChestGUI) {
 				Player.instance.clear_active_gui();
 			} else {
@@ -65,7 +65,7 @@ public partial class Chest : BuildingGridPlacable, IBuildingWithInventory, IInte
 	}
 
 	public string get_interact_text () {
-		if (is_built) {
+		if (current_building_state == BuildingState.built) {
 			return "Open " + interact_name;
 		}
 		return null;

@@ -14,7 +14,7 @@ public partial class FluidTank : BuildingGridPlacable, IInteractable {
 	[Export]
 	public string interact_name = "Fluid Tank";
 	[Export]
-	public float volume = 10000.0f;
+	public float volume = 5000.0f;
 
 	public FluidContainer container;
 
@@ -51,7 +51,7 @@ public partial class FluidTank : BuildingGridPlacable, IInteractable {
 	}
 
 	public void on_interact () {
-		if (is_built) {
+		if (current_building_state == BuildingState.built) {
 			if (Player.instance.active_gui is FluidContainerGUI) {
 				Player.instance.clear_active_gui();
 			} else {
@@ -62,5 +62,11 @@ public partial class FluidTank : BuildingGridPlacable, IInteractable {
 
 	public string get_interact_text () {
 		return "Configure " + interact_name;
+	}
+
+	public override void release() {
+		base.release();
+
+		
 	}
 }

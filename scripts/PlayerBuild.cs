@@ -3,6 +3,12 @@ using Godot;
 using Godot.Collections;
 using Godot.NativeInterop;
 
+public enum BuildingMode {
+	disabled,
+	building,
+	demolishing,
+}
+
 public partial class Player {
 
 	public RayCast3DExtendable building_raycaster;
@@ -11,13 +17,17 @@ public partial class Player {
 	public BuildingGrid last_known_grid;
 	public int current_building_rotation = 0;
 
+	public Array<BuildingGridPlacable> demolish_targets = new Array<BuildingGridPlacable>();
+	public int max_demolish_targets = 100;
+
 	public CsgSphere3D building_cursor;
 
 	public PackedScene current_building_scene = null; //GD.Load<PackedScene>("res://building_scenes/ExampleGrowingPlot.tscn");
 	public BuildingGridPlacable current_building_instance;
-	public bool build_mode = false;
 
-	public bool mouse_clicked = false;
+	public BuildingMode current_build_mode = BuildingMode.disabled;
+
+	public float current_demolish_time = 0.0f;
 
 	public void init_build_mode () {
 		if (current_building_scene != null) {
@@ -46,6 +56,14 @@ public partial class Player {
 		current_building_instance = null;
 	}
 
+	public void clear_demolish_targets () {
+		foreach (BuildingGridPlacable target in demolish_targets) {
+			target.set_mesh_visibility(false);
+		}
+
+		demolish_targets.Clear();
+	}
+
 	public void on_building_choice_selected (Variant data) {
 		Dictionary new_data = (Dictionary) data;
 		string res_path = (string) new_data["res_path"];
@@ -62,7 +80,7 @@ public partial class Player {
 		clear_active_gui();
 	}
 
-	public void building_cast () {
+	public void building_cast (double delta) {
 		GodotObject current_cast_result = building_raycaster.GetCollider();
 		Vector3 current_cast_position = building_raycaster.GetCollisionPoint();
 
@@ -74,19 +92,20 @@ public partial class Player {
 			building_cast_result = current_cast_result;
 		}
 
-		if (build_mode && current_building_instance != null) {
-			if (building_cast_result != null && building_cast_result is BuildingGridChunk) {
+		if (building_cast_result != null && building_cast_result is BuildingGridChunk) {
 
-				last_known_grid = (building_cast_result as BuildingGridChunk).parent_grid;
+			last_known_grid = (building_cast_result as BuildingGridChunk).parent_grid;
 
-				Vector3 collision_normal = building_raycaster.GetCollisionNormal();
+			Vector3 collision_normal = building_raycaster.GetCollisionNormal();
 
-				Vector3I hit_pos = last_known_grid.position_to_voxel(last_building_cast_position - (collision_normal * 0.5f));
-				Vector3I hit_chunk = last_known_grid.position_to_chunk(last_building_cast_position - (collision_normal * 0.5f));
-				Vector3I hit_chunk_voxel = last_known_grid.position_to_chunk_voxel(last_building_cast_position - (collision_normal * 0.5f));
+			Vector3I hit_pos = last_known_grid.position_to_voxel(last_building_cast_position - (collision_normal * 0.5f));
+			Vector3I hit_chunk = last_known_grid.position_to_chunk(last_building_cast_position - (collision_normal * 0.5f));
+			Vector3I hit_chunk_voxel = last_known_grid.position_to_chunk_voxel(last_building_cast_position - (collision_normal * 0.5f));
 
-				Vector3I projected_pos = hit_pos + new Vector3I((int) collision_normal.X, (int) collision_normal.Y, (int) collision_normal.Z);
-				
+			Vector3I projected_pos = hit_pos + new Vector3I((int) collision_normal.X, (int) collision_normal.Y, (int) collision_normal.Z);
+
+			if (current_build_mode == BuildingMode.building && current_building_instance != null) {
+
 				current_building_instance.Visible = true;
 
 				building_hit_label.Text = "Hit Pos: " + hit_pos.ToString();
@@ -133,28 +152,6 @@ public partial class Player {
 						
 						last_known_grid.place(new_instance, projected_pos, build_normal, current_building_rotation);
 
-							// BuildingGridPlacable new_instance = current_building_scene.Instantiate<BuildingGridPlacable>();
-
-							// last_known_grid.AddChild(new_instance);
-
-							// new_instance.GlobalTransform = current_building_instance.GlobalTransform;
-
-							// Godot.Collections.Array<BuildingGridChunk> affected_chunks = last_known_grid.set_area(corner_1, corner_2, index);
-
-							// foreach (BuildingGridChunk chunk in affected_chunks) {
-							// 	new_instance.occupied_chunks.Add(chunk);
-							// 	chunk.OnChunkChanged += new_instance.on_chunk_changed;
-							// 	chunk.on_chunk_changed();
-							// }
-
-							// new_instance.parent_grid = last_known_grid;
-							// last_known_grid.set_placable(index, new_instance);
-
-							// new_instance.set_mesh_visibility(false);
-
-							// new_instance.on_build();
-						
-
 					} else {
 						GD.Print(test_result);
 						GD.Print(test_result.Count - 1);
@@ -178,10 +175,60 @@ public partial class Player {
 					current_building_instance.Visible = false;
 				}
 			}
+
+			if (current_build_mode == BuildingMode.demolishing) {
+				if (last_known_grid.is_position_valid(hit_pos)) {
+					VoxelData result = last_known_grid.get_block(hit_pos);
+
+					if (result.placable_index != -1) {
+						BuildingGridPlacable placable = last_known_grid.placables[result.placable_index];
+						//GD.Print(placable);
+
+						if (mouse_clicked) {
+							if (!demolish_targets.Contains(placable)) {
+								demolish_targets.Add(placable);
+								placable.set_mesh_visibility(true);
+							} else {
+								demolish_targets.Remove(placable);
+								placable.set_mesh_visibility(false);
+							}
+						} 
+					}
+				}
+
+				if (Input.IsMouseButtonPressed(MouseButton.Right)) {
+					current_demolish_time += (float) delta;
+
+					if (current_demolish_time > 1.0f) {
+						GD.Print("it's demolishin time");
+						current_demolish_time = 0.0f;
+
+						foreach (BuildingGrid grid in BuildingGrid.grids) {
+							grid.set_mesh_visibility(false);
+						}
+						
+						foreach (BuildingGridPlacable target in demolish_targets) {
+							target.mark_for_demolishing();
+						}
+
+						current_build_mode = BuildingMode.disabled;
+						clear_active_gui();
+						clear_demolish_targets();
+					}
+				} else {
+					current_demolish_time -= (float) delta;
+					current_demolish_time = Math.Clamp(current_demolish_time, 0, 1);
+				}
+			}
+
 		} else {
 			if (current_building_instance != null) {
 				current_building_instance.Visible = false;
 			}
 		}
+
+		
+		
+		
 	}
 }

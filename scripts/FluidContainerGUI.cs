@@ -15,6 +15,8 @@ public partial class FluidContainerGUI : GUI {
 	public Label system_label;
 	public TextureRect system_icon;
 
+	public string current_fluid = "";
+
 	public override void _Ready()
 	{
 		base._Ready();
@@ -29,7 +31,14 @@ public partial class FluidContainerGUI : GUI {
 		system_label = GetNode<Label>("VBoxContainer/System/TextureRect/Label");
 		system_icon = GetNode<TextureRect>("VBoxContainer/System/TextureRect");
 
-	
+		current_fluid = fluid_container.connected_system.current_fluid;
+
+		if (current_fluid != "") {
+			system_icon.Texture = GD.Load<Texture2D>(Prototypes.fluids[current_fluid].icon_texture);
+			container_icon.Texture = GD.Load<Texture2D>(Prototypes.fluids[current_fluid].icon_texture);
+		}
+
+		
 
 		Player.instance.lock_controls();
 
@@ -43,6 +52,15 @@ public partial class FluidContainerGUI : GUI {
 
 		if (fluid_container.connected_system != null) {
 			system_label.Text = String.Format("{0:F4} / {1:F4}", fluid_container.connected_system.total_amount, fluid_container.connected_system.total_volume);
+
+			if (current_fluid != fluid_container.connected_system.current_fluid) {
+				current_fluid = fluid_container.connected_system.current_fluid;
+
+				if (current_fluid != "") {
+					system_icon.Texture = GD.Load<Texture2D>(Prototypes.fluids[current_fluid].icon_texture);
+					container_icon.Texture = GD.Load<Texture2D>(Prototypes.fluids[current_fluid].icon_texture);
+				}
+			}
 		} 
 	}
 

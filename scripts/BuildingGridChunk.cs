@@ -120,7 +120,7 @@ public partial class BuildingGridChunk : StaticBody3D {
 		
 		ulong total_start = Time.GetTicksUsec();
 
-		generate_mesh();
+		CallDeferred(BuildingGridChunk.MethodName.generate_mesh);
 		//generate_mesh_neighbors();
 
 		ulong time = Time.GetTicksUsec() - total_start;
@@ -374,27 +374,27 @@ public partial class BuildingGridChunk : StaticBody3D {
 
 	public void generate_mesh_neighbors () {
 		if (chunk_left != null) {
-			chunk_left.generate_mesh();
+			chunk_left.CallDeferred(BuildingGridChunk.MethodName.generate_mesh);
 		}
 
 		if (chunk_right != null) {
-			chunk_right.generate_mesh();
+			chunk_right.CallDeferred(BuildingGridChunk.MethodName.generate_mesh);
 		}
 
 		if (chunk_up != null) {
-			chunk_up.generate_mesh();
+			chunk_up.CallDeferred(BuildingGridChunk.MethodName.generate_mesh);
 		}
 
 		if (chunk_down != null) {
-			chunk_down.generate_mesh();
+			chunk_down.CallDeferred(BuildingGridChunk.MethodName.generate_mesh);
 		}
 
 		if (chunk_forward != null) {
-			chunk_forward.generate_mesh();
+			chunk_forward.CallDeferred(BuildingGridChunk.MethodName.generate_mesh);
 		}
 
 		if (chunk_back != null) {
-			chunk_back.generate_mesh();
+			chunk_back.CallDeferred(BuildingGridChunk.MethodName.generate_mesh);
 		}
 	}
 

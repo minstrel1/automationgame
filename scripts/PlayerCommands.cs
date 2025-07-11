@@ -16,5 +16,15 @@ public partial class Player : CharacterBody3D {
         }
 	}
 
+	[ConsoleCommand("set_engine_speed", "sets the speed of the game engine.")]
+	public void set_engine_speed (float speed) {
+		if (speed > 0.000001) {
+			Engine.TimeScale = speed;
+			LimboConsole.Info("Engine speed was set to " + speed.ToString() + ".");
+		} else {
+			LimboConsole.Warn(speed.ToString() + " is too low.");
+		}
+	}
+
     
 }

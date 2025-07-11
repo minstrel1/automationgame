@@ -9,7 +9,9 @@ public partial class FluidSpecialVoxel : SpecialVoxel {
 	
 	public FluidContainer parent_container;
 
-	public Godot.Collections.Array<FluidContainer> target_containers;
+	public Dictionary<FluidContainer, SpecialVoxelFlags> connected_containers = new Dictionary<FluidContainer, SpecialVoxelFlags>();
+
+	public float flow_rate = 600.0f;
 
 	public override void update_voxel_connections()
 	{
@@ -32,7 +34,7 @@ public partial class FluidSpecialVoxel : SpecialVoxel {
 				// 	parent_container.new_system_this_frame = true;
 				// }
 				
-				
+				connected_containers.Clear();
 
 				switch (voxel_flags) {
 					case SpecialVoxelFlags.FluidInputOutput: // combine with other systems
@@ -55,6 +57,9 @@ public partial class FluidSpecialVoxel : SpecialVoxel {
 														parent_container.connected_system.merge_system(fluid_voxel.parent_container.connected_system);
 													}
 													
+													connected_containers[fluid_voxel.parent_container] = SpecialVoxelFlags.FluidInputOutput;
+													fluid_voxel.connected_containers[parent_container] = SpecialVoxelFlags.FluidInputOutput;
+
 												} else {
 													GD.Print("incompatible systems");
 												}
@@ -69,6 +74,9 @@ public partial class FluidSpecialVoxel : SpecialVoxel {
 											if (parent_container.connected_system != null) {
 												if (parent_container.connected_system.is_system_compatible(fluid_voxel.parent_container.connected_system)) {
 													parent_container.connected_system.add_output(fluid_voxel.parent_container.connected_system);
+
+													connected_containers[fluid_voxel.parent_container] = SpecialVoxelFlags.FluidOutput;
+													fluid_voxel.connected_containers[parent_container] = SpecialVoxelFlags.FluidInput;
 												}
 											}
 										}
@@ -112,6 +120,9 @@ public partial class FluidSpecialVoxel : SpecialVoxel {
 								if (fluid_voxel.voxel_flags == SpecialVoxelFlags.FluidInput || fluid_voxel.voxel_flags == SpecialVoxelFlags.FluidInputOutput) {
 									if (fluid_voxel.parent_container != null && fluid_voxel.parent_container.connected_system != null) {
 										parent_container.connected_system.add_output(fluid_voxel.parent_container.connected_system);
+
+										connected_containers[fluid_voxel.parent_container] = SpecialVoxelFlags.FluidOutput;
+										fluid_voxel.connected_containers[parent_container] = SpecialVoxelFlags.FluidInput;
 									}
 								}
 

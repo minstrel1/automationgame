@@ -45,11 +45,11 @@ public partial class Growable : Node3D {
 		//ulong start = Time.GetTicksUsec();
 		
 		if (current_growth_time < growth_time && !done_growing) {
-			current_growth_time += 1;
+			current_growth_time += 1 * (int) Math.Round(Engine.TimeScale);
 			float scale = (float) current_growth_time / growth_time;
 			model.Scale = Vector3.One * scale;
 
-			if (current_growth_time == growth_time) {
+			if (current_growth_time >= growth_time) {
 				done_growing = true;
 			}
 		}

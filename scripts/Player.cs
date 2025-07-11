@@ -66,6 +66,9 @@ public partial class Player : CharacterBody3D {
 	public static Player instance;
 	public static HandItemRepresentation hand_item;
 
+	public bool mouse_clicked = false;
+	public bool right_mouse_clicked = false;
+
 	public override void _Ready()
 	{
 		base._Ready();
@@ -103,7 +106,7 @@ public partial class Player : CharacterBody3D {
 		
 
 		interaction_cast();
-		building_cast();
+		building_cast(delta);
 
 		walk_vel = do_walk((float) delta);
 		grav_vel = do_gravity((float) delta);
@@ -120,6 +123,7 @@ public partial class Player : CharacterBody3D {
 		update_hud();
 
 		mouse_clicked = false;
+		right_mouse_clicked = false;
 		
 	}
 
@@ -225,7 +229,7 @@ public partial class Player : CharacterBody3D {
 		if (Input.IsActionJustPressed("interact")) {
 			if (is_in_gui()) {
 				clear_active_gui();
-			} else if (is_interact_valid() && !build_mode) {
+			} else if (is_interact_valid() && current_build_mode == BuildingMode.disabled) {
 				GD.Print("Interacting with " + interact_cast_result.ToString());
 				(interact_cast_result as IInteractable).on_interact();
 			}
@@ -240,21 +244,30 @@ public partial class Player : CharacterBody3D {
 		}
 
 		if (Input.IsActionJustPressed("build_mode")) {
-			if (build_mode) {
+			if (current_build_mode == BuildingMode.building) {
 				foreach (BuildingGrid grid in BuildingGrid.grids) {
 					grid.set_mesh_visibility(false);
 				}
 
-				build_mode = false;
+				current_build_mode = BuildingMode.disabled;
 				clear_active_gui();
 				clear_building_instance();
 				current_building_scene = null;
+			} else if (current_build_mode == BuildingMode.demolishing) {
+				clear_demolish_targets();
+
+				current_build_mode = BuildingMode.building;
+				if (current_building_instance == null) {
+					CategoryList new_instance = CategoryList.make(CategoryListMode.Buildings, Prototypes.buildings, gui_parent);
+					new_instance.OnChoiceSelected += on_building_choice_selected;
+					set_active_gui(new_instance);
+				}
 			} else {
 				foreach (BuildingGrid grid in BuildingGrid.grids) {
 					grid.set_mesh_visibility(true);
 				}
 
-				build_mode = true;
+				current_build_mode = BuildingMode.building;
 				if (current_building_instance == null) {
 					CategoryList new_instance = CategoryList.make(CategoryListMode.Buildings, Prototypes.buildings, gui_parent);
 					new_instance.OnChoiceSelected += on_building_choice_selected;
@@ -263,7 +276,30 @@ public partial class Player : CharacterBody3D {
 			}
 		}
 
-		if (build_mode && !scrolled_this_frame) {
+		if (Input.IsActionJustPressed("demolish_mode")) {
+			if (current_build_mode == BuildingMode.demolishing) {
+				foreach (BuildingGrid grid in BuildingGrid.grids) {
+					grid.set_mesh_visibility(false);
+				}
+
+				current_build_mode = BuildingMode.disabled;
+				clear_active_gui();
+				clear_demolish_targets();
+			} else if (current_build_mode == BuildingMode.building) {
+				current_build_mode = BuildingMode.demolishing;
+				clear_active_gui();
+				clear_building_instance();
+				current_building_scene = null;
+			} else {
+				foreach (BuildingGrid grid in BuildingGrid.grids) {
+					grid.set_mesh_visibility(true);
+				}
+
+				current_build_mode = BuildingMode.demolishing;
+			}
+		}
+
+		if (current_build_mode == BuildingMode.building && !scrolled_this_frame) {
 			if (Input.IsActionJustPressed("scroll_up")) {
 				GD.Print("scroll up");
 				current_building_rotation += 1;
@@ -290,6 +326,10 @@ public partial class Player : CharacterBody3D {
 				}
 
 				mouse_clicked = true;
+			}
+
+			if (new_event.ButtonIndex == MouseButton.Right && new_event.Pressed) {
+				right_mouse_clicked = true;
 			}
 		}
 	}
@@ -351,7 +391,7 @@ public partial class Player : CharacterBody3D {
 			last_interact_cast_position = current_cast_position;
 		}
 
-		if (!is_in_gui() && !build_mode) {
+		if (!is_in_gui() && current_build_mode == BuildingMode.disabled) {
 			if (current_cast_result != interact_cast_result) {
 				if (is_interact_valid()) {
 					(interact_cast_result as IInteractable).on_hover_unfocus();

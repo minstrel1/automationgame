@@ -296,8 +296,8 @@ public partial class BuildingGrid : StaticBody3D {
 		set_block(x, y, z, new VoxelData{placable_index = -1});
 	}
 
-	public void clear_area (Vector3 from, Vector3 to) {
-		float temp = 0;
+	public void clear_area (Vector3I from, Vector3I to) {
+		int temp = 0;
 		if (from.X > to.X) {
 			temp = from.X;
 			from.X = to.X;
@@ -314,18 +314,19 @@ public partial class BuildingGrid : StaticBody3D {
 			to.Z = temp;
 		}
 
-		Vector3I start = position_to_voxel(from);
-		Vector3I end = position_to_voxel(to);
+		//Godot.Collections.Dictionary<BuildingGridChunk, bool> affected_chunks = new Godot.Collections.Dictionary<BuildingGridChunk, bool>();
 
-		for (int x = start.X; x < end.X; x++) {
-			for (int y = start.Y; y < end.Y; y++) {
-				for (int z = start.Z; z < end.Z; z++) {
+		for (int x = from.X; x <= to.X; x++) {
+			for (int y = from.Y; y <= to.Y; y++) {
+				for (int z = from.Z; z <= to.Z; z++) {
 					if (is_position_valid(x, y, z)) {
 						clear_block(x, y, z);
 					}
 				}
 			}
 		}
+
+		
 	}
 
 	public bool is_position_valid (int x, int y, int z) {
@@ -424,11 +425,16 @@ public partial class BuildingGrid : StaticBody3D {
 		Vector3I corner_1 = Tools.apply_building_rotations(placable.get_box_from(), normal, rotation) + grid_pos; 
 		Vector3I corner_2 = Tools.apply_building_rotations(placable.get_box_to(), normal, rotation) + grid_pos;
 
+		placable.placed_corner_1 = corner_1;
+		placable.placed_corner_2 = corner_2;
+
 		int index = get_free_index();
 
 		if (index == -1) {
 			return false;
 		}
+
+		placable.placed_index = index;
 
 		AddChild(placable, true);
 
@@ -550,7 +556,7 @@ public partial class BuildingGrid : StaticBody3D {
 						chunk.chunk_back = chunk_data[x][y][z + 1];
 					}
 					
-					chunk.generate_mesh();
+					chunk.CallDeferred(BuildingGridChunk.MethodName.generate_mesh);
 				}
 			}
 		}
@@ -560,7 +566,7 @@ public partial class BuildingGrid : StaticBody3D {
 		for (int x = 0; x < grid_width / chunk_size; x++) {
 			for (int y = 0; y < grid_height / chunk_size; y++) {
 				for (int z = 0; z < grid_length / chunk_size; z++) {
-					chunk_data[x][y][z].generate_mesh();
+					chunk_data[x][y][z].CallDeferred(BuildingGridChunk.MethodName.generate_mesh);;
 				}
 			}
 		}

@@ -128,9 +128,12 @@ public partial class BuildingGridPlacable : Node3D {
 
 	public string packed_scene_path;
 
-	public bool is_built = false;
+	public BuildingState current_building_state = BuildingState.pre_built;
 
 	public Array<BuildingGridChunk> occupied_chunks;
+	public Vector3I placed_corner_1;
+	public Vector3I placed_corner_2;
+	public int placed_index = -1;
 
 	public Dictionary<string, SpecialVoxel> special_voxels = new Dictionary<string, SpecialVoxel>();
 
@@ -542,7 +545,7 @@ public partial class BuildingGridPlacable : Node3D {
 	}
 
 	public virtual void on_build () {
-		is_built = true;
+		current_building_state = BuildingState.built;
 
 		foreach (string name in special_voxels.Keys) {
 			special_voxels[name].on_build();
@@ -563,6 +566,10 @@ public partial class BuildingGridPlacable : Node3D {
 		foreach (string name in special_voxels.Keys) {
 			special_voxels[name].update();
 		}
+
+		if (current_building_state == BuildingState.pre_remove) {
+			release();
+		}
 	}
 
 	public virtual void set_collision (bool value) {
@@ -581,6 +588,26 @@ public partial class BuildingGridPlacable : Node3D {
 		}
 
 		
+	}
+
+	public virtual void mark_for_demolishing () {
+		current_building_state = BuildingState.pre_remove;
+	}
+
+	public virtual void release () {
+		//GD.Print("i'm releasing ughhhhh");
+
+		
+
+		parent_grid.clear_area(placed_corner_1, placed_corner_2);
+		foreach (BuildingGridChunk chunk in occupied_chunks) {
+			chunk.on_chunk_changed_subscribers.Remove(this);
+			chunk.on_chunk_changed();
+		}
+
+		parent_grid.remove_placable(placed_index);
+
+		QueueFree();
 	}
 
 }

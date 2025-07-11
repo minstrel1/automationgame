@@ -85,7 +85,7 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 	{
 		base._PhysicsProcess(delta);
 
-		if (Engine.IsEditorHint() || !is_built) {
+		if (Engine.IsEditorHint() || !(current_building_state == BuildingState.built)) {
 			return;
 		}
 
@@ -162,7 +162,7 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 	}
 
 	public void on_interact () {
-		if (is_built) {
+		if (current_building_state == BuildingState.built) {
 			if (Player.instance.active_gui is GrowingPlotGUI) {
 				Player.instance.clear_active_gui();
 			} else {

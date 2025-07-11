@@ -37,12 +37,9 @@ public partial class WaterCollector : BuildingGridPlacable, IInteractable {
 	public override void _PhysicsProcess(double delta) {
 		base._PhysicsProcess(delta);
 
-		if (is_built) {
+		if (current_building_state == BuildingState.built) {
 			water_made_this_frame = container.insert("water", max_water_per_second * (float) delta);
-			//GD.Print(water_made_this_frame);
 		}
-
-		
 	}
 
 	public void on_hover_focus () {
@@ -54,7 +51,7 @@ public partial class WaterCollector : BuildingGridPlacable, IInteractable {
 	}
 
 	public void on_interact () {
-		if (is_built) {
+		if (current_building_state == BuildingState.built) {
 			if (Player.instance.active_gui is FluidContainerGUI) {
 				Player.instance.clear_active_gui();
 			} else {

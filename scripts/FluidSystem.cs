@@ -10,9 +10,11 @@ public partial class FluidSystem : Node {
 
 	public Godot.Collections.Array<FluidContainer> filtered_containers = new Array<FluidContainer>();
 
-	public Godot.Collections.Array<FluidSystem> connected_inputs = new Array<FluidSystem>();
+	public Dictionary<FluidSystem, int> connected_inputs = new Dictionary<FluidSystem, int>(); 
 
-	public Godot.Collections.Array<FluidSystem> connected_outputs = new Array<FluidSystem>(); // EXCLUSIVELY FOR OUTPUTTING
+	public Dictionary<FluidSystem, int> connected_outputs = new Dictionary<FluidSystem, int>(); 
+
+	public Godot.Collections.Array<FluidSpecialVoxel> connected_output_voxels = new Array<FluidSpecialVoxel>();
 
 	public string current_fluid = "";
 	public string fluid_filter = "";
@@ -45,8 +47,8 @@ public partial class FluidSystem : Node {
 		if (connected_outputs.Count > 0) {
 			amount_to_remove = 0;
 
-			foreach (FluidSystem system in connected_outputs) {
-				amount_to_remove = Math.Min(Math.Max(min_flow_rate, (total_amount / total_volume) * flow_rate * (float) delta), total_amount);
+			foreach (FluidSystem system in connected_outputs.Keys) {
+				amount_to_remove = Math.Min(Math.Max(min_flow_rate, (1 - (system.total_amount / system.total_volume)) * flow_rate * (float) delta), total_amount);
 				if (system != null) {
 					amount_to_remove = system.insert(current_fluid, amount_to_remove);
 					flow_rate_this_frame += amount_to_remove;
@@ -154,9 +156,81 @@ public partial class FluidSystem : Node {
 	}
 
 	public void remove_container (FluidContainer container) {
+		connected_containers.Remove(container);
+	}
+
+	public void split_system (FluidContainer container) {
 		if (connected_containers.Contains(container)) {
 			connected_containers.Remove(container);
 			container.connected_system = null;
+
+			System.Collections.Generic.Queue<FluidContainer> search_queue = new System.Collections.Generic.Queue<FluidContainer>();
+			Dictionary<FluidContainer, int> fluid_indices = new Dictionary<FluidContainer, int>();
+			Dictionary<int, FluidSystem> new_systems = new Dictionary<int, FluidSystem>();
+			
+			int search_index = 0;
+
+			foreach (FluidSpecialVoxel starting_voxel in container.connection_points) {
+				foreach (FluidContainer key_container in starting_voxel.connected_containers.Keys) {
+					switch (starting_voxel.connected_containers[key_container]) {
+						case SpecialVoxelFlags.FluidInputOutput:
+							if (!fluid_indices.ContainsKey(key_container)) {
+								connected_containers.Remove(key_container);
+								fluid_indices[key_container] = search_index;
+								new_systems[search_index] = new FluidSystem();
+								new_systems[search_index].add_container(key_container);
+								key_container.connected_system = new_systems[search_index];
+								search_queue.Enqueue(key_container);
+							}
+							break;
+
+						case SpecialVoxelFlags.FluidOutput:
+							remove_output(key_container.connected_system);
+							break;
+
+					} 
+				}
+			}
+
+			int iteration_count = 0;
+
+			int current_index;
+			FluidContainer current;
+
+			while (search_queue.Count > 0 && iteration_count < 10000) {
+				current = search_queue.Dequeue();
+				current_index = fluid_indices[current];
+
+				foreach (FluidSpecialVoxel starting_voxel in current.connection_points) {
+					foreach (FluidContainer key_container in starting_voxel.connected_containers.Keys) {
+						switch (starting_voxel.connected_containers[key_container]) {
+							case SpecialVoxelFlags.FluidInputOutput:
+								if (fluid_indices.ContainsKey(key_container)) {
+									if (fluid_indices[key_container] != current_index) {
+										int old_index = fluid_indices[key_container];
+
+										new_systems[current_index].merge_system(new_systems[old_index]);
+
+										new_systems.Remove(old_index);
+									}
+
+								} else {
+									fluid_indices[key_container] = current_index;
+									new_systems[current_index].add_container(key_container);
+									search_queue.Enqueue(key_container);
+								}
+								break;
+
+							case SpecialVoxelFlags.FluidOutput:
+								remove_output(key_container.connected_system);
+								break;
+
+						} 
+					}
+				}
+			}
+
+			
 			calculate_volume();
 		}
 
@@ -200,12 +274,37 @@ public partial class FluidSystem : Node {
 			return;
 		}
 
-		if (!connected_outputs.Contains(system)) {
-			connected_outputs.Add(system);
+		if (connected_outputs.ContainsKey(system)) {
+			connected_outputs[system] += 1;
+		} else {
+			connected_outputs[system] = 1;
 		}
 
-		if (!system.connected_inputs.Contains(this)) {
-			system.connected_inputs.Add(this);
+		if (system.connected_inputs.ContainsKey(this)) {
+			system.connected_inputs[this] += 1;
+		} else {
+			system.connected_inputs[this] = 1;
+		}
+
+	}
+
+	public void remove_output (FluidSystem system) {
+		if (system == this) {
+			return;
+		}
+
+		if (connected_outputs.ContainsKey(system)) {
+			connected_outputs[system] -= 1;
+			if (connected_outputs[system] <= 0) {
+				connected_outputs.Remove(system);
+			}
+		}
+
+		if (system.connected_inputs.ContainsKey(this)) {
+			system.connected_inputs[this] -= 1;
+			if (system.connected_inputs[this] <= 0) {
+				system.connected_inputs.Remove(system);
+			}
 		}
 	}
 
@@ -255,18 +354,26 @@ public partial class FluidSystem : Node {
 			}
 		}
 
-		foreach (FluidSystem output in system.connected_outputs) {
-			if (output != this && !connected_outputs.Contains(output)) {
-				connected_outputs.Add(output);
+		foreach (FluidSystem output in system.connected_outputs.Keys) {
+			if (output != this) {
+				if (connected_outputs.ContainsKey(output)) {
+					connected_outputs[output] += system.connected_outputs[output];
+				} else {
+					connected_outputs[output] = system.connected_outputs[output];
+				}
 			}
 		}
 
-		int index = 0;
-		foreach (FluidSystem input in system.connected_inputs) {
-			index = input.connected_outputs.IndexOf(system);
-
-			if (index != -1) {
-				input.connected_outputs[index] = this;
+		foreach (FluidSystem input in system.connected_inputs.Keys) {
+			if (input != this) {
+				if (input.connected_outputs.ContainsKey(system)) {
+					if (input.connected_outputs.ContainsKey(this)) {
+						input.connected_outputs[this] += input.connected_outputs[system];
+					} else {
+						input.connected_outputs[this] = input.connected_outputs[system];
+					}
+					input.connected_outputs.Remove(system);
+				}
 			}
 		}
 
