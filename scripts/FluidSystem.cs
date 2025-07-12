@@ -14,8 +14,6 @@ public partial class FluidSystem : Node {
 
 	public Dictionary<FluidSystem, int> connected_outputs = new Dictionary<FluidSystem, int>(); 
 
-	public Godot.Collections.Array<FluidSpecialVoxel> connected_output_voxels = new Array<FluidSpecialVoxel>();
-
 	public string current_fluid = "";
 	public string fluid_filter = "";
 

@@ -51,6 +51,9 @@ public partial class FluidSpecialVoxel : SpecialVoxel {
 											if (parent_container.connected_system != fluid_voxel.parent_container.connected_system) {
 												GD.Print("found system to merge");
 												if (parent_container.connected_system.is_system_compatible(fluid_voxel.parent_container.connected_system)) {
+													parent_container.connected_outputs[fluid_voxel.parent_container] = SpecialVoxelFlags.FluidInputOutput;
+													fluid_voxel.parent_container.connected_outputs[parent_container] = SpecialVoxelFlags.FluidInputOutput;
+
 													if (fluid_voxel.parent_container.connected_system.connected_containers.Count >= parent_container.connected_system.connected_containers.Count) {
 														fluid_voxel.parent_container.connected_system.merge_system(parent_container.connected_system);
 													} else {

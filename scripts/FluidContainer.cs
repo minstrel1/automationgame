@@ -13,6 +13,9 @@ public partial class FluidContainer : Node {
 
 	public Godot.Collections.Array<FluidSpecialVoxel> connection_points = new Array<FluidSpecialVoxel>();
 
+	public Dictionary<FluidContainer, SpecialVoxelFlags> connected_outputs = new Dictionary<FluidContainer, SpecialVoxelFlags>();
+	public Dictionary<FluidContainer, SpecialVoxelFlags> connected_inputs = new Dictionary<FluidContainer, SpecialVoxelFlags>();
+
 	public FluidSystem connected_system;
 
 	public bool new_system_this_frame = false;
