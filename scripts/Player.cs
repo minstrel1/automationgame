@@ -300,14 +300,14 @@ public partial class Player : CharacterBody3D {
 		}
 
 		if (current_build_mode == BuildingMode.building && !scrolled_this_frame) {
-			if (Input.IsActionJustPressed("scroll_up")) {
+			if (Input.IsActionJustPressed("rotate_up")) {
 				GD.Print("scroll up");
 				current_building_rotation += 1;
 				if (current_building_rotation > 3) {
 					current_building_rotation = 0;
 				}
 				scrolled_this_frame = true;
-			} else if (Input.IsActionJustPressed("scroll_down")) {
+			} else if (Input.IsActionJustPressed("rotate_down")) {
 				current_building_rotation -= 1;
 				if (current_building_rotation < 0) {
 					current_building_rotation = 3;

@@ -154,6 +154,38 @@ public partial class FluidSystem : Node {
 	}
 
 	public void remove_container (FluidContainer container) {
+		if (connected_containers.Contains(container)) {
+			connected_containers.Remove(container);
+			container.connected_system = null;
+
+			if (filtered_containers.Contains(container)) {
+				filtered_containers.Remove(container);
+
+				fluid_filter = null;
+
+				foreach (FluidContainer filtered_container in filtered_containers) {
+					if (container.fluid_filter != null) {
+						fluid_filter = container.fluid_filter;
+					}
+				}
+			}
+
+			foreach (FluidSpecialVoxel special_voxel in container.connection_points) {
+				foreach (FluidContainer target_container in special_voxel.connected_containers.Keys) {
+					switch (special_voxel.connected_containers[target_container]) {
+						case SpecialVoxelFlags.FluidInput:
+							target_container.connected_system.remove_output(this);
+							break;
+
+						case SpecialVoxelFlags.FluidOutput:
+							remove_output(target_container.connected_system);
+							break;
+					}
+				}
+			}
+
+			calculate_volume();
+		}
 		connected_containers.Remove(container);
 	}
 
@@ -164,7 +196,7 @@ public partial class FluidSystem : Node {
 
 			System.Collections.Generic.Queue<FluidContainer> search_queue = new System.Collections.Generic.Queue<FluidContainer>();
 			Dictionary<FluidContainer, int> fluid_indices = new Dictionary<FluidContainer, int>();
-			Dictionary<int, FluidSystem> new_systems = new Dictionary<int, FluidSystem>();
+			Dictionary<int, Array<FluidContainer>> new_systems = new Dictionary<int, Array<FluidContainer>>();
 			
 			int search_index = 0;
 
@@ -173,11 +205,8 @@ public partial class FluidSystem : Node {
 					switch (starting_voxel.connected_containers[key_container]) {
 						case SpecialVoxelFlags.FluidInputOutput:
 							if (!fluid_indices.ContainsKey(key_container)) {
-								connected_containers.Remove(key_container);
 								fluid_indices[key_container] = search_index;
-								new_systems[search_index] = new FluidSystem();
-								new_systems[search_index].add_container(key_container);
-								key_container.connected_system = new_systems[search_index];
+								new_systems[search_index] = new Array<FluidContainer>{key_container};
 								search_queue.Enqueue(key_container);
 							}
 							break;
@@ -195,9 +224,12 @@ public partial class FluidSystem : Node {
 			int current_index;
 			FluidContainer current;
 
+			int containers_searched = 0;
+
 			while (search_queue.Count > 0 && iteration_count < 10000) {
 				current = search_queue.Dequeue();
 				current_index = fluid_indices[current];
+				containers_searched += 1;
 
 				foreach (FluidSpecialVoxel starting_voxel in current.connection_points) {
 					foreach (FluidContainer key_container in starting_voxel.connected_containers.Keys) {
@@ -207,27 +239,40 @@ public partial class FluidSystem : Node {
 									if (fluid_indices[key_container] != current_index) {
 										int old_index = fluid_indices[key_container];
 
-										new_systems[current_index].merge_system(new_systems[old_index]);
+										foreach (FluidContainer old_container in new_systems[old_index]) {
+											fluid_indices[old_container] = current_index;
+											new_systems[current_index].Add(old_container);
+										}
 
 										new_systems.Remove(old_index);
 									}
 
 								} else {
 									fluid_indices[key_container] = current_index;
-									new_systems[current_index].add_container(key_container);
+									new_systems[current_index].Add(key_container);
 									search_queue.Enqueue(key_container);
 								}
 								break;
 
 							case SpecialVoxelFlags.FluidOutput:
-								remove_output(key_container.connected_system);
 								break;
 
 						} 
 					}
 				}
 			}
+			
+			int largest_key = new_systems.Keys.GetEnumerator().Current;
+			int largest_count = new_systems[largest_key].Count;
 
+			foreach (int key in new_systems.Keys) {
+				if (new_systems[key].Count > largest_count) {
+					largest_key = key;
+					largest_count = new_systems[largest_key].Count;
+				}
+			}
+			
+			new_systems.Remove(largest_key);
 			
 			calculate_volume();
 		}
@@ -248,11 +293,7 @@ public partial class FluidSystem : Node {
 
 		total_volume = new_volume;
 		total_amount = Math.Min(total_volume, new_amount);
-		float percent_full = total_amount / total_volume;
-		
-		foreach (FluidContainer container in connected_containers) {
-			container.current_amount = container.volume * percent_full;
-		}
+		update_amounts();
 
 		GD.Print(String.Format("{0} has volume {1} and amount {2}", Name, total_volume, total_amount));
 	}

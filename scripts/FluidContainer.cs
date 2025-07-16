@@ -13,9 +13,6 @@ public partial class FluidContainer : Node {
 
 	public Godot.Collections.Array<FluidSpecialVoxel> connection_points = new Array<FluidSpecialVoxel>();
 
-	public Dictionary<FluidContainer, SpecialVoxelFlags> connected_outputs = new Dictionary<FluidContainer, SpecialVoxelFlags>();
-	public Dictionary<FluidContainer, SpecialVoxelFlags> connected_inputs = new Dictionary<FluidContainer, SpecialVoxelFlags>();
-
 	public FluidSystem connected_system;
 
 	public bool new_system_this_frame = false;
@@ -41,5 +38,32 @@ public partial class FluidContainer : Node {
 
 	public float insert (string fluid, float amount) {
 		return connected_system.insert(fluid, amount);
+	}
+
+	public void release () {
+		if (does_removal_split()) {
+			GD.Print("this is where we are supposed to split");
+		} else {
+			FluidSystem old_system = connected_system;
+			old_system.remove_container(this);
+
+			if (current_amount > 0 && current_fluid != "") {
+				old_system.insert(current_fluid, current_amount);
+			}
+		}
+	}
+
+	public bool does_removal_split () {
+		int connected_ios = 0;
+
+		foreach (FluidSpecialVoxel special_voxel in connection_points) {
+			foreach (FluidContainer container in special_voxel.connected_containers.Keys) {
+				if (special_voxel.connected_containers[container] == SpecialVoxelFlags.FluidInputOutput) {
+					connected_ios += 1;
+				}
+			}
+		}
+
+		return connected_ios > 1;
 	}
 }

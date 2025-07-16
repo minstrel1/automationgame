@@ -65,6 +65,10 @@ public partial class FluidTank : BuildingGridPlacable, IInteractable {
 	}
 
 	public override void release() {
+		if (container != null) {
+			container.release();
+		}
+
 		base.release();
 
 		
