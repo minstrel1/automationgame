@@ -10,9 +10,8 @@ public partial class FluidSystem : Node {
 
 	public Godot.Collections.Array<FluidContainer> filtered_containers = new Array<FluidContainer>();
 
-	public Dictionary<FluidSystem, int> connected_inputs = new Dictionary<FluidSystem, int>(); 
-
-	public Dictionary<FluidSystem, int> connected_outputs = new Dictionary<FluidSystem, int>(); 
+	public Array<FluidContainer> connected_outputs = new Array<FluidContainer>();
+	public Array<float> connected_outputs_flow_rates = new Array<float>();
 
 	public string current_fluid = "";
 	public string fluid_filter = "";
@@ -27,6 +26,9 @@ public partial class FluidSystem : Node {
 
 	public float percent_full = 0f;
 
+	public bool outputs_recalculated_this_frame = false;
+	public bool outputs_recalculated_queued_this_frame = false;
+
 	public FluidSystem () {
 		FluidSystemManager.Instance.add_system(this);
 	}
@@ -36,23 +38,36 @@ public partial class FluidSystem : Node {
 	public override void _PhysicsProcess(double delta) {
 		base._PhysicsProcess(delta);
 
-		for (int i = 0; i < connected_containers.Count; i++) {
-			connected_containers[i].new_system_this_frame = false;
-		}
+		outputs_recalculated_this_frame = false;
+		outputs_recalculated_queued_this_frame = false;
+
+		// for (int i = 0; i < connected_containers.Count; i++) {
+		// 	connected_containers[i].new_system_this_frame = false;
+		// }
 
 		flow_rate_this_frame = 0;
 
 		if (connected_outputs.Count > 0) {
 			amount_to_remove = 0;
 
-			foreach (FluidSystem system in connected_outputs.Keys) {
-				if (system == null) {
-					GD.Print("we got a null system");
-					GD.Print(connected_inputs);
+			for (int i = 0; i < connected_outputs.Count; i++) {
+				FluidContainer container = connected_outputs[i];
+				float connection_flow_rate = connected_outputs_flow_rates[i];
+				if (container == null) {
+					GD.Print("we got a null container");
 					GD.Print(connected_outputs);
 					continue;
 				}
-				amount_to_remove = Math.Min(Math.Max(min_flow_rate, (1 - (system.total_amount / system.total_volume)) * flow_rate * (float) delta), total_amount);
+				
+				if (container.connected_system == null) {
+					GD.Print("we got a container with no system??");
+					queue_recalculate_outputs();
+					continue;
+				}
+
+				FluidSystem system = container.connected_system;
+
+				amount_to_remove = Math.Min(Math.Max(min_flow_rate, (1 - (system.total_amount / system.total_volume)) * connection_flow_rate * (float) delta), total_amount);
 				if (system != null) {
 					amount_to_remove = system.insert(current_fluid, amount_to_remove);
 					flow_rate_this_frame += amount_to_remove;
@@ -90,9 +105,76 @@ public partial class FluidSystem : Node {
 
 				connected_containers.Add(container);
 				container.connected_system = this;
+				queue_recalculate_outputs();
 				calculate_volume();
 			} else {
 				GD.Print("INCOMPATIBLE");
+			}
+		}
+	}
+
+	public void remove_container (FluidContainer container) {
+		if (connected_containers.Contains(container)) {
+			connected_containers.Remove(container);
+			container.connected_system = null;
+
+			//GD.Print("removing container");
+
+			if (filtered_containers.Contains(container)) {
+				filtered_containers.Remove(container);
+
+				fluid_filter = null;
+
+				foreach (FluidContainer filtered_container in filtered_containers) {
+					if (container.fluid_filter != null) {
+						fluid_filter = container.fluid_filter;
+					}
+				}
+			}
+
+			if (connected_containers.Count == 0) {
+				this.release();
+			} else {
+				queue_recalculate_outputs();
+				calculate_volume();
+			}
+		}
+
+		//GD.Print(Name + " has " + connected_containers.Count + " containers left");
+	}
+
+	public void queue_recalculate_outputs () {
+		if (!outputs_recalculated_queued_this_frame) {
+			CallDeferred(MethodName.recalculate_outputs);
+			outputs_recalculated_queued_this_frame = true;
+		}
+	}
+
+
+	public void recalculate_outputs () {
+		if (outputs_recalculated_this_frame) {
+			return;
+		}
+
+		outputs_recalculated_this_frame = true;
+
+		connected_outputs.Clear();
+		connected_outputs_flow_rates.Clear();
+
+		foreach (FluidContainer container in connected_containers) {
+			foreach (FluidSpecialVoxel special_voxel in container.connection_points) {
+				foreach (FluidContainer connected_container in special_voxel.connected_containers.Keys) {
+					if (special_voxel.connected_containers[connected_container] == SpecialVoxelFlags.FluidOutput) {
+						if (connected_container.connected_system != null && is_system_compatible(connected_container.connected_system)) {
+							connected_outputs.Add(connected_container);
+							connected_outputs_flow_rates.Add(special_voxel.flow_rate);
+						}
+					} else if (special_voxel.connected_containers[connected_container] == SpecialVoxelFlags.FluidInput) {
+						if (connected_container.connected_system != null) {
+							connected_container.connected_system.queue_recalculate_outputs();
+						}
+					}
+				}
 			}
 		}
 	}
@@ -120,8 +202,6 @@ public partial class FluidSystem : Node {
 					return true;
 				} else {
 					GD.Print("wot");
-					GD.Print(current_fluid);
-					GD.Print(container.current_fluid);
 					return current_fluid == container.current_fluid;
 				}
 			} else {
@@ -157,8 +237,6 @@ public partial class FluidSystem : Node {
 					return true;
 				} else {
 					GD.Print("wot");
-					GD.Print(current_fluid);
-					GD.Print(system.current_fluid);
 					return current_fluid == system.current_fluid;
 				}
 			} else {
@@ -167,61 +245,7 @@ public partial class FluidSystem : Node {
 		}
 	}
 
-	public void remove_container (FluidContainer container) {
-		if (connected_containers.Contains(container)) {
-			connected_containers.Remove(container);
-			container.connected_system = null;
-
-			GD.Print("removing container");
-
-			if (filtered_containers.Contains(container)) {
-				filtered_containers.Remove(container);
-
-				fluid_filter = null;
-
-				foreach (FluidContainer filtered_container in filtered_containers) {
-					if (container.fluid_filter != null) {
-						fluid_filter = container.fluid_filter;
-					}
-				}
-			}
-
-			GD.Print(connected_outputs);
-			GD.Print(connected_inputs);
-
-			foreach (FluidSpecialVoxel special_voxel in container.connection_points) {
-				GD.Print(special_voxel);
-				GD.Print(special_voxel.connected_containers);
-				GD.Print(special_voxel.connected_containers.Keys.Count);
-				foreach (FluidContainer target_container in special_voxel.connected_containers.Keys) {
-					switch (special_voxel.connected_containers[target_container]) {
-						case SpecialVoxelFlags.FluidInput:
-							GD.Print("Removing an input?");
-							target_container.connected_system.remove_output(this);
-							break;
-
-						case SpecialVoxelFlags.FluidOutput:
-							GD.Print("removing an OUTPUT!");
-							remove_output(target_container.connected_system);
-							
-							break;
-					}
-				}
-			}
-
-			GD.Print(connected_outputs);
-			GD.Print(connected_inputs);
-
-			if (connected_containers.Count == 0) {
-				this.release();
-			} else {
-				calculate_volume();
-			}
-		}
-
-		GD.Print(Name + " has " + connected_containers.Count + " containers left");
-	}
-
+	
 	public void split_system (FluidContainer container) {
 		if (connected_containers.Contains(container)) {
 			GD.Print("SPLITTING SYSTEM!");
@@ -251,11 +275,6 @@ public partial class FluidSystem : Node {
 								search_index += 1;
 							}
 							break;
-
-						case SpecialVoxelFlags.FluidOutput:
-							remove_output(key_container.connected_system);
-							break;
-
 					} 
 				}
 			}
@@ -278,7 +297,7 @@ public partial class FluidSystem : Node {
 				containers_searched += 1;
 
 				foreach (FluidSpecialVoxel starting_voxel in current.connection_points) {
-					starting_voxel.force_update = true;
+					//starting_voxel.force_update = true;
 					visited_voxels.Add(starting_voxel);
 					foreach (FluidContainer key_container in starting_voxel.connected_containers.Keys) {
 						if (key_container == container) {
@@ -304,10 +323,6 @@ public partial class FluidSystem : Node {
 									search_queue.Enqueue(key_container);
 								}
 								break;
-
-							case SpecialVoxelFlags.FluidOutput:
-								break;
-
 						} 
 					}
 				}
@@ -346,9 +361,9 @@ public partial class FluidSystem : Node {
 			
 			calculate_volume();
 
-			foreach (FluidSpecialVoxel visited_voxel in visited_voxels) {
-				visited_voxel.update_voxel_connections();
-			}
+			// foreach (FluidSpecialVoxel visited_voxel in visited_voxels) {
+			// 	visited_voxel.update_voxel_connections();
+			// }
 		}
 
 		if (connected_containers.Count == 0) {
@@ -381,62 +396,6 @@ public partial class FluidSystem : Node {
 		}
 	}
 
-	public void add_output (FluidSystem system) {
-		if (system == this) {
-			GD.PrintErr("tried outputting to a system with itself.");
-			return;
-		}
-
-		GD.Print("preadding output");
-		GD.Print(connected_outputs);
-		GD.Print(system.connected_inputs);
-
-		if (connected_outputs.ContainsKey(system)) {
-			connected_outputs[system] += 1;
-		} else {
-			connected_outputs[system] = 1;
-		}
-
-		if (system.connected_inputs.ContainsKey(this)) {
-			system.connected_inputs[this] += 1;
-		} else {
-			system.connected_inputs[this] = 1;
-		}
-
-		GD.Print("adding output");
-		GD.Print(connected_outputs);
-		GD.Print(system.connected_inputs);
-
-	}
-
-	public void remove_output (FluidSystem system) {
-		if (system == this) {
-			return;
-		}
-
-		GD.Print("preremoving output");
-		GD.Print(connected_outputs);
-		GD.Print(system.connected_inputs);
-
-		if (connected_outputs.ContainsKey(system)) {
-			connected_outputs[system] -= 1;
-			if (connected_outputs[system] <= 0) {
-				connected_outputs.Remove(system);
-			}
-		}
-
-		if (system.connected_inputs.ContainsKey(this)) {
-			system.connected_inputs[this] -= 1;
-			if (system.connected_inputs[this] <= 0) {
-				system.connected_inputs.Remove(this);
-			}
-		}
-
-		GD.Print("removing output");
-		GD.Print(connected_outputs);
-		GD.Print(system.connected_inputs);
-	}
-
 	public float insert_difference;
 
 	public float insert (string fluid, float amount) {
@@ -465,61 +424,6 @@ public partial class FluidSystem : Node {
 
 		Array<FluidSpecialVoxel> visited_voxels = new Array<FluidSpecialVoxel>();
 
-		GD.Print(system.connected_outputs);
-
-		foreach (FluidSystem output in system.connected_outputs.Keys) {
-			if (output != this) {
-				system.remove_output(output);
-
-				add_output(output);
-
-				// if (connected_outputs.ContainsKey(output)) {
-				// 	connected_outputs[output] += system.connected_outputs[output];
-				// } else {
-				// 	connected_outputs[output] = system.connected_outputs[output];
-				// }
-
-				// if (output.connected_inputs.ContainsKey(this)) {
-				// 	output.connected_inputs[this] += output.connected_inputs[system];
-				// } else {
-				// 	output.connected_inputs[this] = output.connected_inputs[system];
-				// }
-
-				// output.connected_inputs.Remove(system);
-			}
-		}
-
-		GD.Print(connected_outputs);
-
-		GD.Print("old system inputs");
-
-		GD.Print(system.connected_inputs);
-
-		foreach (FluidSystem input in system.connected_inputs.Keys) {
-			if (input != this) {
-				input.remove_output(system);
-				
-				input.add_output(this);
-				// if (input.connected_outputs.ContainsKey(system)) {
-				// 	if (input.connected_outputs.ContainsKey(this)) {
-				// 		input.connected_outputs[this] += input.connected_outputs[system];
-				// 	} else {
-				// 		input.connected_outputs[this] = input.connected_outputs[system];
-				// 	}
-					
-				// 	if (connected_inputs.ContainsKey(input)) {
-				// 		connected_inputs[input] += system.connected_inputs[input];
-				// 	} else {
-				// 		connected_inputs[input] = system.connected_inputs[input];
-				// 	}
-
-				// 	input.connected_outputs.Remove(system);
-				// }
-			}
-		}
-
-		GD.Print(connected_inputs);
-
 		FluidContainer container;
 		while (system.connected_containers.Count > 0) {
 			container = system.connected_containers[0];
@@ -539,6 +443,8 @@ public partial class FluidSystem : Node {
 		foreach (FluidSpecialVoxel visited_voxel in visited_voxels) {
 			visited_voxel.update_voxel_connections();
 		}
+
+		queue_recalculate_outputs();
 
 		system.release();
 	} 

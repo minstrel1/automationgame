@@ -70,9 +70,6 @@ public partial class FluidSpecialVoxel : SpecialVoxel {
 
 													add_connected_container(fluid_voxel.parent_container, SpecialVoxelFlags.FluidInputOutput);
 													fluid_voxel.add_connected_container(parent_container, SpecialVoxelFlags.FluidInputOutput);
-													
-													//connected_containers[fluid_voxel.parent_container] = SpecialVoxelFlags.FluidInputOutput;
-													//fluid_voxel.connected_containers[parent_container] = SpecialVoxelFlags.FluidInputOutput;
 
 												} else {
 													GD.Print("incompatible systems");
@@ -99,12 +96,15 @@ public partial class FluidSpecialVoxel : SpecialVoxel {
 														fluid_voxel.add_connected_container(parent_container, SpecialVoxelFlags.FluidInput);
 														
 													} else {
-														parent_container.connected_system.add_output(fluid_voxel.parent_container.connected_system);
+														//parent_container.connected_system.add_output(fluid_voxel.parent_container.connected_system);
 
 														GD.Print("adding output from fluidIO???");
 
 														add_connected_container(fluid_voxel.parent_container, SpecialVoxelFlags.FluidOutput);
 														fluid_voxel.add_connected_container(parent_container, SpecialVoxelFlags.FluidInput);
+
+														parent_container.connected_system.queue_recalculate_outputs();
+														fluid_voxel.parent_container.connected_system.queue_recalculate_outputs();
 													}
 												}
 											}
@@ -127,12 +127,15 @@ public partial class FluidSpecialVoxel : SpecialVoxel {
 														add_connected_container(fluid_voxel.parent_container, SpecialVoxelFlags.FluidInput);
 														fluid_voxel.add_connected_container(parent_container, SpecialVoxelFlags.FluidOutput);
 													} else {
-														fluid_voxel.parent_container.connected_system.add_output(parent_container.connected_system);
+														//fluid_voxel.parent_container.connected_system.add_output(parent_container.connected_system);
 
 														GD.Print("adding input from fluidIO???");
 
 														add_connected_container(fluid_voxel.parent_container, SpecialVoxelFlags.FluidInput);
 														fluid_voxel.add_connected_container(parent_container, SpecialVoxelFlags.FluidOutput);
+
+														parent_container.connected_system.queue_recalculate_outputs();
+														fluid_voxel.parent_container.connected_system.queue_recalculate_outputs();
 													}
 													
 
@@ -171,18 +174,19 @@ public partial class FluidSpecialVoxel : SpecialVoxel {
 											GD.Print("adding output from fluidINPUT???");
 
 											GD.Print(parent_container.connected_system.connected_outputs);
-											GD.Print(fluid_voxel.parent_container.connected_system.connected_inputs);
 
-											fluid_voxel.parent_container.connected_system.add_output(parent_container.connected_system);
+											//fluid_voxel.parent_container.connected_system.add_output(parent_container.connected_system);
 
 											GD.Print(parent_container.connected_system.connected_outputs);
-											GD.Print(fluid_voxel.parent_container.connected_system.connected_inputs);
 
 											GD.Print(connected_containers);
 											GD.Print(fluid_voxel.connected_containers);
 
 											add_connected_container(fluid_voxel.parent_container, SpecialVoxelFlags.FluidInput);
 											fluid_voxel.add_connected_container(parent_container, SpecialVoxelFlags.FluidOutput);
+
+											parent_container.connected_system.queue_recalculate_outputs();
+											fluid_voxel.parent_container.connected_system.queue_recalculate_outputs();
 
 											GD.Print(connected_containers);
 											GD.Print(fluid_voxel.connected_containers);
@@ -204,33 +208,28 @@ public partial class FluidSpecialVoxel : SpecialVoxel {
 										
 										if (connected_containers.ContainsKey(fluid_voxel.parent_container) && fluid_voxel.connected_containers.ContainsKey(parent_container)) {
 											GD.Print("connection already exists, skipping");
-										} else if (connected_containers.ContainsKey(fluid_voxel.parent_container) || fluid_voxel.connected_containers.ContainsKey(parent_container)) {
-											GD.Print("uneven connection exists, check that out!");
-											GD.Print(Name);
-											GD.Print(connected_containers);
-											GD.Print(fluid_voxel.Name);
-											GD.Print(fluid_voxel.connected_containers);
-											add_connected_container(fluid_voxel.parent_container, SpecialVoxelFlags.FluidOutput);
-											fluid_voxel.add_connected_container(parent_container, SpecialVoxelFlags.FluidInput);
 										} else {
 											GD.Print("adding input from fluidOUTPUT???");
 
-											GD.Print(parent_container.connected_system.connected_outputs);
-											GD.Print(fluid_voxel.parent_container.connected_system.connected_inputs);
+											// GD.Print(parent_container.connected_system.connected_outputs);
+											// GD.Print(fluid_voxel.parent_container.connected_system.connected_inputs);
 
-											parent_container.connected_system.add_output(fluid_voxel.parent_container.connected_system);
+											// //parent_container.connected_system.add_output(fluid_voxel.parent_container.connected_system);
 
-											GD.Print(parent_container.connected_system.connected_outputs);
-											GD.Print(fluid_voxel.parent_container.connected_system.connected_inputs);
+											// GD.Print(parent_container.connected_system.connected_outputs);
+											// GD.Print(fluid_voxel.parent_container.connected_system.connected_inputs);
 
-											GD.Print(connected_containers);
-											GD.Print(fluid_voxel.connected_containers);
+											// GD.Print(connected_containers);
+											// GD.Print(fluid_voxel.connected_containers);
 
 											add_connected_container(fluid_voxel.parent_container, SpecialVoxelFlags.FluidOutput);
 											fluid_voxel.add_connected_container(parent_container, SpecialVoxelFlags.FluidInput);
 
-											GD.Print(connected_containers);
-											GD.Print(fluid_voxel.connected_containers);
+											parent_container.connected_system.queue_recalculate_outputs();
+											fluid_voxel.parent_container.connected_system.queue_recalculate_outputs();
+
+											// GD.Print(connected_containers);
+											// GD.Print(fluid_voxel.connected_containers);
 											
 										}
 									}
