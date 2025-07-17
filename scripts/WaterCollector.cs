@@ -27,7 +27,7 @@ public partial class WaterCollector : BuildingGridPlacable, IInteractable {
 
 		container = new FluidContainer(volume);
 
-		((FluidSpecialVoxel) special_voxels["output"]).set_container(container);
+		((FluidSpecialVoxel) special_voxels["WATEROUTPUT"]).set_container(container);
 	}
 
 	public override void on_build() {

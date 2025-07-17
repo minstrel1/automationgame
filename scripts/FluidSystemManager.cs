@@ -9,6 +9,8 @@ public partial class FluidSystemManager : Node {
 
 	public static FluidSystemManager Instance {get; private set;}
 
+	public int id_counter = 1;
+
 	public override void _Ready()
 	{
 		Instance = this;
@@ -18,6 +20,8 @@ public partial class FluidSystemManager : Node {
 		if (!systems.Contains(system)) {
 			systems.Add(system);
 			AddChild(system);
+			system.Name = "FluidSystem " + id_counter.ToString();
+			id_counter += 1;
 		}
 	}
 

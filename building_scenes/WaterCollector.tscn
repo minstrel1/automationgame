@@ -5,7 +5,7 @@
 
 [sub_resource type="Resource" id="Resource_gc728"]
 script = ExtResource("2_6fqfe")
-name = "output"
+name = "WATEROUTPUT"
 voxel_position = Vector3i(0, -2, -1)
 voxel_flags = 5
 FlagDirections = 32

@@ -43,6 +43,7 @@ public partial class FluidContainer : Node {
 	public void release () {
 		if (does_removal_split()) {
 			GD.Print("this is where we are supposed to split");
+			connected_system.split_system(this);
 		} else {
 			FluidSystem old_system = connected_system;
 			old_system.remove_container(this);

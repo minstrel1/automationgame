@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=4 uid="uid://ibpbfdj0iv00"]
+[gd_scene load_steps=31 format=4 uid="uid://ibpbfdj0iv00"]
 
 [ext_resource type="Script" uid="uid://balvvjf5ljuew" path="res://scripts/Player.cs" id="1_ykrsh"]
 [ext_resource type="Script" uid="uid://df07k7veekgso" path="res://scripts/RayCast3DExtendable.cs" id="3_g14j6"]
@@ -114,6 +114,8 @@ resource_name = "new_animation"
 _data = {
 &"new_animation": SubResource("Animation_8uh7m")
 }
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_0m0f1"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_b0q6j"]
 
@@ -766,6 +768,46 @@ directional_shadow_max_distance = 250.0
 libraries = {
 &"": SubResource("AnimationLibrary_6uqi0")
 }
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.474088, -0.880477, 0, 0.880477, 0.474088, 0, 0, 0, 1, -79.7698, -0.524486, -30.3703)
+mesh = SubResource("PlaneMesh_0m0f1")
+skeleton = NodePath("../BuildingGrid")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.474088, -0.880477, 0, 0.880477, 0.474088, 0, 0, 0, 1, -63.77, -0.524, -30.37)
+mesh = SubResource("PlaneMesh_0m0f1")
+skeleton = NodePath("../BuildingGrid")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.474088, -0.880477, 0, 0.880477, 0.474088, 0, 0, 0, 1, -47.7698, -0.524486, -30.3703)
+mesh = SubResource("PlaneMesh_0m0f1")
+skeleton = NodePath("../BuildingGrid")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.474088, -0.880477, 0, 0.880477, 0.474088, 0, 0, 0, 1, -31.77, -0.524, -30.37)
+mesh = SubResource("PlaneMesh_0m0f1")
+skeleton = NodePath("../BuildingGrid")
+
+[node name="MeshInstance3D6" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.474088, -0.880477, 0, 0.880477, 0.474088, 0, 0, 0, 1, -15.7698, -0.524486, -30.3703)
+mesh = SubResource("PlaneMesh_0m0f1")
+skeleton = NodePath("../BuildingGrid")
+
+[node name="MeshInstance3D7" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.474088, -0.880477, 0, 0.880477, 0.474088, 0, 0, 0, 1, 0.23, -0.524, -30.37)
+mesh = SubResource("PlaneMesh_0m0f1")
+skeleton = NodePath("../BuildingGrid")
+
+[node name="MeshInstance3D8" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.474088, -0.880477, 0, 0.880477, 0.474088, 0, 0, 0, 1, 16.2302, -0.524486, -30.3703)
+mesh = SubResource("PlaneMesh_0m0f1")
+skeleton = NodePath("../BuildingGrid")
+
+[node name="MeshInstance3D9" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.474088, -0.880477, 0, 0.880477, 0.474088, 0, 0, 0, 1, 32.23, -0.524, -30.37)
+mesh = SubResource("PlaneMesh_0m0f1")
+skeleton = NodePath("../BuildingGrid")
 
 [node name="BuildingGrid" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -79.7698, -0.524486, -30.3703)

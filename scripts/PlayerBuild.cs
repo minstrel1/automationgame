@@ -111,7 +111,11 @@ public partial class Player {
 				building_hit_label.Text = "Hit Pos: " + hit_pos.ToString();
 
 				if (last_known_grid.is_position_valid(hit_pos)) {
+					VoxelData data = last_known_grid.get_block(hit_pos);
 					voxel_data_label.Text = last_known_grid.get_block(hit_pos).ToString();
+					if (data.is_special_voxel && data.special_voxel is FluidSpecialVoxel) {
+						voxel_data_label.Text += "\n Connected Containers: " + ((FluidSpecialVoxel) data.special_voxel).connected_containers;
+					}
 				}
 				
 

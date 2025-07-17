@@ -57,4 +57,14 @@ public partial class Pipe : BuildingGridPlacable, IInteractable {
 	public string get_interact_text () {
 		return "Configure " + interact_name;
 	}
+
+	public override void release() {
+		if (container != null) {
+			container.release();
+		}
+
+		base.release();
+
+		
+	}
 }
