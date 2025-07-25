@@ -164,14 +164,16 @@ public partial class FluidSystem : Node {
 		foreach (FluidContainer container in connected_containers) {
 			foreach (FluidSpecialVoxel special_voxel in container.connection_points) {
 				foreach (FluidContainer connected_container in special_voxel.connected_containers.Keys) {
-					if (special_voxel.connected_containers[connected_container] == SpecialVoxelFlags.FluidOutput) {
-						if (connected_container.connected_system != null && is_system_compatible(connected_container.connected_system)) {
-							connected_outputs.Add(connected_container);
-							connected_outputs_flow_rates.Add(special_voxel.flow_rate);
-						}
-					} else if (special_voxel.connected_containers[connected_container] == SpecialVoxelFlags.FluidInput) {
-						if (connected_container.connected_system != null) {
-							connected_container.connected_system.queue_recalculate_outputs();
+					if (connected_container != null) {
+						if (special_voxel.connected_containers[connected_container] == SpecialVoxelFlags.FluidOutput) {
+							if (connected_container.connected_system != null && is_system_compatible(connected_container.connected_system)) {
+								connected_outputs.Add(connected_container);
+								connected_outputs_flow_rates.Add(special_voxel.flow_rate);
+							}
+						} else if (special_voxel.connected_containers[connected_container] == SpecialVoxelFlags.FluidInput) {
+							if (connected_container.connected_system != null) {
+								connected_container.connected_system.queue_recalculate_outputs();
+							}
 						}
 					}
 				}
