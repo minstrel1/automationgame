@@ -76,6 +76,11 @@ public partial class ItemSpecialVoxel : SpecialVoxel {
 	public override void _PhysicsProcess(double delta) {
 		base._PhysicsProcess(delta);
 
+		if (is_target && (target_inventory == null)) {
+			GD.Print("item voxel had an invalid target?");
+			update_voxel_connections();
+		}
+
 		if (is_target) {
 			if (auto_input) {
 				if (input_should_check) {

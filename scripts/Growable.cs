@@ -92,4 +92,8 @@ public partial class Growable : Node3D {
 		try_insert = true;
 	}
 
+	public void release () {
+		base.QueueFree();
+	}
+
 }

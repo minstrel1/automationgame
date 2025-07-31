@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://bpxmocl88b44h"]
+[gd_scene load_steps=5 format=3 uid="uid://bpxmocl88b44h"]
 
 [ext_resource type="Script" uid="uid://ghryo6jsccrf" path="res://scripts/GrowingPlotGUI.cs" id="1_1mrlm"]
 [ext_resource type="PackedScene" uid="uid://byespjiunasj4" path="res://gui_scenes/dummy_inventory_gui.tscn" id="2_ssynn"]
 [ext_resource type="PackedScene" uid="uid://drninlmo8l1ku" path="res://gui_scenes/dummy_item_representation.tscn" id="3_i7lwr"]
+[ext_resource type="PackedScene" uid="uid://bgxqm2fhduxtl" path="res://gui_scenes/dummy_fluid_representation.tscn" id="4_ssynn"]
 
 [node name="growing_plot_gui" type="PanelContainer"]
 custom_minimum_size = Vector2(920, 520)
@@ -134,7 +135,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="DummyItemRepresentation" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/PanelContainer/HBoxContainer/VBoxContainer2/Control/Control" instance=ExtResource("3_i7lwr")]
+[node name="DummyFluidRepresentation" parent="VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/PanelContainer/HBoxContainer/VBoxContainer2/Control/Control" instance=ExtResource("4_ssynn")]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

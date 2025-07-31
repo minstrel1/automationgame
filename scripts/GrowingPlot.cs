@@ -38,6 +38,8 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 	CsgBox3D grow_area;
 	CsgShape3D collider;
 
+	public FluidContainer water_container;
+
 	public override void _Ready()
 	{
 		base._Ready();
@@ -51,6 +53,11 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 		((ItemSpecialVoxel) special_voxels["crop_output"]).set_inventory(output_inventory);
 
 		collider = GetNode<CsgBox3D>("CSGBox3D2");
+
+		water_container = new FluidContainer(500.0f);
+		water_container.set_fluid_filter("water", true);
+
+		((FluidSpecialVoxel) special_voxels["water_input"]).set_container(water_container);
 
 		adjust_box();
 	}
@@ -173,5 +180,33 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 
 	public string get_interact_text() {
 		return "Configure " + interact_name;
+	}
+
+	public override void release() {
+		if (water_container != null) {
+			water_container.release();
+		}
+
+		foreach (InventoryItem item in input_inventory.contents) {
+			if (item != null) {
+				Player.instance.inventory.insert(item);
+			}
+		}
+		
+		input_inventory.release();
+
+		foreach (InventoryItem item in output_inventory.contents) {
+			if (item != null) {
+				Player.instance.inventory.insert(item);
+			}
+		}
+		
+		output_inventory.release();
+
+		foreach (Growable growable in grow_slots_physical) {
+			growable.release();
+		}
+
+		base.release();
 	}
 }

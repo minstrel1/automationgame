@@ -56,6 +56,7 @@ public partial class FluidSystem : Node {
 				if (container == null) {
 					GD.Print("we got a null container");
 					GD.Print(connected_outputs);
+					queue_recalculate_outputs();
 					continue;
 				}
 				

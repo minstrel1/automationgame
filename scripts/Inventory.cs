@@ -17,6 +17,9 @@ public partial class Inventory : Node {
 
 	public int inventory_size = 1;
 
+	public bool do_input = true;
+	public bool do_output = true;
+
 	public Inventory () {
 		contents.Resize(10);
 		filters.Resize(10);
@@ -102,6 +105,10 @@ public partial class Inventory : Node {
 	}
 
 	public int insert (InventoryItem item) {
+		if (!do_input) { 
+			return 0; 
+		}
+
 		int pos_to_insert = get_first_slot_to_insert(item.name);
 		if (pos_to_insert == -1) { return 0; }
 
@@ -191,6 +198,10 @@ public partial class Inventory : Node {
 	}
 
 	public int remove (InventoryItem item) {
+		if (!do_output) { 
+			return 0; 
+		}
+
 		int pos_to_remove = get_last_slot_to_remove(item.name);
 		if (pos_to_remove == -1) { return 0; }
 
@@ -241,6 +252,10 @@ public partial class Inventory : Node {
 	}
 
 	public bool can_insert (InventoryItem item) {
+		if (!do_input) {
+			return false;
+		}
+
 		int pos_to_insert = get_first_slot_to_insert(item.name);
 		if (pos_to_insert == -1) { return false; }
 
@@ -343,10 +358,15 @@ public partial class Inventory : Node {
 		filters[index] = null;
 	}
 
-	public void destroy () {
+	public void release () {
 		foreach (InventoryItem item in contents) {
-			item.QueueFree();
+			if (item != null) {
+				item.QueueFree();	
+			}
 		}
+
+		do_input = false;
+		do_output = false;
 
 		this.QueueFree();
 	}

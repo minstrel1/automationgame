@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://dv08dlncbff2q"]
+[gd_scene load_steps=7 format=3 uid="uid://dv08dlncbff2q"]
 
 [ext_resource type="Script" uid="uid://brbd5ek3kaceh" path="res://scripts/GrowingPlot.cs" id="1_cv31k"]
 [ext_resource type="Script" uid="uid://bg67704cqo5ma" path="res://scripts/SpecialVoxelData.cs" id="2_qlxu3"]
@@ -7,7 +7,7 @@
 [sub_resource type="Resource" id="Resource_183o3"]
 script = ExtResource("2_qlxu3")
 name = "seed_input"
-voxel_position = Vector3i(0, -1, 2)
+voxel_position = Vector3i(1, -1, 2)
 voxel_flags = 1
 FlagDirections = 64
 SupportDirections = 0
@@ -20,6 +20,14 @@ voxel_flags = 2
 FlagDirections = 33
 SupportDirections = 0
 
+[sub_resource type="Resource" id="Resource_gfcda"]
+script = ExtResource("2_qlxu3")
+name = "water_input"
+voxel_position = Vector3i(-1, -1, 2)
+voxel_flags = 4
+FlagDirections = 64
+SupportDirections = 0
+
 [node name="grow plot" type="Node3D" node_paths=PackedStringArray("grow_area")]
 script = ExtResource("1_cv31k")
 grow_area = NodePath("CSGBox3D2/grow area")
@@ -27,7 +35,7 @@ grid_width = 5
 grid_length = 5
 grid_offset = Vector3(0, 1, 0)
 PlacableDirections = 8
-special_voxel_data = Array[Object]([SubResource("Resource_183o3"), SubResource("Resource_fv6ty")])
+special_voxel_data = Array[Object]([SubResource("Resource_183o3"), SubResource("Resource_fv6ty"), SubResource("Resource_gfcda")])
 display_name = "Growing Plot"
 building_category = 1
 building_cost = [{
@@ -48,7 +56,11 @@ operation = 2
 size = Vector3(5, 0.591309, 5)
 
 [node name="CSGBox3D" type="CSGBox3D" parent="CSGBox3D2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.05)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 2.05)
+size = Vector3(0.9, 0.9, 0.9)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="CSGBox3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 2.05)
 size = Vector3(0.9, 0.9, 0.9)
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="CSGBox3D2"]

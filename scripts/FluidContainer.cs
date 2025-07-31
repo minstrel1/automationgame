@@ -52,6 +52,8 @@ public partial class FluidContainer : Node {
 				old_system.insert(current_fluid, current_amount);
 			}
 		}
+
+		QueueFree();
 	}
 
 	public bool does_removal_split () {

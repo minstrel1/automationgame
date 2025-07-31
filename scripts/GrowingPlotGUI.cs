@@ -10,6 +10,7 @@ public partial class GrowingPlotGUI : GUI {
 	public InventoryGUI player_inventory_gui;
 	public ItemRepresentation seed_input_gui;
 	public InventoryGUI product_output_gui;
+	public FluidRepresentation water_input_gui;
 
 	public static PackedScene scene = GD.Load<PackedScene>("res://gui_scenes/growing_plot_gui.tscn");
 
@@ -41,6 +42,12 @@ public partial class GrowingPlotGUI : GUI {
 
 		seed_input_gui = ItemRepresentation.make_item_representation(0, growing_plot.get_input_inventory(), result.parent);
 
+		Array<GUIDummy> fluid_rep_result = pop_dummy_type("FluidRepresentation");
+
+		result = remove_dummy(fluid_rep_result[0]);
+
+		water_input_gui = FluidRepresentation.make(growing_plot.water_container, result.parent);
+
 		Player.instance.lock_controls();
 		Player.instance.active_inventory = growing_plot.get_input_inventory();
 
@@ -62,6 +69,7 @@ public partial class GrowingPlotGUI : GUI {
 		player_inventory_gui.release();
 		seed_input_gui.release();
 		product_output_gui.release();
+		water_input_gui.release();
 
 		Player.instance.unlock_controls();
 		Player.instance.active_inventory = null;

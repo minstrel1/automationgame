@@ -166,7 +166,7 @@ public partial class CategoryList : GUI {
 		lower_inventory_gui = null;
 
 		if (lower_inventory != null) {
-			lower_inventory.destroy();
+			lower_inventory.release();
 		}
 		lower_inventory = null;
 
