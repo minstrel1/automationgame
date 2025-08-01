@@ -40,6 +40,10 @@ public partial class FluidContainer : Node {
 		return connected_system.insert(fluid, amount);
 	}
 
+	public float remove (string fluid, float amount) {
+		return connected_system.remove(fluid, amount);
+	}
+
 	public void release () {
 		if (does_removal_split()) {
 			GD.Print("this is where we are supposed to split");

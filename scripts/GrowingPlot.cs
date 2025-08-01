@@ -80,6 +80,7 @@ public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory,
 
 				new_node.GlobalPosition = coordinate;
 				new_node.Name = String.Format("{0}, {1}", x, z);
+				new_node.water_container = water_container;
 				grow_slots_physical.Add(new_node);
 				output_inventory.OnInventoryChanged += new_node.on_output_inventory_changed;
 			}

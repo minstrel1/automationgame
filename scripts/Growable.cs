@@ -9,8 +9,8 @@ public partial class Growable : Node3D {
 	
 	public string current_plant_name = "";
 	public GrowablePrototype prototype;
-	public int growth_time = 0;
-	public int current_growth_time = 0;
+	public float growth_time = 0;
+	public float current_growth_time = 0;
 	public bool plant_set = false;
 	public bool done_growing = false;
 
@@ -18,8 +18,12 @@ public partial class Growable : Node3D {
 	public Array<InventoryItem> to_insert = new Array<InventoryItem>();
 	public bool try_insert = true;
 
+	public float fluid_usage_per_frame = 0.01f;
+
 	MeshInstance3D model;
 	SphereMesh sphere_mesh;
+
+	public FluidContainer water_container;
 
 	public override void _Ready()
 	{
@@ -45,12 +49,19 @@ public partial class Growable : Node3D {
 		//ulong start = Time.GetTicksUsec();
 		
 		if (current_growth_time < growth_time && !done_growing) {
-			current_growth_time += 1 * (int) Math.Round(Engine.TimeScale);
-			float scale = (float) current_growth_time / growth_time;
-			model.Scale = Vector3.One * scale;
+			if (water_container != null && water_container.current_fluid == prototype.growing_fluid && water_container.current_amount > fluid_usage_per_frame) {
+				//GD.Print("per frame: " + fluid_usage_per_frame.ToString());
+				//GD.Print(water_container.remove(prototype.growing_fluid, fluid_usage_per_frame));
 
-			if (current_growth_time >= growth_time) {
-				done_growing = true;
+				current_growth_time += (float) delta;
+				float scale = current_growth_time / growth_time;
+				model.Scale = Vector3.One * scale;
+
+				if (current_growth_time >= growth_time) {
+					done_growing = true;
+				}
+			} else {
+
 			}
 		}
 
@@ -63,9 +74,11 @@ public partial class Growable : Node3D {
 			prototype = Prototypes.growables[new_plant_name];
 			current_plant_name = new_plant_name;
 			current_growth_time = 0;
-			growth_time = Globals.ighours_to_ticks((float) prototype.time_to_grow);
+			growth_time = prototype.time_to_grow;
 			plant_set = true;
 			done_growing = false;
+
+			fluid_usage_per_frame = (prototype.fluid_to_grow / prototype.time_to_grow) / 60.0f;
 
 			model.Visible = true;
 			model.Scale = Vector3.One * 0.000000001f;

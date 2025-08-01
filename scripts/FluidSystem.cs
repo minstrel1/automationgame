@@ -418,6 +418,17 @@ public partial class FluidSystem : Node {
 		return 0;
 	}
 
+	public float remove (string fluid, float amount) {
+		if (current_fluid == fluid) {
+			float amount_to_remove = Math.Min(amount, total_amount);
+			total_amount -= amount_to_remove;
+			update_amounts();
+			return amount_to_remove;
+		}
+
+		return 0;
+	}
+
 	public void merge_system (FluidSystem system) {
 		if (system == this) {
 			GD.PrintErr("tried merging a system with itself.");

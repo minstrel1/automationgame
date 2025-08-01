@@ -12,6 +12,10 @@ public partial class GrowablePrototype : PrototypeBase {
 
 	public Godot.Collections.Array<ProductPrototype> harvest_result = new Godot.Collections.Array<ProductPrototype>();
 
+	public string growing_fluid = "water";
+	
+	public float fluid_to_grow = 50.0f;
+
 	public (Godot.Collections.Array<InventoryItem>, int) get_products () { // replace with fluids
 		Godot.Collections.Array<InventoryItem> items = new Godot.Collections.Array<InventoryItem>();
 
