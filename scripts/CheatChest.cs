@@ -6,18 +6,18 @@ using Godot.NativeInterop;
 
 [GlobalClass]
 [Tool]
-public partial class Chest : BuildingGridPlacable, IBuildingWithInventory, IInteractable {
+public partial class CheatChest : Chest {
 	
-	public Inventory inventory;
-
-	[Export]
-	public string interact_name = "Chest";
+	public Inventory filter_inventory;
+	public bool void_unfiltered = false;
 
 	public override void _Ready()
 	{
 		base._Ready();
 
 		inventory = new Inventory(10);
+
+		filter_inventory = new Inventory(1);
 
 		((ItemSpecialVoxel) special_voxels["voxel"]).inventory = inventory;
 
@@ -33,14 +33,6 @@ public partial class Chest : BuildingGridPlacable, IBuildingWithInventory, IInte
 		base._PhysicsProcess(delta);
 	}
 
-	public Inventory get_input_inventory () {
-		return inventory;
-	}
-
-	public Inventory get_output_inventory () {
-		return inventory;
-	}
-
 	public void on_hover_focus () {
 
 	}
@@ -49,17 +41,16 @@ public partial class Chest : BuildingGridPlacable, IBuildingWithInventory, IInte
 
 	}
 
-	public override void set_collision(bool value)
-	{
+	public override void set_collision(bool value) {
 		
 	}
 
-	public virtual void on_interact () {
+	public override void on_interact () {
 		if (current_building_state == BuildingState.built) {
-			if (Player.instance.active_gui is ChestGUI) {
+			if (Player.instance.active_gui is CheatChestGUI) {
 				Player.instance.clear_active_gui();
 			} else {
-				Player.set_active_gui(ChestGUI.make_chest_gui(this, Player.instance.gui_parent));
+				Player.set_active_gui(CheatChestGUI.make_chest_gui(this, Player.instance.gui_parent));
 			}
 		}
 	}

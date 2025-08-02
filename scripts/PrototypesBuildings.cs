@@ -33,6 +33,10 @@ public partial class Prototypes : Node {
 			{"display_name", "Miscellaneous"},
 			{"icon_texture", "res://item_textures/test_item.png"}
 		}},
+		{"developer", new Dictionary{
+			{"display_name", "Developer"},
+			{"icon_texture", "res://item_textures/test_item.png"},
+		}}
 	};
 
 	public static string building_scene_directory = "res://building_scenes";

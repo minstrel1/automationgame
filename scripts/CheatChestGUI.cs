@@ -3,15 +3,15 @@ using Godot;
 using Godot.Collections;
 using Godot.NativeInterop;
 
-public partial class ChestGUI : GUI {
+public partial class CheatChestGUI : GUI {
 
-	public Chest chest;
+	public CheatChest chest;
 	public InventoryGUI player_inventory_gui;
 	public InventoryGUI chest_inventory_gui;
 
 	public Control inventory_parent;
 
-	public static PackedScene scene = GD.Load<PackedScene>("res://gui_scenes/chest_gui.tscn");
+	public static PackedScene scene = GD.Load<PackedScene>("res://gui_scenes/cheat_chest_gui.tscn");
 
 	public override void _Ready()
 	{
@@ -28,13 +28,15 @@ public partial class ChestGUI : GUI {
 
 		chest_inventory_gui = InventoryGUI.make(chest.inventory, result.parent);
 		chest_inventory_gui.Position = result.pos;
+        chest_inventory_gui.CustomMinimumSize = result.min_size;
+        chest_inventory_gui.Size = result.size;
 
 		Player.instance.lock_controls();
 		Player.instance.active_inventory = chest.inventory;
 	}
 
-	public static ChestGUI make_chest_gui (Chest chest, Control gui_parent) {
-		ChestGUI new_instance = scene.Instantiate<ChestGUI>();
+	public static CheatChestGUI make_chest_gui (CheatChest chest, Control gui_parent) {
+		CheatChestGUI new_instance = scene.Instantiate<CheatChestGUI>();
 
 		new_instance.chest = chest;
 		new_instance.gui_parent = gui_parent;

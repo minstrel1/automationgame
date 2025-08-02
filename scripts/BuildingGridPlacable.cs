@@ -8,7 +8,8 @@ public enum BuildingCategory {
 	production,
 	structures,
 	dectorations,
-	miscellaneous
+	miscellaneous,
+	developer
 }
 
 public enum BuildingState {

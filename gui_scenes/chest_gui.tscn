@@ -54,6 +54,7 @@ custom_minimum_size = Vector2(460, 500)
 layout_mode = 2
 
 [node name="DummyInventoryGUI2" parent="VBoxContainer/HBoxContainer/Control2" instance=ExtResource("3_enqt0")]
+custom_minimum_size = Vector2(460, 250)
 layout_mode = 2
 anchors_preset = 0
 anchor_left = 0.0
@@ -63,4 +64,5 @@ anchor_bottom = 0.0
 offset_left = 4.0
 offset_top = 0.0
 offset_right = 464.0
-offset_bottom = 500.0
+offset_bottom = 416.0
+inventory_size = 90
