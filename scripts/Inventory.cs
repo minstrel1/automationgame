@@ -346,6 +346,30 @@ public partial class Inventory : Node {
 		}
 	}
 
+	public void remove_item (int index){
+		if (index != -1) {
+			contents[index].parent_inventory = null;
+			contents[index].current_index = 0;
+			contents[index] = null;
+			EmitSignal(SignalName.OnItemSlotChanged, index, contents[index]);
+			EmitSignal(SignalName.OnInventoryChanged, this);
+		}
+	}
+
+	public int get_item_count (string item_name) {
+		int result = 0;
+
+		foreach (InventoryItem item in contents) {
+			if (item != null) {
+				if (item.name == item_name) {
+					result += item.count;
+				}
+			}
+		}
+
+		return result;
+	}
+
 	public void set_filter (FilterBase filter, int index) {
 		filters[index] = filter;
 	}
