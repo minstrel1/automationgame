@@ -28,8 +28,8 @@ public partial class CheatChestGUI : GUI {
 
 		chest_inventory_gui = InventoryGUI.make(chest.inventory, result.parent);
 		chest_inventory_gui.Position = result.pos;
-        chest_inventory_gui.CustomMinimumSize = result.min_size;
-        chest_inventory_gui.Size = result.size;
+		chest_inventory_gui.CustomMinimumSize = result.min_size;
+		chest_inventory_gui.Size = result.size;
 
 		Player.instance.lock_controls();
 		Player.instance.active_inventory = chest.inventory;

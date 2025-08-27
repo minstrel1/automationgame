@@ -5,16 +5,16 @@ using Godot;
 using Godot.Collections;
 using Godot.NativeInterop;
 
-public partial class ItemRepresentation : GUI {
+public partial class FilterRepresentation : GUI {
 
-	public static Array<ItemRepresentation> instances = new Array<ItemRepresentation>();
-	public static Stack<ItemRepresentation> available_instances = new Stack<ItemRepresentation>();
+	public static Array<FilterRepresentation> instances = new Array<FilterRepresentation>();
+	public static Stack<FilterRepresentation> available_instances = new Stack<FilterRepresentation>();
 
 	public Inventory parent_inventory;
 	public int current_index;
 	public InventoryItem current_item;
 	
-	public static PackedScene scene = GD.Load<PackedScene>("res://gui_scenes/item_representation.tscn");
+	public static PackedScene scene = GD.Load<PackedScene>("res://gui_scenes/filter_representation.tscn");
 
 	public TextureRect background;
 	public TextureRect filter_texture;
@@ -23,11 +23,11 @@ public partial class ItemRepresentation : GUI {
 
 	public bool interactable = true;
 
-	public static ItemRepresentation make_item_representation (int current_index, Inventory parent_inventory, Control parent, bool interactable = true) {
-		ItemRepresentation new_rep = get_first_available_instance();
+	public static FilterRepresentation make (int current_index, Inventory parent_inventory, Control parent, bool interactable = true) {
+		FilterRepresentation new_rep = get_first_available_instance();
 
 		if (new_rep == null) {
-			new_rep = scene.Instantiate<ItemRepresentation>();
+			new_rep = scene.Instantiate<FilterRepresentation>();
 			instances.Add(new_rep);
 		} else {
 			if (new_rep.GetParent() != null) {
@@ -208,9 +208,9 @@ public partial class ItemRepresentation : GUI {
 		}
 	}
 
-	public static ItemRepresentation get_first_available_instance () {
+	public static FilterRepresentation get_first_available_instance () {
 		if (available_instances.Count > 0) {
-			ItemRepresentation result = available_instances.Pop();
+			FilterRepresentation result = available_instances.Pop();
 			if (result.GetParent() != null) {
 				GD.Print("Item rep pushed with parent");
 			}
