@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=4 uid="uid://ibpbfdj0iv00"]
+[gd_scene load_steps=31 format=4 uid="uid://ibpbfdj0iv00"]
 
 [ext_resource type="Script" uid="uid://balvvjf5ljuew" path="res://scripts/Player.cs" id="1_ykrsh"]
 [ext_resource type="Script" uid="uid://df07k7veekgso" path="res://scripts/RayCast3DExtendable.cs" id="3_g14j6"]
@@ -118,11 +118,6 @@ _data = {
 [sub_resource type="PlaneMesh" id="PlaneMesh_0m0f1"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_b0q6j"]
-
-[sub_resource type="SphereMesh" id="SphereMesh_0m0f1"]
-radius = 0.69
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_b0q6j"]
 
 [node name="Node3D" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13.0182, 0)
@@ -837,18 +832,3 @@ omni_range = 27.4347
 
 [node name="dumbass birb" parent="." instance=ExtResource("13_0m0f1")]
 transform = Transform3D(0.465, 0, 0, 0, 0.465, 0, 0, 0, 0.465, 6.98188, 0.15025, -31.7453)
-
-[node name="MeshInstance3D10" type="MeshInstance3D" parent="."]
-mesh = SubResource("SphereMesh_0m0f1")
-
-[node name="MeshInstance3D11" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.87752, 0, 0)
-mesh = SubResource("SphereMesh_0m0f1")
-
-[node name="MeshInstance3D13" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.967166, 1.93523, 0)
-mesh = SubResource("SphereMesh_0m0f1")
-
-[node name="MeshInstance3D12" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.966104, 0.741726, 0)
-mesh = SubResource("CylinderMesh_b0q6j")

@@ -51,7 +51,7 @@ public partial class Growable : Node3D {
 		if (current_growth_time < growth_time && !done_growing) {
 			if (water_container != null && water_container.current_fluid == prototype.growing_fluid && water_container.current_amount > fluid_usage_per_frame) {
 				//GD.Print("per frame: " + fluid_usage_per_frame.ToString());
-				//GD.Print(water_container.remove(prototype.growing_fluid, fluid_usage_per_frame));
+				water_container.remove(prototype.growing_fluid, fluid_usage_per_frame);
 
 				current_growth_time += (float) delta;
 				float scale = current_growth_time / growth_time;
