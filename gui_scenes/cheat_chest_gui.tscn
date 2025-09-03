@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cg17n5hc1q8na" path="res://scripts/CheatChestGUI.cs" id="1_qg0ue"]
 [ext_resource type="Script" uid="uid://ctow5yvnwds2l" path="res://scripts/GUI.cs" id="2_wg1o6"]
 [ext_resource type="PackedScene" uid="uid://byespjiunasj4" path="res://gui_scenes/dummy_inventory_gui.tscn" id="3_4y0lb"]
-[ext_resource type="PackedScene" uid="uid://drninlmo8l1ku" path="res://gui_scenes/dummy_item_representation.tscn" id="4_ihdqa"]
+[ext_resource type="PackedScene" uid="uid://21e5q7iuwm8b" path="res://gui_scenes/dummy_multi_filter_representation.tscn" id="5_wg1o6"]
 
 [node name="CheatChestGui" type="PanelContainer"]
 custom_minimum_size = Vector2(920, 520)
@@ -93,19 +93,10 @@ text = "Spawn Filter "
 custom_minimum_size = Vector2(42, 42)
 layout_mode = 2
 
-[node name="DummyItemRepresentation" parent="VBoxContainer/HBoxContainer/Control2/Control/HBoxContainer/Control" instance=ExtResource("4_ihdqa")]
+[node name="DummyMultiFilterRepresentation" parent="VBoxContainer/HBoxContainer/Control2/Control/HBoxContainer/Control" instance=ExtResource("5_wg1o6")]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -21.0
-offset_top = -21.0
-offset_right = 21.0
-offset_bottom = 21.0
-grow_horizontal = 2
-grow_vertical = 2
+offset_right = 42.0
+offset_bottom = 42.0
 
 [node name="VSeparator" type="VSeparator" parent="VBoxContainer/HBoxContainer/Control2/Control/HBoxContainer"]
 layout_mode = 2
@@ -116,3 +107,6 @@ layout_mode = 2
 focus_mode = 0
 text = "Void Unfiltered"
 icon_alignment = 2
+
+[node name="CheckButton" type="CheckButton" parent="VBoxContainer/HBoxContainer/Control2/Control/HBoxContainer"]
+layout_mode = 2

@@ -8,8 +8,9 @@ using Godot.NativeInterop;
 [Tool]
 public partial class CheatChest : Chest {
 	
-	public Inventory filter_inventory;
 	public bool void_unfiltered = false;
+
+	public MultiFilter multi_filter;
 
 	public string filter_item_name = "";
 	public int filter_item_count = 0;
@@ -23,9 +24,13 @@ public partial class CheatChest : Chest {
 
 		inventory.OnInventoryChanged += on_inventory_changed;
 
-		filter_inventory = new Inventory(1);
+		//filter_inventory = new Inventory(1);
 
-		filter_inventory.OnInventoryChanged += on_filter_inventory_changed;
+		//filter_inventory.OnInventoryChanged += on_filter_inventory_changed;
+
+		multi_filter = new MultiFilter(new Array<string>(), "items", 1);
+
+		multi_filter.OnFiltersChanged += on_filters_changed;
 
 		((ItemSpecialVoxel) special_voxels["voxel"]).inventory = inventory;
 
@@ -40,11 +45,11 @@ public partial class CheatChest : Chest {
 		base._PhysicsProcess(delta);
 	}
 
-	public void on_filter_inventory_changed (Inventory inventory) {
-		if (filter_inventory.contents[0] != null) {
+	public void on_filters_changed (Array<String> filters) {
+		if (multi_filter.filters[0] != "") {
 			filter_set = true;
-			filter_item_name = filter_inventory.contents[0].prototype.name;
-			filter_item_count = filter_inventory.contents[0].prototype.stack_size;
+			filter_item_name = multi_filter.filters[0];
+			filter_item_count = Prototypes.items[multi_filter.filters[0]].stack_size;
 
 			refill();
 		} else {
@@ -114,11 +119,11 @@ public partial class CheatChest : Chest {
 	}
 
 	public override void release() {
-		filter_inventory.OnInventoryChanged -= on_filter_inventory_changed;
-		filter_inventory.release();
-
 		inventory.OnInventoryChanged -= on_inventory_changed;
 		inventory.release();
+
+		multi_filter.OnFiltersChanged -= on_filters_changed;
+		multi_filter.QueueFree();
 
 		base.release();
 	}

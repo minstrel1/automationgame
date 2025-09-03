@@ -1,0 +1,50 @@
+[gd_scene load_steps=5 format=3 uid="uid://21e5q7iuwm8b"]
+
+[ext_resource type="Script" uid="uid://cw2ema3lschje" path="res://scripts/DummyMultiFilterRepresentation.cs" id="1_axnr0"]
+[ext_resource type="Texture2D" uid="uid://cq7tca85ciuqx" path="res://item_representation_bg.png" id="2_4u8ai"]
+[ext_resource type="Texture2D" uid="uid://b3e53ahpsap14" path="res://item_textures/test_item.png" id="3_utg81"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_30ak8"]
+outline_size = 5
+outline_color = Color(0, 0, 0, 1)
+
+[node name="DummyMultiFilterRepresentation" type="Control"]
+custom_minimum_size = Vector2(42, 42)
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_axnr0")
+
+[node name="Background" type="TextureRect" parent="."]
+texture_filter = 1
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("2_4u8ai")
+
+[node name="ItemTexture" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("3_utg81")
+expand_mode = 1
+
+[node name="ItemCount" type="Label" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -23.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "50"
+label_settings = SubResource("LabelSettings_30ak8")
+horizontal_alignment = 2
+
+[node name="Label" type="Label" parent="ItemCount"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0

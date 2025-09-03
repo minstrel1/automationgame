@@ -10,8 +10,8 @@ public partial class CheatChestGUI : GUI {
 	public InventoryGUI chest_inventory_gui;
 
 	public CheckBox void_unfiltered_check;
-
-	public ItemRepresentation item_filter_slot;
+	
+	public MultiFilterRepresentation multi_filter_rep;
 
 	public Control inventory_parent;
 
@@ -42,12 +42,12 @@ public partial class CheatChestGUI : GUI {
 		void_unfiltered_check.ButtonPressed = chest.void_unfiltered;
 		void_unfiltered_check.Toggled += on_check_changed;
 
-		Array<GUIDummy> item_slot_result = pop_dummy_type("ItemRepresentation");
+		Array<GUIDummy> multi_filter_result = pop_dummy_type("MultiFilterRepresentation");
 
-		result = remove_dummy(item_slot_result[0]);
+		result = remove_dummy(multi_filter_result[0]);
 
-		item_filter_slot = ItemRepresentation.make_item_representation(0, chest.filter_inventory, result.parent);
-		item_filter_slot.Position = result.pos;
+		multi_filter_rep = MultiFilterRepresentation.make(0, chest.multi_filter, result.parent);
+		multi_filter_rep.Position = result.pos;
 
 		Player.instance.lock_controls();
 		Player.instance.active_inventory = chest.inventory;
@@ -83,7 +83,7 @@ public partial class CheatChestGUI : GUI {
 
 		void_unfiltered_check.Toggled -= on_check_changed;
 
-		item_filter_slot.release();
+		multi_filter_rep.release();
 
 		Player.instance.unlock_controls();
 		Player.instance.active_inventory = null;

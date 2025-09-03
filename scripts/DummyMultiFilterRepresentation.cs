@@ -3,11 +3,11 @@ using Godot;
 using Godot.Collections;
 using Godot.NativeInterop;
 
-public partial class DummyItemRepresentation : GUIDummy {
+public partial class DummyMultiFilterRepresentation : GUIDummy {
 	
 	public override string replacable_by {
 		get {
-			return "ItemRepresentation";
+			return "MultiFilterRepresentation";
 		}
 	}
 

@@ -1,25 +1,25 @@
-[gd_scene load_steps=5 format=3 uid="uid://d1q7guhm1eqab"]
+[gd_scene load_steps=5 format=3 uid="uid://lvv6vi0vyuja"]
 
-[ext_resource type="Script" uid="uid://cd144dxyjh8sl" path="res://scripts/FluidRepresentation.cs" id="1_dx60u"]
-[ext_resource type="Texture2D" uid="uid://cq7tca85ciuqx" path="res://item_representation_bg.png" id="2_cl250"]
-[ext_resource type="Texture2D" uid="uid://b3e53ahpsap14" path="res://item_textures/test_item.png" id="3_fltmf"]
+[ext_resource type="Script" uid="uid://bwtwumgcrj4j8" path="res://scripts/MultiFilterRepresentation.cs" id="1_eie4q"]
+[ext_resource type="Texture2D" uid="uid://cq7tca85ciuqx" path="res://item_representation_bg.png" id="2_ns6bc"]
+[ext_resource type="Texture2D" uid="uid://b3e53ahpsap14" path="res://item_textures/test_item.png" id="3_u6c65"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_vbegm"]
 outline_size = 5
 outline_color = Color(0, 0, 0, 1)
 
-[node name="FilterRepresentation" type="Control"]
+[node name="MultiFilterRepresentation" type="Control"]
 custom_minimum_size = Vector2(42, 42)
 layout_mode = 3
 anchors_preset = 0
-script = ExtResource("1_dx60u")
+script = ExtResource("1_eie4q")
 
 [node name="Background" type="TextureRect" parent="."]
 texture_filter = 1
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
-texture = ExtResource("2_cl250")
+texture = ExtResource("2_ns6bc")
 
 [node name="FilterTexture" type="TextureRect" parent="."]
 modulate = Color(1, 1, 1, 0.301961)
@@ -50,7 +50,7 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("3_fltmf")
+texture = ExtResource("3_u6c65")
 expand_mode = 1
 
 [node name="ItemCount" type="Label" parent="."]
