@@ -8,6 +8,7 @@ public partial class Inventory : Node {
 
 	public Array<InventoryItem> contents = new Array<InventoryItem>();
 	public Array<FilterBase> filters = new Array<FilterBase>();
+	public Array<int> stack_sizes = new Array<int>();
 
 	[Signal]
 	public delegate void OnItemSlotChangedEventHandler (int index, InventoryItem item);

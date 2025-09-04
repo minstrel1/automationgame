@@ -63,6 +63,8 @@ public partial class Player : CharacterBody3D {
 	public Vector3 last_interact_cast_position;
 	public GodotObject interact_cast_result;
 
+	public CollisionShape3D collider;
+
 	public static Player instance;
 	public static HandItemRepresentation hand_item;
 
@@ -78,6 +80,8 @@ public partial class Player : CharacterBody3D {
 
 		camera = GetNode<Node3D>("Camera");
 		actual_renderer = GetNode<Camera3D>("Camera/Camera3D");
+
+		collider = GetNode<CollisionShape3D>("CollisionShape3D");
 
 		interaction_raycaster = GetNode<RayCast3DExtendable>("Camera/Camera3D/InteractionRaycaster");
 		building_raycaster = GetNode<RayCast3DExtendable>("Camera/Camera3D/BuildingRaycaster");
@@ -363,6 +367,8 @@ public partial class Player : CharacterBody3D {
 		new_rotation.Y -= look_dir.X * camera_sens * sens_mod;
 		new_rotation.X = Math.Clamp(new_rotation.X - look_dir.Y * camera_sens * sens_mod, -1.5f, 1.5f);
 		camera.Rotation = new_rotation;
+
+		collider.Rotation = camera.Rotation * new Vector3(0, 1, 0);
 	}
 
 	public void capture_mouse () {
