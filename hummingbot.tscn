@@ -20,24 +20,34 @@ top_radius = 0.0
 bottom_radius = 0.08
 height = 0.38
 
-[node name="dumbass birb" type="Node3D"]
+[node name="Hummingbot" type="Node3D"]
 
-[node name="CSGBox3D" type="MeshInstance3D" parent="."]
+[node name="Node3D" type="Node3D" parent="."]
+
+[node name="CSGBox3D" type="MeshInstance3D" parent="Node3D"]
 transform = Transform3D(-3.35108e-08, -2.80662e-08, 1, -0.642079, 0.766639, 0, -0.766639, -0.642079, -4.37114e-08, 0.00113292, -0.198087, 0.22656)
 mesh = SubResource("BoxMesh_wnfvn")
+skeleton = NodePath("../..")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Node3D"]
 transform = Transform3D(-3.00108e-08, -1, -2.78236e-08, 0.727066, -4.09226e-08, 0.686567, -0.686567, 3.74872e-10, 0.727066, -0.534489, -0.198087, 0.22656)
 mesh = SubResource("PrismMesh_64rwm")
+skeleton = NodePath("../..")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Node3D"]
 transform = Transform3D(0.00537525, 0.999942, 0.00931066, 0.754784, 0.00205048, -0.65597, -0.655951, 0.0105535, -0.754729, 0.537133, -0.198087, 0.22656)
 mesh = SubResource("PrismMesh_aalg6")
+skeleton = NodePath("../..")
 
-[node name="MeshInstance3D3" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Node3D"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.00113291, 0.264993, -0.130684)
 mesh = SubResource("SphereMesh_rfwja")
+skeleton = NodePath("../..")
 
-[node name="MeshInstance3D4" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="Node3D"]
 transform = Transform3D(1.91069e-15, -4.37114e-08, 1, -1, -4.37114e-08, 0, 4.37114e-08, -1, -4.37114e-08, 0.00113283, 0.251363, -0.548618)
 mesh = SubResource("CylinderMesh_2ua43")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000350237, -0.00212383, 0.347605)
