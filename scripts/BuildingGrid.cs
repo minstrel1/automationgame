@@ -481,7 +481,7 @@ public partial class BuildingGrid : StaticBody3D {
 
 		placable.set_mesh_visibility(false);
 
-		placable.on_build();
+		placable.on_pre_build();
 
 		ulong time = Time.GetTicksUsec() - total_start;
 		GD.Print("PLACE TIME:" + time.ToString());

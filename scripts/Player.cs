@@ -90,6 +90,8 @@ public partial class Player : CharacterBody3D {
 
 		ready_hud();
 
+		ready_drone();
+
 		init_build_mode();
 
 		capture_mouse();

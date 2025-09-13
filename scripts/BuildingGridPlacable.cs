@@ -139,6 +139,9 @@ public partial class BuildingGridPlacable : Node3D {
 	public Dictionary<string, SpecialVoxel> special_voxels = new Dictionary<string, SpecialVoxel>();
 
 	public bool chunk_updated_this_frame = false;
+	
+	public double current_building_time = 0.0f;
+	public Array<Drone> current_building_drones = new Array<Drone>();
 
 	public override void _Ready() {
 		if (special_voxel_data != null) {
@@ -545,8 +548,16 @@ public partial class BuildingGridPlacable : Node3D {
 		return new Vector3I(x, y, z);
 	}
 
+	public virtual void on_pre_build () {
+		current_building_state = BuildingState.pre_built;
+
+		AddToGroup("pre_built_entities");
+	}
+
 	public virtual void on_build () {
 		current_building_state = BuildingState.built;
+
+		RemoveFromGroup("pre_built_entities");
 
 		foreach (string name in special_voxels.Keys) {
 			special_voxels[name].on_build();
