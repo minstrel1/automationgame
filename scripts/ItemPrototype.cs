@@ -11,5 +11,7 @@ public partial class ItemPrototype : PrototypeBase {
 	public int stack_size = 50;
 
 	public bool plantable = false;
+
 	public string plant_result = "";
+	public string drone_result = "";
 }

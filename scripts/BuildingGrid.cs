@@ -491,7 +491,7 @@ public partial class BuildingGrid : StaticBody3D {
 		foreach (BuildingGridChunk chunk in affected_chunks.Keys) {
 			placable.occupied_chunks.Add(chunk);
 			chunk.on_chunk_changed_subscribers.Add(placable);
-			chunk.on_chunk_changed();
+			//chunk.on_chunk_changed();
 		}
 
 		time = Time.GetTicksUsec() - chunk_start;

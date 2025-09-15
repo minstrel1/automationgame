@@ -562,6 +562,10 @@ public partial class BuildingGridPlacable : Node3D {
 		foreach (string name in special_voxels.Keys) {
 			special_voxels[name].on_build();
 		}
+
+		foreach (BuildingGridChunk chunk in occupied_chunks) {
+			chunk.on_chunk_changed();
+		}
 	}
 
 	public override void _Process(double delta)
