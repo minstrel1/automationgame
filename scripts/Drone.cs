@@ -5,6 +5,17 @@ using Godot.Collections;
 using Godot.NativeInterop;
 
 public partial class Drone : CharacterBody3D {
+	public BuildingGridPlacable current_target;
+
+    public double max_flying_speed = 5.0f;
+    public double flying_accel = 5.0f;
+    public double flying_decel = 10.0f;
+
+    public double time_to_unperch = 2.0f;
+    public double unperch_speed = 1.0f;
+    public double current_unperch_time = 0.0f;
+
+    public double current_flying_speed = 0f;
     
     public DronePerch current_perch;
 
