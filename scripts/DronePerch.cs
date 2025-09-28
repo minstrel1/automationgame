@@ -25,19 +25,29 @@ public partial class DronePerch : Node3D {
 
 		inventory = new Inventory(inventory_size);
 		inventory.set_filter(new ItemCategoryFilter("drone"), 0);
+
+        GD.Print("DINGALING");
+        GD.Print(inventory.get_filter(0).GetType().Name);
     }
 
     public override void _PhysicsProcess(double delta) {
         base._PhysicsProcess(delta);
+        //GD.Print("bababa");
 
         calculate_placables_in_range();
 
 		if (placables_to_build.Count != 0) {
-			if (inventory.contents[0] != null) {
-				foreach (BuildingGridPlacable placable in placables_to_build) {
+            GD.Print("found placable to build");
+            foreach (BuildingGridPlacable placable in placables_to_build) {
+                if (placable.current_building_drones.Count < max_drones_per_building) {
+                    if (inventory.contents[0] != null) {
+                        if (inventory.contents[0].prototype.drone_result != null) {
 
-				}
-			}
+                        } 
+                    }
+                }
+                
+            }
 		}
 
 		
@@ -52,10 +62,8 @@ public partial class DronePerch : Node3D {
                 placable = (BuildingGridPlacable) node;
 
 				if (placable.GlobalPosition.DistanceSquaredTo(GlobalPosition) < (range * range)) {
-
+                    placables_to_build.Add(placable);
 				}
-
-                placables_to_build.Add(placable);
             }
         }
 

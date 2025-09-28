@@ -7,7 +7,7 @@ using Godot.NativeInterop;
 public partial class Inventory : Node {
 
 	public Array<InventoryItem> contents = new Array<InventoryItem>();
-	public Array<FilterBase> filters = new Array<FilterBase>();
+	public Array<ItemFilter> filters = new Array<ItemFilter>();
 	public Array<int> stack_sizes = new Array<int>();
 
 	[Signal]
@@ -47,14 +47,14 @@ public partial class Inventory : Node {
 		return String.Format("Inventory of size {0}\nContents: {1}", contents.Count, contents.ToString());
 	}
 
-	public int get_first_slot_to_insert (String item_name, int start = 0) {
+	public int get_first_slot_to_insert (InventoryItem item, int start = 0) {
 		for (int i = start; i < contents.Count; i++) {
 			if (contents[i] != null) {
-				if (contents[i].name == item_name && contents[i].count < contents[i].stack_size) {
+				if (contents[i].name == item.name && contents[i].count < contents[i].stack_size) {
 					return i;
 				}
 			} else {
-				if (filters[i] == null || (filters[i].match(item_name))) {
+				if (filters[i] == null || filters[i].match(item)) {
 					return i;
 				}
 			}
@@ -77,10 +77,10 @@ public partial class Inventory : Node {
 		return -1;
 	}
 
-	public int get_first_item (FilterBase filter, int start = 0) {
+	public int get_first_item (ItemFilter filter, int start = 0) {
 		for (int i = start; i < contents.Count; i++) {
 			if (contents[i] != null) {
-				if (filter.match(contents[i].name)) {
+				if (filter.match(contents[i])) {
 					return i;
 				}
 			}
@@ -89,14 +89,14 @@ public partial class Inventory : Node {
 		return -1;
 	}
 
-	public int get_last_item (FilterBase filter, int start = -1) {
+	public int get_last_item (ItemFilter filter, int start = -1) {
 		if (start == -1) {
 			start = contents.Count - 1;
 		}
 
 		for (int i = start; i >= 0; i--) {
 			if (contents[i] != null) {
-				if (filter.match(contents[i].name)) {
+				if (filter.match(contents[i])) {
 					return i;
 				}
 			}
@@ -110,7 +110,7 @@ public partial class Inventory : Node {
 			return 0; 
 		}
 
-		int pos_to_insert = get_first_slot_to_insert(item.name);
+		int pos_to_insert = get_first_slot_to_insert(item);
 		if (pos_to_insert == -1) { return 0; }
 
 		int items_inserted = 0;
@@ -152,7 +152,7 @@ public partial class Inventory : Node {
 					
 					break;
 				} else {
-					pos_to_insert = get_first_slot_to_insert(item.name, pos_to_insert + 1);
+					pos_to_insert = get_first_slot_to_insert(item, pos_to_insert + 1);
 				}
 
 			}
@@ -168,6 +168,54 @@ public partial class Inventory : Node {
 		if (changed) {
 			EmitSignal(SignalName.OnInventoryChanged, this);
 		}
+
+		if (item != null) {
+			item.emit_update();
+		}
+
+		return items_inserted;
+	}
+
+	public int insert_at_pos (InventoryItem item, int pos_to_insert) {
+		if (!do_input) { 
+			return 0; 
+		}
+
+		if (pos_to_insert == -1) { return 0; }
+
+		int items_inserted = 0;
+		int difference = 0;
+		int before_count = 0;
+
+		int starting_amount = item.count;
+
+		if (contents[pos_to_insert] == null) {
+			int new_item_count = Math.Min(item.count, item.stack_size);
+			InventoryItem new_item = InventoryItem.new_item(item.name, new_item_count);
+			contents[pos_to_insert] = new_item;
+			new_item.parent_inventory = this;
+			new_item.current_index = pos_to_insert;
+			items_inserted += new_item_count;
+
+			item.count -= new_item_count;
+
+		} else {
+			before_count = contents[pos_to_insert].count;
+			contents[pos_to_insert].count = Math.Min(before_count + item.count, contents[pos_to_insert].stack_size);
+			difference = contents[pos_to_insert].count - before_count;
+			items_inserted += difference;
+
+			item.count -= difference;
+
+			if (items_inserted > starting_amount) {
+				GD.PrintErr("An insert operation put more items in than started with.");
+				return 0;
+			}
+		}
+		
+
+		EmitSignal(SignalName.OnItemSlotChanged, pos_to_insert, contents[pos_to_insert]);
+		EmitSignal(SignalName.OnInventoryChanged, this);
 
 		if (item != null) {
 			item.emit_update();
@@ -257,7 +305,7 @@ public partial class Inventory : Node {
 			return false;
 		}
 
-		int pos_to_insert = get_first_slot_to_insert(item.name);
+		int pos_to_insert = get_first_slot_to_insert(item);
 		if (pos_to_insert == -1) { return false; }
 
 		int current_count = item.count;
@@ -290,7 +338,7 @@ public partial class Inventory : Node {
 					
 					break;
 				} else {
-					pos_to_insert = get_first_slot_to_insert(item.name, pos_to_insert + 1);
+					pos_to_insert = get_first_slot_to_insert(item, pos_to_insert + 1);
 				}
 
 			}
@@ -306,6 +354,58 @@ public partial class Inventory : Node {
 				return false;
 			}
 		}
+		return true;
+	}
+
+	// public bool can_insert_at_pos (InventoryItem item, int pos_to_insert) {
+	// 	if (!do_input) {
+	// 		return false;
+	// 	}
+
+	// 	if (pos_to_insert == -1) { return false; }
+
+	// 	int current_count = item.count;
+	// 	int starting_count = item.count;
+	// 	int items_inserted = 0;
+	// 	int difference = 0;
+	// 	int before_count = 0;
+	// 	int new_count = 0;
+
+	// 	if (contents[pos_to_insert] == null) {
+	// 		if (filters[pos_to_insert] != null) {
+	// 			if (filters[pos_to_insert].match(item)) {
+	// 				items_inserted += current_count;
+	// 				current_count -= current_count;
+	// 			}
+	// 		} else {
+	// 			items_inserted += current_count;
+	// 			current_count -= current_count;
+	// 		}
+			
+	// 	} else {
+	// 		before_count = contents[pos_to_insert].count;
+	// 		new_count = Math.Min(before_count + current_count, contents[pos_to_insert].stack_size);
+	// 		difference = new_count - before_count;
+	// 		items_inserted += difference;
+
+	// 		current_count -= difference;
+
+	// 		if (items_inserted >= starting_count) {
+	// 			if (items_inserted > starting_count) {
+	// 				GD.PrintErr("A can_insert operation put more items in than started with.");
+	// 			}
+	// 		}
+	// 	}
+			
+
+	// 	return items_inserted == starting_count;
+	// }
+
+	public bool match_filter_at_index (InventoryItem item, int index) {
+		if (filters[index] != null) {
+			return filters[index].match(item);
+		}
+
 		return true;
 	}
 
@@ -371,11 +471,11 @@ public partial class Inventory : Node {
 		return result;
 	}
 
-	public void set_filter (FilterBase filter, int index) {
+	public void set_filter (ItemFilter filter, int index) {
 		filters[index] = filter;
 	}
 
-	public FilterBase get_filter (int index) {
+	public ItemFilter get_filter (int index) {
 		return filters[index];
 	}
 

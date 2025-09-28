@@ -24,7 +24,7 @@ public partial class ItemSpecialVoxel : SpecialVoxel {
 	public bool auto_output = false;
 	public bool auto_input = false;
 
-	public FilterBase any_filter;
+	public ItemFilter any_filter;
 
 	public override void update_voxel_connections() {
 		base.update_voxel_connections();
@@ -67,7 +67,7 @@ public partial class ItemSpecialVoxel : SpecialVoxel {
 		output_index = 0;
 		output_should_check = true;
 
-		any_filter = new FilterBase();
+		any_filter = new ItemFilter("", true);
 
 		ulong time = Time.GetTicksUsec() - total_start;
 		//GD.Print("ITEMSPECIALVOXEL UPDATE TIME:" + time.ToString());

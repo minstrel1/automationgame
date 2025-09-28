@@ -1,4 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://b60igm2htfui4"]
+[gd_scene load_steps=8 format=3 uid="uid://b60igm2htfui4"]
+
+[ext_resource type="Script" uid="uid://i4sjase7wymr" path="res://scripts/Hummingbot.cs" id="1_6240b"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_wnfvn"]
 size = Vector3(0.3, 1, 0.3)
@@ -20,7 +22,11 @@ top_radius = 0.0
 bottom_radius = 0.08
 height = 0.38
 
-[node name="Hummingbot" type="Node3D"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_6240b"]
+radius = 1.0
+
+[node name="Hummingbot" type="CharacterBody3D"]
+script = ExtResource("1_6240b")
 
 [node name="Node3D" type="Node3D" parent="."]
 
@@ -51,3 +57,6 @@ skeleton = NodePath("../..")
 
 [node name="MeshInstance3D5" type="MeshInstance3D" parent="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.000350237, -0.00212383, 0.347605)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_6240b")

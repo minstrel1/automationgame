@@ -39,7 +39,7 @@ public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IIn
 	public double current_crafting_time = 0d;
 	public bool crafting = false;
 
-	NoneFilter none_filter;
+	NoneItemFilter none_filter;
 
 	CsgShape3D collider;
 
@@ -64,7 +64,7 @@ public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IIn
 			}
 		}
 
-		none_filter = new NoneFilter();
+		none_filter = new NoneItemFilter();
 		recipe_filter = new SubcategoryFilter(recipe_subcategories);
 
 		collider = GetNode<CsgBox3D>("CSGBox3D");

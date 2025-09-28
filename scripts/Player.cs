@@ -216,7 +216,7 @@ public partial class Player : CharacterBody3D {
 			if (is_in_gui() && active_gui is PlayerInventoryGUI) {
 				clear_active_gui();
 			} else {
-				set_active_gui(PlayerInventoryGUI.make_player_inventory_gui(inventory, gui_parent));
+				set_active_gui(PlayerInventoryGUI.make_player_inventory_gui(this, gui_parent));
 			}
 		}
 

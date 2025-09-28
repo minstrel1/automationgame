@@ -145,20 +145,27 @@ public partial class ItemRepresentation : GUI {
 							Player.hand_item.update_visualization();
 						}
 					} else {
-						InventoryItem temp_item = current_item;
-						int temp_index = Player.hand_item.current_index;
-						Inventory temp_inventory = Player.hand_item.current_inventory;
-
-						current_item = Player.hand_item.current_item;
-						parent_inventory.set_item(current_item, current_index);
-
-						if (temp_inventory != null) {
-							temp_inventory.set_item(temp_item, temp_index);
-							//Player.hand_item.set_item(temp_item, temp_inventory);
-							Player.hand_item.clear_item();
-						} else {
-							Player.hand_item.set_item(null, null);
+						if (parent_inventory.match_filter_at_index(Player.hand_item.current_item, current_index)) {
+							int before = Player.hand_item.current_item.count;
+							int result = parent_inventory.insert_at_pos(Player.hand_item.current_item, current_index);
+							if (before == result) {
+								Player.hand_item.clear_item();
+							}
 						}
+						// InventoryItem temp_item = current_item;
+						// int temp_index = Player.hand_item.current_index;
+						// Inventory temp_inventory = Player.hand_item.current_inventory;
+
+						// current_item = Player.hand_item.current_item;
+						// parent_inventory.set_item(current_item, current_index);
+
+						// if (temp_inventory != null) {
+						// 	temp_inventory.set_item(temp_item, temp_index);
+						// 	//Player.hand_item.set_item(temp_item, temp_inventory);
+						// 	Player.hand_item.clear_item();
+						// } else {
+						// 	Player.hand_item.set_item(null, null);
+						// }
 					}
 				} else {
 					Player.hand_item.set_item(current_item, parent_inventory);
