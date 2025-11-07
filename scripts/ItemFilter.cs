@@ -20,8 +20,8 @@ public partial class ItemFilter : FilterBase {
 		icon_path = Prototypes.items[name].icon_texture;
 	}
 
-	public override bool match (string test) {
-		return (test == name) && !invert;
+	public virtual bool match (InventoryItem test) {
+		return (test.name == name) && !invert;
 	}
 
 }

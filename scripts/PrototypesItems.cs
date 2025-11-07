@@ -37,8 +37,8 @@ public partial class Prototypes : Node {
 			plant_result = "test_plant",
 		}},
 		{"test_drone", new ItemPrototype{
-			name = "test_Drone",
-			category = "seed",
+			name = "test_drone",
+			category = "drone",
 			display_name = "Test Drone",
 			display_description = "This is a test drone.",
 			icon_texture = "res://item_textures/test_item.png",

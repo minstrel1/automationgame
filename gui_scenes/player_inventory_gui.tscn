@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://cuc12gn2pt6y"]
+[gd_scene load_steps=6 format=3 uid="uid://cuc12gn2pt6y"]
 
 [ext_resource type="Script" uid="uid://cxci021pryxe8" path="res://scripts/PlayerInventoryGUI.cs" id="1_de2ma"]
 [ext_resource type="PackedScene" uid="uid://byespjiunasj4" path="res://gui_scenes/dummy_inventory_gui.tscn" id="2_ygbyh"]
+[ext_resource type="PackedScene" uid="uid://drninlmo8l1ku" path="res://gui_scenes/dummy_item_representation.tscn" id="3_ygbyh"]
 
 [sub_resource type="Gradient" id="Gradient_af1l0"]
 offsets = PackedFloat32Array(0)
@@ -51,6 +52,69 @@ custom_minimum_size = Vector2(460, 520)
 layout_mode = 2
 current_tab = 0
 
-[node name="Crafting" type="VBoxContainer" parent="HBoxContainer/SideContainer"]
+[node name="i\'m droning it" type="Control" parent="HBoxContainer/SideContainer"]
 layout_mode = 2
 metadata/_tab_index = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="HBoxContainer/SideContainer/i\'m droning it"]
+custom_minimum_size = Vector2(150, 200)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -75.0
+offset_top = -50.0
+offset_right = 75.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Control" type="Control" parent="HBoxContainer/SideContainer/i\'m droning it/PanelContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/SideContainer/i\'m droning it/PanelContainer/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="HBoxContainer/SideContainer/i\'m droning it/PanelContainer/Control/VBoxContainer"]
+layout_mode = 2
+text = "Put drones here"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="HBoxContainer/SideContainer/i\'m droning it/PanelContainer/Control/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="Control" type="Control" parent="HBoxContainer/SideContainer/i\'m droning it/PanelContainer/Control/VBoxContainer/Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DummyItemRepresentation" parent="HBoxContainer/SideContainer/i\'m droning it/PanelContainer/Control/VBoxContainer/Control/Control" instance=ExtResource("3_ygbyh")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Crafting" type="VBoxContainer" parent="HBoxContainer/SideContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1

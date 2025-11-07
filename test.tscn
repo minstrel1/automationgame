@@ -486,7 +486,7 @@ jump_height = 2.0
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
 shape = SubResource("CapsuleShape3D_mf4mk")
 
-[node name="DroneSpawner" type="Node3D" parent="Player/CollisionShape3D"]
+[node name="DronePerch" type="Node3D" parent="Player/CollisionShape3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.47173e-07, 0, 0.974678)
 script = ExtResource("2_mhym6")
 

@@ -3,10 +3,7 @@ using Godot;
 using Godot.Collections;
 using Godot.NativeInterop;
 
-public partial class ItemCategoryFilter : FilterBase {
-
-	public string name;
-	public bool invert;
+public partial class ItemCategoryFilter : ItemFilter {
 
 	public ItemCategoryFilter () {
 		this.name = "";
@@ -18,8 +15,8 @@ public partial class ItemCategoryFilter : FilterBase {
 		this.invert = invert;
 	}
 
-	public override bool match (string test) {
+	public override bool match (InventoryItem test) {
 		// performance could be fucking terrible on this
-		return (Prototypes.items[test].category == name) && !invert; 
+		return (Prototypes.items[test.name].category == name) && !invert; 
 	}
 }

@@ -40,6 +40,7 @@ public partial class DronePerch : Node3D {
 
     public override void _PhysicsProcess(double delta) {
         base._PhysicsProcess(delta);
+        //GD.Print("bababa");
 
         calculate_placables_in_range();
 
