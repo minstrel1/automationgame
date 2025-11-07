@@ -1,7 +1,7 @@
-[gd_scene load_steps=31 format=4 uid="uid://ibpbfdj0iv00"]
+[gd_scene load_steps=33 format=4 uid="uid://ibpbfdj0iv00"]
 
 [ext_resource type="Script" uid="uid://balvvjf5ljuew" path="res://scripts/Player.cs" id="1_ykrsh"]
-[ext_resource type="Script" uid="uid://frhg0ypd7c80" path="res://scripts/DronePerch.cs" id="2_b0q6j"]
+[ext_resource type="Script" uid="uid://frhg0ypd7c80" path="res://scripts/DronePerch.cs" id="2_mhym6"]
 [ext_resource type="Script" uid="uid://df07k7veekgso" path="res://scripts/RayCast3DExtendable.cs" id="3_g14j6"]
 [ext_resource type="Script" uid="uid://ctow5yvnwds2l" path="res://scripts/GUI.cs" id="4_vbegm"]
 [ext_resource type="Texture2D" uid="uid://x23a144snyot" path="res://textures/oxygen_under.png" id="5_5tkv4"]
@@ -13,6 +13,8 @@
 [ext_resource type="Texture2D" uid="uid://3g6bl6rfdqjn" path="res://textures/oxygen_progress.png" id="7_b0q6j"]
 [ext_resource type="Material" uid="uid://bynkxa8q587h7" path="res://building_grid_placable_box.tres" id="12_0m0f1"]
 [ext_resource type="Material" uid="uid://b640f8sx4x12o" path="res://test_voxel_texture.tres" id="12_5tkv4"]
+[ext_resource type="PackedScene" uid="uid://b60igm2htfui4" path="res://drone_scenes/hummingbot.tscn" id="13_0m0f1"]
+[ext_resource type="PackedScene" uid="uid://cn4ych4i3hiwe" path="res://moped.glb" id="14_b0q6j"]
 
 [sub_resource type="PrismMesh" id="PrismMesh_5tkv4"]
 size = Vector3(149.185, 1000, 21.44)
@@ -486,7 +488,7 @@ shape = SubResource("CapsuleShape3D_mf4mk")
 
 [node name="DronePerch" type="Node3D" parent="Player/CollisionShape3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.47173e-07, 0, 0.974678)
-script = ExtResource("2_b0q6j")
+script = ExtResource("2_mhym6")
 
 [node name="Camera" type="Node3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.991825, 0)
@@ -833,3 +835,9 @@ surface_material_override/0 = ExtResource("12_0m0f1")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.54828, 0)
 visible = false
 omni_range = 27.4347
+
+[node name="dumbass birb" parent="." instance=ExtResource("13_0m0f1")]
+transform = Transform3D(0.465, 0, 0, 0, 0.465, 0, 0, 0, 0.465, 6.98188, 0.15025, -31.7453)
+
+[node name="moped" parent="." instance=ExtResource("14_b0q6j")]
+transform = Transform3D(0.445, 0, 0, 0, 0.445, 0, 0, 0, 0.445, 3.44276, -0.527467, -40.4536)

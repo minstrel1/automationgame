@@ -1,4 +1,5 @@
 using System;
+using System.Data.SqlTypes;
 using System.Linq;
 using Godot;
 using Godot.Collections;
@@ -6,7 +7,7 @@ using Godot.NativeInterop;
 
 public partial class DronePerch : Node3D {
 
-    public Array<Drone> working_drones = new Array<Drone>();
+    
 
 	public bool closest_first = true;
 	public bool round_robin = true;
@@ -15,6 +16,12 @@ public partial class DronePerch : Node3D {
 
 	public Inventory inventory;
 	public int inventory_size = 1;
+
+	public string current_drone_path = "res://drone_scenes/hummingbot.tscn";
+
+	public Array<Drone> working_drones = new Array<Drone>();
+	public Array<Drone> available_drones = new Array<Drone>();
+	public int max_drone_count = 20;
 
     public double range = 10.0f;
     
@@ -26,8 +33,9 @@ public partial class DronePerch : Node3D {
 		inventory = new Inventory(inventory_size);
 		inventory.set_filter(new ItemCategoryFilter("drone"), 0);
 
-        GD.Print("DINGALING");
-        GD.Print(inventory.get_filter(0).GetType().Name);
+		for (int i = 0; i < max_drone_count; i++) {
+			create_drone(current_drone_path);
+		}
     }
 
     public override void _PhysicsProcess(double delta) {
@@ -37,21 +45,38 @@ public partial class DronePerch : Node3D {
         calculate_placables_in_range();
 
 		if (placables_to_build.Count != 0) {
-            GD.Print("found placable to build");
-            foreach (BuildingGridPlacable placable in placables_to_build) {
-                if (placable.current_building_drones.Count < max_drones_per_building) {
-                    if (inventory.contents[0] != null) {
-                        if (inventory.contents[0].prototype.drone_result != null) {
-
-                        } 
-                    }
-                }
-                
-            }
+			if (working_drones.Count < max_drone_count) {
+				foreach (BuildingGridPlacable placable in placables_to_build) {
+					if (round_robin) {
+						if (placable.current_building_drones.Count < max_drones_per_building) {
+							
+						}
+					}
+				}
+			}
 		}
 
 		
     }
+
+	public void create_drone (String path) {
+		PackedScene drone_scene = GD.Load<PackedScene>(path);
+
+		Drone drone = drone_scene.Instantiate<Drone>();
+
+		available_drones.Add(drone);
+
+		drone.current_perch = this;
+
+		AddChild(drone);
+
+		drone.TopLevel = true;
+		drone.GlobalPosition = GlobalPosition;
+	}
+
+	public void allocate_drone (BuildingGridPlacable target) {
+		
+	}
 
     public void calculate_placables_in_range () {
         placables_to_build.Clear();
@@ -62,7 +87,7 @@ public partial class DronePerch : Node3D {
                 placable = (BuildingGridPlacable) node;
 
 				if (placable.GlobalPosition.DistanceSquaredTo(GlobalPosition) < (range * range)) {
-                    placables_to_build.Add(placable);
+					placables_to_build.Add(placable);
 				}
             }
         }
