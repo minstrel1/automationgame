@@ -16,7 +16,6 @@ public enum HummingbotStatus {
 public partial class Hummingbot : Drone {
 
 	public HummingbotStatus current_status = HummingbotStatus.waking;
-    public HummingbotStatus current_status = HummingbotStatus.perched;
 
 	public BuildingGridPlacable target;
 
@@ -24,10 +23,7 @@ public partial class Hummingbot : Drone {
 		base._Ready();
 	}
 
-	 Array<BuildingGridPlacable> placables_in_range = null;
-    public override void _Ready() {
-        base._Ready();
-    }
+	Array<BuildingGridPlacable> placables_in_range = null;
 
 	public override void _PhysicsProcess(double delta) {
 		base._PhysicsProcess(delta);
