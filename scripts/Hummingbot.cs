@@ -17,39 +17,29 @@ public partial class Hummingbot : Drone {
 
     public HummingbotStatus current_status = HummingbotStatus.perched;
 
+	public BuildingGridPlacable target;
+
     public override void _Ready() {
         base._Ready();
     }
-
-     Array<BuildingGridPlacable> placables_in_range = null;
 
     public override void _PhysicsProcess(double delta) {
         base._PhysicsProcess(delta);
 
         switch (current_status) {
-            // case HummingbotStatus.perched:
-            //     if (current_perch == null) {
-            //         return;
-            //     }
+            case HummingbotStatus.perched:
+                if (current_perch == null) {
+                    return;
+                }
 
-            //     placables_in_range = current_perch.get_placables();
+				GlobalPosition = current_perch.GlobalPosition;
 
-            //     foreach (BuildingGridPlacable placable in placables_in_range) {
-            //         if (placable.current_building_drones.Count == 0) {
-            //             current_target = placable;
+                break;
 
-            //             current_status = HummingbotStatus.waking;
-
-            //             current_unperch_time = 0f;
-            //         }
-            //     }
-
-            //     break;
-
-            // case HummingbotStatus.waking:
+            case HummingbotStatus.waking:
                 
                 
-            //     break;
+                break;
         }
     }
 

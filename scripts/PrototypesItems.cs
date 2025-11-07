@@ -44,7 +44,7 @@ public partial class Prototypes : Node {
 			icon_texture = "res://item_textures/test_item.png",
 			stack_size = 50,
 			plant_result = "",
-			drone_result = "",
+			drone_result = "res://drone_scenes/hummingbot.tscn",
 		}}
 	};
 }
