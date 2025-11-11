@@ -8,6 +8,6 @@ public partial class Player {
 	public DronePerch player_perch;
 
     public void ready_drone () {
-        player_perch = GetNode<DronePerch>("CollisionShape3D/DroneSpawner");
+        player_perch = GetNode<DronePerch>("CollisionShape3D/DronePerch");
     }
 }

@@ -143,6 +143,8 @@ public partial class BuildingGridPlacable : Node3D {
 	public double current_building_time = 0.0f;
 	public Array<Drone> current_building_drones = new Array<Drone>();
 
+	public Array<Vector3I> open_adjacent_cells = new Array<Vector3I>();
+
 	public override void _Ready() {
 		if (special_voxel_data != null) {
 			foreach (SpecialVoxelData thing in special_voxel_data) {
@@ -601,6 +603,8 @@ public partial class BuildingGridPlacable : Node3D {
 			}
 
 			chunk_updated_this_frame = true;
+
+			calculate_open_adjacent_cells();
 		}
 
 		
@@ -624,6 +628,31 @@ public partial class BuildingGridPlacable : Node3D {
 		parent_grid.remove_placable(placed_index);
 
 		QueueFree();
+	}
+
+	public virtual void calculate_open_adjacent_cells () {
+		open_adjacent_cells.Clear();
+
+		int x_edge_1 = (placed_corner_1.X <= placed_corner_2.X ? placed_corner_1.X : placed_corner_2.X) - 1;
+		int x_edge_2 = (placed_corner_2.X >  placed_corner_1.X ? placed_corner_2.X : placed_corner_1.X) + 1;
+
+		int y_edge_1 = (placed_corner_1.Y <= placed_corner_2.Y ? placed_corner_1.Y : placed_corner_2.Y) - 1;
+		int y_edge_2 = (placed_corner_2.Y >  placed_corner_1.Y ? placed_corner_2.Y : placed_corner_1.Y) + 1;
+
+		int z_edge_1 = (placed_corner_1.Z <= placed_corner_2.Z ? placed_corner_1.Z : placed_corner_2.Z) - 1;
+		int z_edge_2 = (placed_corner_2.Z >  placed_corner_1.Z ? placed_corner_2.Z : placed_corner_1.Z) + 1;
+
+		for (int x = x_edge_1; x < x_edge_2; x++) {
+			for (int y = y_edge_1; y < y_edge_2; y++) {
+				for (int z = x_edge_1; z < x_edge_2; z++) {
+					if (x == x_edge_1 || x == x_edge_2 || y == y_edge_1 || y == y_edge_2 || z == z_edge_1 || z == z_edge_2) {
+						if (parent_grid.is_block_free(x,y,z)) {
+							open_adjacent_cells.Add(new Vector3I(x,y,z));
+						}
+					}
+				}
+			}
+		}
 	}
 
 }

@@ -12,7 +12,7 @@ public partial class DronePerch : Node3D {
 	public bool closest_first = true;
 	public bool round_robin = true;
 
-	public int max_drones_per_building = 3;
+	public int max_drones_per_building = 1;
 
 	public Inventory inventory;
 	public int inventory_size = 1;
@@ -49,7 +49,8 @@ public partial class DronePerch : Node3D {
 				foreach (BuildingGridPlacable placable in placables_to_build) {
 					if (round_robin) {
 						if (placable.current_building_drones.Count < max_drones_per_building) {
-							
+							GD.Print("allocatin drone");
+							allocate_drone(placable);
 						}
 					}
 				}
@@ -75,7 +76,26 @@ public partial class DronePerch : Node3D {
 	}
 
 	public void allocate_drone (BuildingGridPlacable target) {
-		
+		if (working_drones.Count < max_drone_count) {
+			Drone selected_drone = null;
+
+			foreach (Drone drone in available_drones) {
+				if (drone.current_target == null) {
+					selected_drone = drone;
+					break;
+				}
+			}
+
+			GD.Print(selected_drone);
+
+			if (selected_drone != null) {
+				working_drones.Add(selected_drone);
+				selected_drone.current_target = target;
+				target.current_building_drones.Add(selected_drone);
+			}
+
+			
+		}
 	}
 
     public void calculate_placables_in_range () {
