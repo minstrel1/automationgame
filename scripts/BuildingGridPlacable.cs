@@ -553,6 +553,8 @@ public partial class BuildingGridPlacable : Node3D {
 	public virtual void on_pre_build () {
 		current_building_state = BuildingState.pre_built;
 
+		calculate_open_adjacent_cells();
+
 		AddToGroup("pre_built_entities");
 	}
 
@@ -644,7 +646,7 @@ public partial class BuildingGridPlacable : Node3D {
 
 		for (int x = x_edge_1; x < x_edge_2; x++) {
 			for (int y = y_edge_1; y < y_edge_2; y++) {
-				for (int z = x_edge_1; z < x_edge_2; z++) {
+				for (int z = z_edge_1; z < z_edge_2; z++) {
 					if (x == x_edge_1 || x == x_edge_2 || y == y_edge_1 || y == y_edge_2 || z == z_edge_1 || z == z_edge_2) {
 						if (parent_grid.is_block_free(x,y,z)) {
 							open_adjacent_cells.Add(new Vector3I(x,y,z));
@@ -653,6 +655,14 @@ public partial class BuildingGridPlacable : Node3D {
 				}
 			}
 		}
+	}
+
+	public virtual Vector3I get_open_adjacent_cell () {
+		if (open_adjacent_cells.Count > 0) {
+			return open_adjacent_cells.PickRandom();
+		}
+
+		return new Vector3I(-1,-1,-1);
 	}
 
 }

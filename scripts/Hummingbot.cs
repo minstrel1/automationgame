@@ -22,7 +22,10 @@ public partial class Hummingbot : Drone {
 	private float wake_rise_distance = 2.0f;
 	private Vector3 wake_start_pos = Vector3.Zero;
 
-	
+	private Vector3 travel_pos = Vector3.Zero;
+	private double travelling_speed = 5.0f;
+
+	private double building_speed = 1.0f;
 
 	public override void _Ready() {
 		base._Ready();
@@ -63,12 +66,49 @@ public partial class Hummingbot : Drone {
 				}
 
 				if (wake_time >= target_wake_time) {
+					Vector3I cell_pos = current_target.get_open_adjacent_cell();
+					GD.Print(current_target.placed_corner_1);
+					GD.Print(current_target.placed_corner_2);
+					GD.Print(cell_pos);
+					travel_pos = current_target.parent_grid.voxel_to_position(cell_pos);
+					GD.Print(travel_pos);
 					current_status = HummingbotStatus.travelling_to_target;
 				}
 				
 				break;
 
 			case HummingbotStatus.travelling_to_target:
+				if (current_target == null) {
+					return;
+				}
+				
+
+				if (GlobalPosition.DistanceTo(travel_pos) < (float) (travelling_speed * delta)) {
+					GlobalPosition = travel_pos;
+					current_status = HummingbotStatus.building;
+				} else {
+					Velocity = GlobalPosition.DirectionTo(travel_pos) * (float) (travelling_speed);
+					MoveAndSlide();
+				}
+				
+				
+				break;
+
+			case HummingbotStatus.building:
+				if (current_target == null) {
+					return;
+				}
+
+				LookAt(current_target.GlobalPosition);
+
+				current_target.current_building_time += delta * building_speed;
+
+				if (current_target.current_building_time > current_target.building_time) {
+					current_target.on_build();
+
+					current_status = HummingbotStatus.travelling_to_home;
+				}
+
 				break;
 		}
 	}

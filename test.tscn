@@ -218,7 +218,6 @@ mesh = SubResource("ArrayMesh_5tkv4")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="Region"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00156629, -1.02747, 9.01918)
-visible = false
 use_collision = true
 size = Vector3(100, 1, 117.921)
 
@@ -228,9 +227,14 @@ use_collision = true
 size = Vector3(100, 1, 117.921)
 
 [node name="CSGBox3D6" type="CSGBox3D" parent="Region/CSGBox3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.3664, 0, 9.43412)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.3664, 0, 9.52594)
 use_collision = true
-size = Vector3(100, 1, 117.921)
+size = Vector3(100, 1, 117.737)
+
+[node name="CSGBox3D13" type="CSGBox3D" parent="Region/CSGBox3D"]
+transform = Transform3D(0.887212, 0, -0.461362, 0, 1, 0, 0.461362, 0, 0.887212, 52.0336, -9.53674e-07, -43.7906)
+use_collision = true
+size = Vector3(19.4341, 1, 16.2155)
 
 [node name="CSGBox3D8" type="CSGBox3D" parent="Region/CSGBox3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.4057, 7.62939e-06, 89.9132)
@@ -247,10 +251,30 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0745796, -7.66429, -102.486
 use_collision = true
 size = Vector3(100.774, 1, 34.525)
 
+[node name="CSGBox3D11" type="CSGBox3D" parent="Region/CSGBox3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 82.7403, -7.66429, -79.374)
+use_collision = true
+size = Vector3(64.5053, 1, 75.5707)
+
 [node name="CSGBox3D3" type="CSGBox3D" parent="Region/CSGBox3D"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0.258819, 0.965926, -1.13133e-08, 0.965926, -0.258819, -4.2222e-08, 33.7349, -3.85245, -73.3194)
 use_collision = true
 size = Vector3(30.1053, 1, 23.1769)
+
+[node name="CSGBox3D12" type="CSGBox3D" parent="Region/CSGBox3D"]
+transform = Transform3D(-0.407836, 0.109279, -0.906492, 0.258819, 0.965926, -1.13133e-08, 0.875604, -0.234617, -0.422223, 63.681, -3.88799, -63.0069)
+use_collision = true
+size = Vector3(30.1053, 1, 41.8481)
+
+[node name="CSGBox3D14" type="CSGBox3D" parent="Region/CSGBox3D"]
+transform = Transform3D(-0.407836, 0.109279, -0.906492, 0.258819, 0.965926, -1.13133e-08, 0.875604, -0.234617, -0.422223, 64.6444, -5.32907, -68.4911)
+use_collision = true
+size = Vector3(18.9695, 1, 44.7327)
+
+[node name="CSGBox3D15" type="CSGBox3D" parent="Region/CSGBox3D"]
+transform = Transform3D(-0.407836, 0.109279, -0.906492, 0.258819, 0.965926, -1.13133e-08, 0.875604, -0.234617, -0.422223, 48.4254, -6.39967, -80.4532)
+use_collision = true
+size = Vector3(10.6966, 1, 8.8255)
 
 [node name="CSGBox3D4" type="CSGBox3D" parent="Region/CSGBox3D"]
 transform = Transform3D(-4.37114e-08, 0, -1, 0.258819, 0.965926, -1.13133e-08, 0.965926, -0.258819, -4.2222e-08, -33.7314, -3.85253, -73.3192)
@@ -264,6 +288,7 @@ size = Vector3(34.9491, 1, 23.1769)
 
 [node name="CSGBakedMeshInstance3D3" type="MeshInstance3D" parent="Region"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00156629, -1.02747, 9.01918)
+visible = false
 mesh = SubResource("ArrayMesh_77dp3")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="Region"]
@@ -283,7 +308,6 @@ mesh = SubResource("ArrayMesh_b0q6j")
 
 [node name="CSGBox3D6" type="CSGBox3D" parent="Region"]
 transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 90.5554, 4.736, -41.0181)
-visible = false
 use_collision = true
 size = Vector3(25.799, 33.0278, 24.7393)
 
@@ -291,6 +315,26 @@ size = Vector3(25.799, 33.0278, 24.7393)
 transform = Transform3D(0.969458, 0.0570251, -0.238535, 0, 0.972594, 0.232512, 0.245257, -0.225411, 0.942889, -2.72013, 4.81272, 19.4699)
 use_collision = true
 size = Vector3(25.799, 33.0278, 24.7393)
+
+[node name="CSGBox3D40" type="CSGBox3D" parent="Region/CSGBox3D6"]
+transform = Transform3D(0.969458, 0.0570251, -0.238535, -0.169805, 0.857845, -0.485046, 0.176966, 0.510736, 0.841327, -2.00052, 15.6381, -44.1981)
+use_collision = true
+size = Vector3(25.799, 58.2663, 24.7393)
+
+[node name="CSGBox3D43" type="CSGBox3D" parent="Region/CSGBox3D6"]
+transform = Transform3D(0.969458, 0.0570251, -0.238535, -0.00403634, 0.976172, 0.216963, 0.245224, -0.209374, 0.946588, -2.00052, -4.60177, -61.901)
+use_collision = true
+size = Vector3(25.799, 58.2663, 24.7393)
+
+[node name="CSGBox3D42" type="CSGBox3D" parent="Region/CSGBox3D6"]
+transform = Transform3D(0.853804, 0.520574, -0.00464731, -0.461114, 0.760367, 0.457402, 0.241645, -0.388389, 0.889248, -2.00052, 15.6381, 4.26232)
+use_collision = true
+size = Vector3(25.799, 58.2663, 24.7393)
+
+[node name="CSGBox3D41" type="CSGBox3D" parent="Region/CSGBox3D6"]
+transform = Transform3D(0.969458, 0.0570251, -0.238535, -0.231855, 0.530204, -0.815554, 0.0799652, 0.845951, 0.527232, -0.643333, 23.5975, -26.3328)
+use_collision = true
+size = Vector3(25.799, 58.2663, 24.7393)
 
 [node name="CSGBox3D8" type="CSGBox3D" parent="Region/CSGBox3D6"]
 transform = Transform3D(0.883244, 0.126492, 0.45153, -0.206838, 0.969285, 0.133063, -0.42083, -0.210921, 0.882278, 1.6215, 7.17786, 40.6095)
@@ -472,6 +516,7 @@ sides = 21
 
 [node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="Region"]
 transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 90.5554, 4.736, -41.0181)
+visible = false
 mesh = SubResource("ArrayMesh_mhym6")
 
 [node name="Player" type="CharacterBody3D" parent="."]

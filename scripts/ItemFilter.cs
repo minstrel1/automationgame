@@ -17,7 +17,11 @@ public partial class ItemFilter : FilterBase {
 		this.name = name;
 		this.invert = invert;
 
-		icon_path = Prototypes.items[name].icon_texture;
+		if (this.name != "") {
+			icon_path = Prototypes.items[name].icon_texture;
+		}
+
+		
 	}
 
 	public virtual bool match (InventoryItem test) {

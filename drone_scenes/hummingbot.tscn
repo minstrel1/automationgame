@@ -26,6 +26,8 @@ height = 0.38
 radius = 0.33
 
 [node name="Hummingbot" type="CharacterBody3D"]
+collision_layer = 0
+collision_mask = 0
 script = ExtResource("1_4mq0n")
 
 [node name="Node3D" type="Node3D" parent="."]

@@ -191,6 +191,11 @@ public partial class BuildingGrid : StaticBody3D {
 		return new Vector3I((int)floor(position.X), (int)floor(position.Y), (int)floor(position.Z)) - (chunk_pos * chunk_size);
 	}
 
+	public Vector3 voxel_to_position (Vector3I position) {
+		Vector3 new_position = position + GlobalPosition;
+		return new_position + new Vector3(0.5f, 0.5f, 0.5f);
+	}
+
 	public BuildingGridChunk set_block (int x, int y, int z, VoxelData data) {
 		BuildingGridChunk chunk = get_chunk(x, y, z);
 		chunk.set_block(x % chunk_size, y % chunk_size, z % chunk_size, data);
