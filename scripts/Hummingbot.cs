@@ -55,6 +55,12 @@ public partial class Hummingbot : Drone {
 					return;
 				}
 
+				if (!is_target_still_valid()) {
+					current_status = HummingbotStatus.docking;
+					current_perch.gather_drone(this);
+					break;
+				}
+
 				wake_time += delta;
 
 				if (wake_time < (target_wake_time / 2)) {
@@ -66,20 +72,20 @@ public partial class Hummingbot : Drone {
 				}
 
 				if (wake_time >= target_wake_time) {
+					wake_time = target_wake_time;
+
 					Vector3I cell_pos = current_target.get_open_adjacent_cell();
-					GD.Print(current_target.placed_corner_1);
-					GD.Print(current_target.placed_corner_2);
-					GD.Print(cell_pos);
 					travel_pos = current_target.parent_grid.voxel_to_position(cell_pos);
-					GD.Print(travel_pos);
 					current_status = HummingbotStatus.travelling_to_target;
 				}
 				
 				break;
 
 			case HummingbotStatus.travelling_to_target:
-				if (current_target == null) {
-					return;
+				if (!is_target_still_valid()) {
+					current_status = HummingbotStatus.travelling_to_home;
+					current_perch.gather_drone(this);
+					break;
 				}
 				
 
@@ -95,8 +101,10 @@ public partial class Hummingbot : Drone {
 				break;
 
 			case HummingbotStatus.building:
-				if (current_target == null) {
-					return;
+				if (!is_target_still_valid()) {
+					current_status = HummingbotStatus.travelling_to_home;
+					current_perch.gather_drone(this);
+					break;
 				}
 
 				LookAt(current_target.GlobalPosition);
@@ -106,11 +114,65 @@ public partial class Hummingbot : Drone {
 				if (current_target.current_building_time > current_target.building_time) {
 					current_target.on_build();
 
+					current_perch.gather_drone(this);
+
 					current_status = HummingbotStatus.travelling_to_home;
 				}
 
 				break;
+
+			case HummingbotStatus.travelling_to_home:
+				if (current_perch == null) {
+					return;
+				}
+
+				if (current_target != null) {
+					GD.Print("have a target but returning anyways???");
+					Vector3I cell_pos = current_target.get_open_adjacent_cell();
+					travel_pos = current_target.parent_grid.voxel_to_position(cell_pos);
+					current_status = HummingbotStatus.travelling_to_target;
+					return;
+				}
+
+				travel_pos = current_perch.GlobalPosition + Vector3.Up * wake_rise_distance;
+
+				if (GlobalPosition.DistanceTo(travel_pos) < (float) (travelling_speed * delta)) {
+					GlobalPosition = travel_pos;
+					current_status = HummingbotStatus.docking;
+				} else {
+					Velocity = GlobalPosition.DirectionTo(travel_pos) * (float) (travelling_speed);
+					MoveAndSlide();
+				}
+
+				break;
+
+			case HummingbotStatus.docking:
+				if (current_perch == null) {
+					return;
+				}
+
+				wake_time -= delta;
+
+				if (wake_time > 0) {
+					GlobalPosition = current_perch.GlobalPosition + (new Vector3(0,wake_rise_distance / 2f,0) * (float) wake_time);
+				} else {
+					wake_time = 0;
+					current_status = HummingbotStatus.perched;
+				}
+
+				break;
 		}
+	}
+
+	private bool is_target_still_valid() {
+		if (current_target == null || !IsInstanceValid(current_target)) {
+			return false;
+		}
+
+		if (current_target.current_building_state == BuildingState.built) {
+			return false;
+		}
+		return true;
 	}
 
 	public override void release () {

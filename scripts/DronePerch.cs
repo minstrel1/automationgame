@@ -12,7 +12,7 @@ public partial class DronePerch : Node3D {
 	public bool closest_first = true;
 	public bool round_robin = true;
 
-	public int max_drones_per_building = 1;
+	public int max_drones_per_building = 5;
 
 	public Inventory inventory;
 	public int inventory_size = 1;
@@ -93,8 +93,16 @@ public partial class DronePerch : Node3D {
 				selected_drone.current_target = target;
 				target.current_building_drones.Add(selected_drone);
 			}
+		}
+	}
 
-			
+	public void gather_drone (Drone drone) {
+		if (working_drones.Contains(drone)) {
+			if (drone.current_target != null) {
+				drone.current_target.current_building_drones.Remove(drone);
+			}
+			drone.current_target = null;
+			working_drones.Remove(drone);
 		}
 	}
 

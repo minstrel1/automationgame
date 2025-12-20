@@ -486,8 +486,6 @@ public partial class BuildingGrid : StaticBody3D {
 
 		placable.set_mesh_visibility(false);
 
-		placable.on_pre_build();
-
 		ulong time = Time.GetTicksUsec() - total_start;
 		GD.Print("PLACE TIME:" + time.ToString());
 
@@ -498,6 +496,8 @@ public partial class BuildingGrid : StaticBody3D {
 			chunk.on_chunk_changed_subscribers.Add(placable);
 			//chunk.on_chunk_changed();
 		}
+
+		placable.on_pre_build();
 
 		time = Time.GetTicksUsec() - chunk_start;
 		GD.Print("TOTAL CHUNK TIME:" + time.ToString());

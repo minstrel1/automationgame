@@ -555,6 +555,10 @@ public partial class BuildingGridPlacable : Node3D {
 
 		calculate_open_adjacent_cells();
 
+		foreach (BuildingGridChunk chunk in occupied_chunks) {
+			chunk.on_chunk_changed();
+		}
+
 		AddToGroup("pre_built_entities");
 	}
 
@@ -635,20 +639,22 @@ public partial class BuildingGridPlacable : Node3D {
 	public virtual void calculate_open_adjacent_cells () {
 		open_adjacent_cells.Clear();
 
-		int x_edge_1 = (placed_corner_1.X <= placed_corner_2.X ? placed_corner_1.X : placed_corner_2.X) - 1;
-		int x_edge_2 = (placed_corner_2.X >  placed_corner_1.X ? placed_corner_2.X : placed_corner_1.X) + 1;
+		int x_edge_1 = Math.Min(placed_corner_1.X, placed_corner_2.X) - 1;
+		int x_edge_2 = Math.Max(placed_corner_1.X, placed_corner_2.X) + 1;
 
-		int y_edge_1 = (placed_corner_1.Y <= placed_corner_2.Y ? placed_corner_1.Y : placed_corner_2.Y) - 1;
-		int y_edge_2 = (placed_corner_2.Y >  placed_corner_1.Y ? placed_corner_2.Y : placed_corner_1.Y) + 1;
+		int y_edge_1 = Math.Min(placed_corner_1.Y, placed_corner_2.Y) - 1;
+		int y_edge_2 = Math.Max(placed_corner_1.Y, placed_corner_2.Y) + 1;
 
-		int z_edge_1 = (placed_corner_1.Z <= placed_corner_2.Z ? placed_corner_1.Z : placed_corner_2.Z) - 1;
-		int z_edge_2 = (placed_corner_2.Z >  placed_corner_1.Z ? placed_corner_2.Z : placed_corner_1.Z) + 1;
+		int z_edge_1 = Math.Min(placed_corner_1.Z, placed_corner_2.Z) - 1;
+		int z_edge_2 = Math.Max(placed_corner_1.Z, placed_corner_2.Z) + 1;
 
-		for (int x = x_edge_1; x < x_edge_2; x++) {
-			for (int y = y_edge_1; y < y_edge_2; y++) {
-				for (int z = z_edge_1; z < z_edge_2; z++) {
+		for (int x = x_edge_1; x <= x_edge_2; x++) {
+			for (int y = y_edge_1; y <= y_edge_2; y++) {
+				for (int z = z_edge_1; z <= z_edge_2; z++) {
 					if (x == x_edge_1 || x == x_edge_2 || y == y_edge_1 || y == y_edge_2 || z == z_edge_1 || z == z_edge_2) {
+						GD.Print(new Vector3I(x,y,z));
 						if (parent_grid.is_block_free(x,y,z)) {
+							
 							open_adjacent_cells.Add(new Vector3I(x,y,z));
 						}
 					}

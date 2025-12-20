@@ -50,10 +50,12 @@ public partial class FluidContainer : Node {
 			connected_system.split_system(this);
 		} else {
 			FluidSystem old_system = connected_system;
-			old_system.remove_container(this);
+			if (old_system != null) {
+				old_system.remove_container(this);
 
-			if (current_amount > 0 && current_fluid != "") {
-				old_system.insert(current_fluid, current_amount);
+				if (current_amount > 0 && current_fluid != "") {
+					old_system.insert(current_fluid, current_amount);
+				}
 			}
 		}
 
