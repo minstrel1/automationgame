@@ -21,6 +21,10 @@ public partial class Player {
 
 	public ProgressBar demolish_bar;
 
+	public Label available_drone_count_label;
+	public Label max_drone_count_label;
+	public TextureProgressBar drone_bar;
+
 	public void ready_hud () {
 		player_hud = GetNode<Control>("PlayerHUD");
 		clock_label = GetNode<Label>("PlayerHUD/Control/Label");
@@ -37,6 +41,10 @@ public partial class Player {
 		demolish_count_label = GetNode<Label>("PlayerHUD/Control3/PanelContainer2/Label");
 
 		demolish_bar = GetNode<ProgressBar>("PlayerHUD/Control3/PanelContainer3/DemolishBar");
+
+		available_drone_count_label = GetNode<Label>("PlayerHUD/Control4/Control/TextureProgressBar/topLabel");
+		max_drone_count_label = GetNode<Label>("PlayerHUD/Control4/Control/TextureProgressBar/bottomLabel");
+		drone_bar = GetNode<TextureProgressBar>("PlayerHUD/Control4/Control/TextureProgressBar");
 	}
 
 	public void update_hud () {
@@ -52,6 +60,11 @@ public partial class Player {
 		oxygen_meter.Value = (float) oxygen_remaining / (float) max_oxygen;
 
 		fps_label.Text = "FPS: " + Engine.GetFramesPerSecond().ToString();
+
+		available_drone_count_label.Text = (player_perch.available_drones.Count - player_perch.working_drones.Count).ToString();
+		max_drone_count_label.Text = (player_perch.available_drones.Count).ToString();
+
+		drone_bar.Value = (player_perch.available_drones.Count - player_perch.working_drones.Count) / (float) player_perch.available_drones.Count;
 
 		if (is_interact_valid() && !is_in_gui() && current_build_mode == BuildingMode.disabled) {
 			interact_label_container.Visible = true;

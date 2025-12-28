@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://cfjbv7oxeiwiq"]
+
+[ext_resource type="Shader" uid="uid://c3hujshlqfbl5" path="res://misc_scenes/dingaling.gdshader" id="1_alsnl"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_alsnl")
+shader_parameter/range = 25.0
+shader_parameter/falloff_range = 3.0

@@ -67,11 +67,14 @@ public partial class FluidContainer : Node {
 
 		foreach (FluidSpecialVoxel special_voxel in connection_points) {
 			foreach (FluidContainer container in special_voxel.connected_containers.Keys) {
+				GD.Print(special_voxel.connected_containers);
 				if (special_voxel.connected_containers[container] == SpecialVoxelFlags.FluidInputOutput) {
 					connected_ios += 1;
 				}
 			}
 		}
+
+		GD.Print("connected ios " + connected_ios.ToString());
 
 		return connected_ios > 1;
 	}

@@ -15,26 +15,22 @@ public partial class FluidSpecialVoxel : SpecialVoxel {
 
 	public bool connected_containers_cleared_this_frame = false;
 
-	public bool force_update = false;
-
 	public FluidSystem previous_system;
 
-	public override void update_voxel_connections()
+	public override void update_voxel_connections(bool force = false)
 	{
-		base.update_voxel_connections();
+		base.update_voxel_connections(force);
 
 		ulong total_start = Time.GetTicksUsec();
 
 		if (parent_container != null) {
 
-			if (connections_changed_this_frame || force_update) {
+			if (connections_changed_this_frame || force) {
 
-				if (force_update) {
+				if (force) {
 					GD.Print(name + " force updated");
 					connected_containers_cleared_this_frame = true;
 				}
-
-				force_update = false;
 				
 				if (!connected_containers_cleared_this_frame) {
 					connected_containers.Clear();

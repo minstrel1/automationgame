@@ -25,7 +25,7 @@ public partial class ItemFilter : FilterBase {
 	}
 
 	public virtual bool match (InventoryItem test) {
-		return (test.name == name) && !invert;
+		return ((test.name == name) && !invert) || ((test.name != name) && invert);
 	}
 
 }

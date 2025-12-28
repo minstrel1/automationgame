@@ -26,8 +26,13 @@ public partial class ItemSpecialVoxel : SpecialVoxel {
 
 	public ItemFilter any_filter;
 
-	public override void update_voxel_connections() {
-		base.update_voxel_connections();
+	public override void _Ready() {
+		base._Ready();
+		any_filter = new ItemFilter("", true);
+	}
+
+	public override void update_voxel_connections(bool force = false) {
+		base.update_voxel_connections(force);
 
 		ulong total_start = Time.GetTicksUsec();
 
@@ -70,7 +75,7 @@ public partial class ItemSpecialVoxel : SpecialVoxel {
 		any_filter = new ItemFilter("", true);
 
 		ulong time = Time.GetTicksUsec() - total_start;
-		//GD.Print("ITEMSPECIALVOXEL UPDATE TIME:" + time.ToString());
+		GD.Print("ITEMSPECIALVOXEL UPDATE TIME:" + time.ToString());
 	}
 
 	public override void _PhysicsProcess(double delta) {
@@ -78,12 +83,14 @@ public partial class ItemSpecialVoxel : SpecialVoxel {
 
 		if (is_target && (target_inventory == null)) {
 			GD.Print("item voxel had an invalid target?");
-			update_voxel_connections();
+			update_voxel_connections(true);
 		}
 
 		if (is_target) {
 			if (auto_input) {
+				//GD.Print("auto inputting");
 				if (input_should_check) {
+					GD.Print("auto inputting2");
 					if (input_index >= target_count) {
 						input_index = 0;
 						input_should_check = false;
@@ -91,6 +98,7 @@ public partial class ItemSpecialVoxel : SpecialVoxel {
 					}
 
 					int result = target_inventory.get_first_item(any_filter, input_index);
+					GD.Print(result);
 
 					if (result != -1) {
 						input_index = result;
