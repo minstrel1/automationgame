@@ -71,6 +71,8 @@ public partial class SpecialVoxel : Node3D {
 	public bool connections_updated_this_frame = false;
 	public bool connections_changed_this_frame = false;
 
+	public bool built = false;
+
 	public void on_property_changed () {
 		
 		update_flags();
@@ -89,9 +91,9 @@ public partial class SpecialVoxel : Node3D {
 		
 	}
 
-	public virtual void update_voxel_connections () {
+	public virtual void update_voxel_connections (bool force = false) {
 
-		if (connections_updated_this_frame) {
+		if (connections_updated_this_frame && !force) {
 			return;
 		}
 
@@ -161,6 +163,8 @@ public partial class SpecialVoxel : Node3D {
 
 	public virtual void on_build () {
 		directions = Tools.flags_to_enum(placed_voxel_data.special_directions);
+
+		built = true;
 
 		foreach (BuildDirection direction in directions) {
 			test_positions.Add(Tools.v3_to_v3I(placed_voxel_pos + Tools.enum_to_normal(direction)));

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using Godot;
 using Godot.Collections;
 
@@ -37,6 +38,9 @@ public partial class BuildingGrid : StaticBody3D {
 
 	[Export]
 	public Material mesh_material;
+
+	[Export]
+	public Material grid_material;
 
 	[ExportGroup("Grid Sizes")]
 	[Export]
@@ -77,8 +81,8 @@ public partial class BuildingGrid : StaticBody3D {
 	Godot.Collections.Array pre_mesh_data = new Godot.Collections.Array();
 
 	MeshInstance3D mesh_instance;
-	CollisionShape3D collision_shape;
-	ConcavePolygonShape3D collision_polygon;
+
+	MeshInstance3D grid_mesh;
 
 	int face_count = 0;
 	int voxel_count = 0;
@@ -98,17 +102,17 @@ public partial class BuildingGrid : StaticBody3D {
 		mesh_instance.MaterialOverride = mesh_material;
 		AddChild(mesh_instance);
 
-		collision_shape = new CollisionShape3D ();
-		AddChild(collision_shape);
-
-		collision_polygon = new ConcavePolygonShape3D ();
-		collision_shape.Shape = collision_polygon;
+		grid_mesh = new MeshInstance3D ();
+		grid_mesh.Position = Vector3.Zero;
+		AddChild(grid_mesh);
 
 		init_placable_indices();
 
 		grids.Add(this);
 
 		init_chunk_array();
+
+		generate_grid_mesh();
 
 		if (!Engine.IsEditorHint()) {
 			set_mesh_visibility(false);
@@ -575,6 +579,40 @@ public partial class BuildingGrid : StaticBody3D {
 				}
 			}
 		}
+	}
+
+	public void generate_grid_mesh () {
+		SurfaceTool st = new SurfaceTool();
+
+		st.Begin(Mesh.PrimitiveType.Lines);
+
+		st.SetMaterial(grid_material);
+
+		for (int x = 0; x <= grid_width / chunk_size; x++) {
+			for (int y = 0; y <= grid_height / chunk_size; y++) {
+				st.SetColor(new Godot.Color(0x000000ff));
+				st.AddVertex(new Vector3(x * chunk_size, y * chunk_size, 0));
+				st.AddVertex(new Vector3(x * chunk_size, y * chunk_size, grid_length));
+			}
+		}
+
+		for (int z = 0; z <= grid_width / chunk_size; z++) {
+			for (int y = 0; y <= grid_height / chunk_size; y++) {
+				st.SetColor(new Godot.Color(0x000000ff));
+				st.AddVertex(new Vector3(0, y * chunk_size, z * chunk_size));
+				st.AddVertex(new Vector3(grid_width, y * chunk_size, z * chunk_size));
+			}
+		}
+
+		for (int x = 0; x <= grid_width / chunk_size; x++) {
+			for (int z = 0; z <= grid_length / chunk_size; z++) {
+				st.SetColor(new Godot.Color(0x000000ff));
+				st.AddVertex(new Vector3(x * chunk_size, 0, z * chunk_size));
+				st.AddVertex(new Vector3(x * chunk_size, grid_height, z * chunk_size));
+			}
+		}
+
+		grid_mesh.Mesh = st.Commit();
 	}
 
 

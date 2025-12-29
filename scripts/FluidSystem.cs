@@ -264,7 +264,7 @@ public partial class FluidSystem : Node {
 			GD.Print("starting_voxels " + container.connection_points.Count);
 
 			foreach (FluidSpecialVoxel starting_voxel in container.connection_points) {
-				starting_voxel.force_update = true;
+				//starting_voxel.force_update = true;
 				visited_voxels.Add(starting_voxel);
 				GD.Print("connected_containers " + starting_voxel.connected_containers.Keys.Count);
 				foreach (FluidContainer key_container in starting_voxel.connected_containers.Keys) {
@@ -300,7 +300,6 @@ public partial class FluidSystem : Node {
 				containers_searched += 1;
 
 				foreach (FluidSpecialVoxel starting_voxel in current.connection_points) {
-					//starting_voxel.force_update = true;
 					visited_voxels.Add(starting_voxel);
 					foreach (FluidContainer key_container in starting_voxel.connected_containers.Keys) {
 						if (key_container == container) {
@@ -447,7 +446,7 @@ public partial class FluidSystem : Node {
 			container.connected_system = this;
 
 			foreach (FluidSpecialVoxel starting_voxel in container.connection_points) {
-				starting_voxel.force_update = true;
+				//starting_voxel.force_update = true;
 				visited_voxels.Add(starting_voxel);
 			}
 		}
@@ -455,7 +454,7 @@ public partial class FluidSystem : Node {
 		calculate_volume();
 
 		foreach (FluidSpecialVoxel visited_voxel in visited_voxels) {
-			visited_voxel.update_voxel_connections();
+			visited_voxel.update_voxel_connections(true);
 		}
 
 		queue_recalculate_outputs();

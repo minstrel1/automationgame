@@ -18,7 +18,7 @@ public partial class Hummingbot : Drone {
 	public HummingbotStatus current_status = HummingbotStatus.perched;
 
 	private double wake_time = 0.0f;
-	private double target_wake_time = 2.0f;
+	private double target_wake_time = 0.5f;
 	private float wake_rise_distance = 2.0f;
 	private Vector3 wake_start_pos = Vector3.Zero;
 
@@ -127,7 +127,7 @@ public partial class Hummingbot : Drone {
 				}
 
 				if (current_target != null) {
-					GD.Print("have a target but returning anyways???");
+					//GD.Print("have a target but returning anyways???");
 					Vector3I cell_pos = current_target.get_open_adjacent_cell();
 					travel_pos = current_target.parent_grid.voxel_to_position(cell_pos);
 					current_status = HummingbotStatus.travelling_to_target;

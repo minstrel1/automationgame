@@ -66,6 +66,7 @@ public partial class CheatChestGUI : GUI {
 
 	public void on_check_changed (bool toggle) {
 		if (toggle) {
+			chest.void_unfiltered = toggle;
 			chest.on_inventory_changed(chest.inventory);
 		}
 	}

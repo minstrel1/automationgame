@@ -605,10 +605,10 @@ public partial class BuildingGridPlacable : Node3D {
 
 		if (!chunk_updated_this_frame) {
 			foreach (SpecialVoxel voxel in special_voxels.Values) {
-				voxel.update_voxel_connections();
+				voxel.update_voxel_connections(true);
 			}
 
-			chunk_updated_this_frame = true;
+			//chunk_updated_this_frame = true;
 
 			calculate_open_adjacent_cells();
 		}
@@ -652,7 +652,7 @@ public partial class BuildingGridPlacable : Node3D {
 			for (int y = y_edge_1; y <= y_edge_2; y++) {
 				for (int z = z_edge_1; z <= z_edge_2; z++) {
 					if (x == x_edge_1 || x == x_edge_2 || y == y_edge_1 || y == y_edge_2 || z == z_edge_1 || z == z_edge_2) {
-						GD.Print(new Vector3I(x,y,z));
+						//GD.Print(new Vector3I(x,y,z));
 						if (parent_grid.is_block_free(x,y,z)) {
 							
 							open_adjacent_cells.Add(new Vector3I(x,y,z));
