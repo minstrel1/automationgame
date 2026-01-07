@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=4 uid="uid://ibpbfdj0iv00"]
+[gd_scene load_steps=34 format=4 uid="uid://ibpbfdj0iv00"]
 
 [ext_resource type="Script" uid="uid://balvvjf5ljuew" path="res://scripts/Player.cs" id="1_ykrsh"]
 [ext_resource type="Script" uid="uid://frhg0ypd7c80" path="res://scripts/DronePerch.cs" id="2_mhym6"]
@@ -13,7 +13,6 @@
 [ext_resource type="Texture2D" uid="uid://3g6bl6rfdqjn" path="res://textures/oxygen_progress.png" id="7_b0q6j"]
 [ext_resource type="Material" uid="uid://bynkxa8q587h7" path="res://building_grid_placable_box.tres" id="12_0m0f1"]
 [ext_resource type="Material" uid="uid://b640f8sx4x12o" path="res://test_voxel_texture.tres" id="12_5tkv4"]
-[ext_resource type="Material" uid="uid://cfjbv7oxeiwiq" path="res://misc_scenes/distance_shader.tres" id="13_mhym6"]
 [ext_resource type="PackedScene" uid="uid://h4vwrwnw3kct" path="res://misc_scenes/moped.tscn" id="14_b0q6j"]
 
 [sub_resource type="PrismMesh" id="PrismMesh_5tkv4"]
@@ -1355,7 +1354,6 @@ collision_layer = 2
 collision_mask = 0
 script = ExtResource("5_ykrsh")
 mesh_material = ExtResource("12_5tkv4")
-grid_material = ExtResource("13_mhym6")
 grid_width = 144
 grid_height = 64
 grid_length = 144
