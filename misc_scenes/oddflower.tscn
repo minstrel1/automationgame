@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://bpblb1o4d0ojk"]
+
+[ext_resource type="ArrayMesh" uid="uid://dntiped4hal4b" path="res://misc_scenes/oddflower.tres" id="1_u4wsa"]
+
+[node name="oddflower" type="Node3D"]
+
+[node name="Cylinder" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.997058, -0.0766494, 0, 0.0766494, 0.997058, 0, 0.990715, 0)
+mesh = ExtResource("1_u4wsa")
+skeleton = NodePath("")

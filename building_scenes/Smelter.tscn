@@ -63,6 +63,7 @@ special_voxel_data = [SubResource("Resource_f60qr"), SubResource("Resource_s1nv5
 display_name = "Smelter"
 display_description = "A basic smelter."
 building_category = 2
+unlocked = false
 
 [node name="CSGBox3D" type="CSGBox3D" parent="." node_paths=PackedStringArray("interaction_parent")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)

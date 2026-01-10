@@ -120,7 +120,10 @@ public partial class CategoryList : GUI {
 			case CategoryListMode.Buildings:
 				if (current_category != "") {
 					foreach (Dictionary element_data in ((Godot.Collections.Array) building_data[current_category])) {
-						elements.Add(CategoryListElement.make(this, element_data, mode, element_container));
+						if ((bool) element_data["unlocked"]) {
+							elements.Add(CategoryListElement.make(this, element_data, mode, element_container));
+						}
+						
 					}
 				}
 

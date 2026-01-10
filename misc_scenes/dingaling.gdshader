@@ -15,7 +15,12 @@ void fragment() {
 	
 	ALBEDO = COLOR.rgb;
 	if (dist > range) {
-		ALPHA = clamp(1.0 - ((dist - range) / falloff_range), 0.0, 1.0);
+		float value = clamp(1.0 - ((dist - range) / falloff_range), 0.0, 1.0);
+		if (value == 0.0) {
+			discard;
+		} else {
+			ALPHA = value;
+		}
 	} else {
 		ALPHA = 1.0;
 	}

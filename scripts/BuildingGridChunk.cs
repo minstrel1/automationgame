@@ -261,93 +261,81 @@ public partial class BuildingGridChunk : StaticBody3D {
 
 	public void add_cube (Vector3 pos, BuildDirectionFlags flags) {
 		if (is_block_free(pos + Vector3.Left)) {
-			vertices[face_count * 4 + 0] = pos + ltb;
-			vertices[face_count * 4 + 1] = pos + ltf;
-			vertices[face_count * 4 + 2] = pos + lbf;
-			vertices[face_count * 4 + 3] = pos + lbb;
-
 			if (flags == BuildDirectionFlags.Any || (((int) flags & 2) >> 1) == 1) {
+				vertices[face_count * 4 + 0] = pos + ltb;
+				vertices[face_count * 4 + 1] = pos + ltf;
+				vertices[face_count * 4 + 2] = pos + lbf;
+				vertices[face_count * 4 + 3] = pos + lbb;
 
+				add_uvs();
+				add_collision_tris();
+				add_tris();
 			}
-
-			add_uvs();
-			add_collision_tris();
-			add_tris();
 		}
 
 		if (is_block_free(pos + Vector3.Right)) {
-			vertices[face_count * 4 + 0] = pos + rtf;
-			vertices[face_count * 4 + 1] = pos + rtb;
-			vertices[face_count * 4 + 2] = pos + rbb;
-			vertices[face_count * 4 + 3] = pos + rbf;
-
 			if (flags == BuildDirectionFlags.Any || (((int) flags & 4) >> 2) == 1) {
+				vertices[face_count * 4 + 0] = pos + rtf;
+				vertices[face_count * 4 + 1] = pos + rtb;
+				vertices[face_count * 4 + 2] = pos + rbb;
+				vertices[face_count * 4 + 3] = pos + rbf;
 
+				add_uvs();
+				add_collision_tris();
+				add_tris();
 			}
-
-			add_uvs();
-			add_collision_tris();
-			add_tris();
 		}
 
 		if (is_block_free(pos + Vector3.Up)) {
-			vertices[face_count * 4 + 0] = pos + ltb;
-			vertices[face_count * 4 + 1] = pos + rtb;
-			vertices[face_count * 4 + 2] = pos + rtf;
-			vertices[face_count * 4 + 3] = pos + ltf;
-
 			if (flags == BuildDirectionFlags.Any || (((int) flags & 8) >> 3) == 1) {
-				
-			}
+				vertices[face_count * 4 + 0] = pos + ltb;
+				vertices[face_count * 4 + 1] = pos + rtb;
+				vertices[face_count * 4 + 2] = pos + rtf;
+				vertices[face_count * 4 + 3] = pos + ltf;
 
-			add_uvs();
-			add_collision_tris();
-			add_tris();
+				add_uvs();
+				add_collision_tris();
+				add_tris();
+			}
 		}
 
 		if (is_block_free(pos + Vector3.Down)) {
-			vertices[face_count * 4 + 0] = pos + lbf;
-			vertices[face_count * 4 + 1] = pos + rbf;
-			vertices[face_count * 4 + 2] = pos + rbb;
-			vertices[face_count * 4 + 3] = pos + lbb;
-
 			if (flags == BuildDirectionFlags.Any || (((int) flags & 16) >> 4) == 1) {
+				vertices[face_count * 4 + 0] = pos + lbf;
+				vertices[face_count * 4 + 1] = pos + rbf;
+				vertices[face_count * 4 + 2] = pos + rbb;
+				vertices[face_count * 4 + 3] = pos + lbb;
 
+				add_uvs();
+				add_collision_tris();
+				add_tris();
 			}
-
-			add_uvs();
-			add_collision_tris();
-			add_tris();
 		}
 
 		if (is_block_free(pos + Vector3.Forward) ) {
-			vertices[face_count * 4 + 0] = pos + rtb;
-			vertices[face_count * 4 + 1] = pos + ltb;
-			vertices[face_count * 4 + 2] = pos + lbb;
-			vertices[face_count * 4 + 3] = pos + rbb;
-
 			if (flags == BuildDirectionFlags.Any || (((int) flags & 32) >> 5) == 1) {
-				
-			}
+				vertices[face_count * 4 + 0] = pos + rtb;
+				vertices[face_count * 4 + 1] = pos + ltb;
+				vertices[face_count * 4 + 2] = pos + lbb;
+				vertices[face_count * 4 + 3] = pos + rbb;
 
-			add_uvs();
-			add_collision_tris();
-			add_tris();
+				add_uvs();
+				add_collision_tris();
+				add_tris();
+			}
 		}
 
 		if (is_block_free(pos + Vector3.Back)) {
-			vertices[face_count * 4 + 0] = pos + ltf;
-			vertices[face_count * 4 + 1] = pos + rtf;
-			vertices[face_count * 4 + 2] = pos + rbf;
-			vertices[face_count * 4 + 3] = pos + lbf;
-
 			if (flags == BuildDirectionFlags.Any || (((int) flags & 64) >> 6) == 1) {
-				
-			}
+				vertices[face_count * 4 + 0] = pos + ltf;
+				vertices[face_count * 4 + 1] = pos + rtf;
+				vertices[face_count * 4 + 2] = pos + rbf;
+				vertices[face_count * 4 + 3] = pos + lbf;
 
-			add_uvs();
-			add_collision_tris();
-			add_tris();
+				add_uvs();
+				add_collision_tris();
+				add_tris();
+			}
 		}
 	}
 

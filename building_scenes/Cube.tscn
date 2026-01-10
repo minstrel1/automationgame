@@ -8,6 +8,7 @@ script = ExtResource("1_333jj")
 grid_width = 1
 grid_height = 1
 grid_length = 1
+SupportDirections = 1
 special_voxel_data = []
 display_name = "Cube"
 display_description = "A simple building cube"
