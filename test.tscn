@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=4 uid="uid://ibpbfdj0iv00"]
+[gd_scene load_steps=42 format=4 uid="uid://ibpbfdj0iv00"]
 
 [ext_resource type="Script" uid="uid://balvvjf5ljuew" path="res://scripts/Player.cs" id="1_ykrsh"]
 [ext_resource type="Script" uid="uid://frhg0ypd7c80" path="res://scripts/DronePerch.cs" id="2_mhym6"]
@@ -14,6 +14,7 @@
 [ext_resource type="Material" uid="uid://bynkxa8q587h7" path="res://building_grid_placable_box.tres" id="12_0m0f1"]
 [ext_resource type="Material" uid="uid://b640f8sx4x12o" path="res://test_voxel_texture.tres" id="12_5tkv4"]
 [ext_resource type="PackedScene" uid="uid://h4vwrwnw3kct" path="res://misc_scenes/moped.tscn" id="14_b0q6j"]
+[ext_resource type="Shader" uid="uid://c2gjp5weg6no4" path="res://test.gdshader" id="14_uty7l"]
 [ext_resource type="PackedScene" uid="uid://bh568irnehyoc" path="res://misc_scenes/oddflower.glb" id="16_a3se8"]
 [ext_resource type="ArrayMesh" uid="uid://xu1v28wl8e86" path="res://models/badtree.res" id="17_uty7l"]
 
@@ -150,6 +151,52 @@ resource_name = "new_animation"
 _data = {
 &"new_animation": SubResource("Animation_8uh7m")
 }
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_45l4g"]
+render_priority = 0
+shader = ExtResource("14_uty7l")
+shader_parameter/sync_time = 0.0
+shader_parameter/wave_speed = 0.05
+shader_parameter/caustic_speed = 0.01
+shader_parameter/edge_fade_power = 2.0
+shader_parameter/transmittence = 0.04
+shader_parameter/h_dist_trans_weight = 3.0
+shader_parameter/transmit_color = Color(0, 0, 0, 1)
+shader_parameter/depth_fade = 0.3
+shader_parameter/depth_fade_distance = 5.0
+shader_parameter/surface_albedo = Color(0, 0, 0, 1)
+shader_parameter/surface_bottom = Color(0, 0, 0, 1)
+shader_parameter/opacity = 0.4
+shader_parameter/opacity_floor = 0.1
+shader_parameter/opacity_ceiling = 0.8
+shader_parameter/roughness = 0.4
+shader_parameter/height_scale = 1.0
+shader_parameter/amplitude1 = 2.0
+shader_parameter/amplitude2 = 0.5
+shader_parameter/v_noise_tile = 200
+shader_parameter/normal_noise_size = 5.12
+shader_parameter/normal_noise_speed = 0.05
+shader_parameter/v_normal_scale = 1.0
+shader_parameter/normal_map_w = 256
+shader_parameter/wobble_power = 0.01
+shader_parameter/sky_color = Color(0, 0, 0, 1)
+shader_parameter/foam_color = Color(0, 0, 0, 1)
+shader_parameter/foam_mask_size = 0.0
+shader_parameter/foam_mask_offset = Vector2(0, 0)
+shader_parameter/foam_wobble = 0.01
+shader_parameter/foam_wobble_size = 10.0
+shader_parameter/high_color = Color(0, 0, 0, 1)
+shader_parameter/low_color = Color(0, 0, 0, 1)
+shader_parameter/wave_color_range = 2.0
+shader_parameter/enable_fake_lighting = false
+shader_parameter/shine_strength = 0.17
+shader_parameter/shine_shininess = 18.0
+shader_parameter/shadow = 0.72
+shader_parameter/shadow_width = 0.18
+shader_parameter/shadow_color = Color(0.705, 0.705, 0.705, 0.705)
+shader_parameter/_specular_smoothness = 0.199
+shader_parameter/_specular_strength = 0.075
+shader_parameter/_glossiness = 0.067
 
 [sub_resource type="BoxMesh" id="BoxMesh_b0q6j"]
 
@@ -1442,7 +1489,7 @@ collision_layer = 2
 collision_mask = 0
 script = ExtResource("5_ykrsh")
 mesh_material = ExtResource("12_5tkv4")
-grid_material = ExtResource("13_mhym6")
+grid_material = SubResource("ShaderMaterial_45l4g")
 grid_width = 128
 grid_height = 64
 grid_length = 112
