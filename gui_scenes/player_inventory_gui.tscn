@@ -51,6 +51,7 @@ inventory_size = 10
 custom_minimum_size = Vector2(460, 520)
 layout_mode = 2
 current_tab = 0
+tab_focus_mode = 0
 
 [node name="i\'m droning it" type="Control" parent="HBoxContainer/SideContainer"]
 layout_mode = 2

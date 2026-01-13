@@ -69,6 +69,10 @@ public partial class BuildingGrid : StaticBody3D {
 	[Export]
 	public int chunk_size = 16;
 
+	[ExportGroup("Debris Summons")]
+	[Export]
+	public Array<PackedScene> debris_scenes = new Array<PackedScene>();
+
 	static int max_faces = 4096 * 4;
 
 	ArrayMesh mesh = new ArrayMesh();
@@ -83,6 +87,8 @@ public partial class BuildingGrid : StaticBody3D {
 	MeshInstance3D mesh_instance;
 
 	MeshInstance3D grid_mesh;
+
+	public float grid_viewing_distance = 30.0f;
 
 	int face_count = 0;
 	int voxel_count = 0;
@@ -162,6 +168,7 @@ public partial class BuildingGrid : StaticBody3D {
 
 	public void set_mesh_visibility (bool value) {
 		mesh_instance.Visible = value;
+		grid_mesh.Visible = value;
 		for (int x = 0; x < grid_width / chunk_size; x++) {
 			for (int y = 0; y < grid_height / chunk_size; y++) {
 				for (int z = 0; z < grid_length / chunk_size; z++) {
@@ -169,6 +176,10 @@ public partial class BuildingGrid : StaticBody3D {
 				}
 			}
 		}
+	}
+
+	public void update_mesh_distance () {
+		((ShaderMaterial) grid_material).SetShaderParameter("range", grid_viewing_distance);
 	}
 
 	public float floor (float input) {
@@ -596,7 +607,7 @@ public partial class BuildingGrid : StaticBody3D {
 			}
 		}
 
-		for (int z = 0; z <= grid_width / chunk_size; z++) {
+		for (int z = 0; z <= grid_length / chunk_size; z++) {
 			for (int y = 0; y <= grid_height / chunk_size; y++) {
 				st.SetColor(new Godot.Color(0x000000ff));
 				st.AddVertex(new Vector3(0, y * chunk_size, z * chunk_size));

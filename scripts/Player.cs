@@ -71,6 +71,8 @@ public partial class Player : CharacterBody3D {
 	public bool mouse_clicked = false;
 	public bool right_mouse_clicked = false;
 
+	public bool alt_mode = false;
+
 	public override void _Ready()
 	{
 		base._Ready();
@@ -143,6 +145,11 @@ public partial class Player : CharacterBody3D {
 
 		Vector3 forward = camera.GlobalTransform.Basis * new Vector3(move_dir.X, 0, move_dir.Y);
 		Vector3 walk_dir = new Vector3(forward.X, 0, forward.Z).Normalized();
+
+		Vector3 floor_normal = GetFloorNormal();
+
+		float angle_x = Vector3.Up.SignedAngleTo(floor_normal, Vector3.Left);
+		float angle_z = Vector3.Up.SignedAngleTo(floor_normal, Vector3.Forward);
 
 		bool can_sprint = false;
 		float final_speed = speed;
@@ -251,8 +258,10 @@ public partial class Player : CharacterBody3D {
 
 		if (Input.IsActionJustPressed("build_mode")) {
 			if (current_build_mode == BuildingMode.building) {
-				foreach (BuildingGrid grid in BuildingGrid.grids) {
-					grid.set_mesh_visibility(false);
+				if (!alt_mode) {
+					foreach (BuildingGrid grid in BuildingGrid.grids) {
+						grid.set_mesh_visibility(false);
+					}
 				}
 
 				current_build_mode = BuildingMode.disabled;
@@ -284,8 +293,10 @@ public partial class Player : CharacterBody3D {
 
 		if (Input.IsActionJustPressed("demolish_mode")) {
 			if (current_build_mode == BuildingMode.demolishing) {
-				foreach (BuildingGrid grid in BuildingGrid.grids) {
-					grid.set_mesh_visibility(false);
+				if (!alt_mode) {
+					foreach (BuildingGrid grid in BuildingGrid.grids) {
+						grid.set_mesh_visibility(false);
+					}
 				}
 
 				current_build_mode = BuildingMode.disabled;
@@ -323,6 +334,16 @@ public partial class Player : CharacterBody3D {
 		}
 
 		sprinting = Input.IsActionPressed("shift_modifier");
+
+		if (Input.IsActionJustPressed("alt_mode")) {
+			alt_mode = !alt_mode;
+
+			if (!(current_build_mode == BuildingMode.building || current_build_mode == BuildingMode.demolishing)) {
+				foreach (BuildingGrid grid in BuildingGrid.grids) {
+					grid.set_mesh_visibility(alt_mode);
+				}
+			}
+		}
 
 		if (@event is InputEventMouseButton) {
 			InputEventMouseButton new_event = @event as InputEventMouseButton;
