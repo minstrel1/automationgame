@@ -12,7 +12,7 @@ void vertex() {
 void fragment() {
 	vec3 camera_pos = (INV_VIEW_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
 	float dist = distance(world_position, camera_pos);
-	
+
 	ALBEDO = COLOR.rgb;
 	if (dist > range) {
 		float value = clamp(1.0 - ((dist - range) / falloff_range), 0.0, 1.0);

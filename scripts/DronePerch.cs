@@ -56,8 +56,6 @@ public partial class DronePerch : Node3D {
 				}
 			}
 		}
-
-		
     }
 
 	public void create_drone (String path) {
