@@ -8,8 +8,8 @@ using Godot.NativeInterop;
 public partial class Globals : Node {
 	public static Globals Instance {get; private set;}
 
-	public static int seconds_per_hour = 240;
-	public static int ticks_per_second = 60;
+	public static int seconds_per_hour = 15;
+	public static int ticks_per_second = 10;
 
 	public static int ighours_to_ticks (float input) {
 		return (int) Math.Round(input * seconds_per_hour * ticks_per_second);
@@ -25,6 +25,10 @@ public partial class Globals : Node {
 
 	public static float ticks_to_seconds (int input) {
 		return (float) Math.Round((double) input / ticks_per_second);
+	}
+
+	public static int get_day_length_ticks () {
+		return ticks_per_second * seconds_per_hour * 24;
 	}
 
 	public override void _Ready()
