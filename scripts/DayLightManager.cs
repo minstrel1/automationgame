@@ -19,7 +19,7 @@ public partial class DaylightManager : Node3D {
 
 		float degrees = 360 * WorldTime.Instance.get_day_percentage();
 
-		light.LightEnergy = (float) Mathf.Clamp(Math.Sin((degrees / 360) * 2 * Math.PI + (Math.PI / 2) - 0.1) * 2 + 0.7, -0.5, 0.5) + 0.5f;
+		light.LightEnergy = (float) Mathf.Clamp(Math.Sin((degrees / 360) * 2 * Math.PI + (Math.PI / 2) - 0.1) * 2 + 0.7, -0.5, 0.5) + 0.5f; 
 
 		if (light.LightEnergy < 0.0005) {
 			light.Visible = false;

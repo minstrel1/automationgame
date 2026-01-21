@@ -5,9 +5,7 @@ using Godot;
 using Godot.Collections;
 using Godot.NativeInterop;
 
-public partial class DronePerch : Node3D {
-
-    
+public partial class DronePerch : Node3D { 
 
 	public bool closest_first = true;
 	public bool round_robin = true;
