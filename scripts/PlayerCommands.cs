@@ -26,5 +26,11 @@ public partial class Player : CharacterBody3D {
 		}
 	}
 
+	[ConsoleCommand("set_show_profiler", "sets the visibility of the debug profiler.")]
+	public void set_show_profiler (bool value) {
+		show_debug_profiler_label = value;
+		LimboConsole.Info("Profiler view is now set to " + value.ToString() + ".");
+	}
+
     
 }

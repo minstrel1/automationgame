@@ -14,7 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://3g6bl6rfdqjn" path="res://textures/oxygen_progress.png" id="7_b0q6j"]
 [ext_resource type="Material" uid="uid://bynkxa8q587h7" path="res://building_grid_placable_box.tres" id="12_0m0f1"]
 [ext_resource type="Material" uid="uid://b640f8sx4x12o" path="res://test_voxel_texture.tres" id="12_5tkv4"]
-[ext_resource type="Script" uid="uid://cfvtkv5o0w8hq" path="res://scripts/DayLightManager.cs" id="13_4uo0j"]
+[ext_resource type="Script" uid="uid://cfvtkv5o0w8hq" path="res://scripts/DaylightManager.cs" id="13_4uo0j"]
 [ext_resource type="Material" uid="uid://cfjbv7oxeiwiq" path="res://misc_scenes/distance_shader.tres" id="13_mhym6"]
 [ext_resource type="PackedScene" uid="uid://h4vwrwnw3kct" path="res://misc_scenes/moped.tscn" id="14_b0q6j"]
 [ext_resource type="PackedScene" uid="uid://bh568irnehyoc" path="res://misc_scenes/oddflower.glb" id="16_a3se8"]
@@ -1425,6 +1425,30 @@ offset_bottom = 40.0
 texture = ExtResource("6_xersf")
 expand_mode = 1
 
+[node name="Control5" type="Control" parent="Player/PlayerHUD"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+
+[node name="Label5" type="Label" parent="Player/PlayerHUD/Control5"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -407.0
+offset_top = 55.0
+offset_right = -52.0
+offset_bottom = 130.0
+grow_horizontal = 0
+text = "this is chud text \\n fuck yo
+fuck
+fuck"
+horizontal_alignment = 2
+
 [node name="PlayerGUI" type="Control" parent="Player"]
 layout_mode = 3
 anchors_preset = 15
@@ -1491,11 +1515,20 @@ environment = SubResource("Environment_8uh7m")
 [node name="DaylightManager" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20.8424, 8.50293)
 script = ExtResource("13_4uo0j")
+do_daylight_cycle = false
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="DaylightManager"]
 transform = Transform3D(0.882997, -0.356386, 0.30546, 0, 0.650774, 0.759271, -0.469379, -0.670434, 0.574631, 0, 0, 0)
 shadow_enabled = true
 directional_shadow_max_distance = 250.0
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="DaylightManager"]
+transform = Transform3D(0.882948, 0.356456, -0.30552, 0, -0.650774, -0.759271, -0.469472, 0.670397, -0.574599, 0, 0, 0)
+light_color = Color(1.1792e-06, 0.279938, 0.436973, 1)
+light_energy = 0.213
+shadow_enabled = true
+directional_shadow_max_distance = 250.0
+sky_mode = 1
 
 [node name="Node3D" type="Node3D" parent="."]
 

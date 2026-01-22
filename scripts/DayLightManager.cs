@@ -8,6 +8,9 @@ public partial class DaylightManager : Node3D {
 
 	private DirectionalLight3D light;
 
+	[Export]
+	public bool do_daylight_cycle = true;
+
 	public override void _Ready () {
 		base._Ready();
 
@@ -19,14 +22,16 @@ public partial class DaylightManager : Node3D {
 
 		float degrees = 360 * WorldTime.Instance.get_day_percentage();
 
-		light.LightEnergy = (float) Mathf.Clamp(Math.Sin((degrees / 360) * 2 * Math.PI + (Math.PI / 2) - 0.1) * 2 + 0.7, -0.5, 0.5) + 0.5f; 
+		if (do_daylight_cycle) {
+			light.LightEnergy = (float) Mathf.Clamp(Math.Sin((degrees / 360) * 2 * Math.PI + (Math.PI / 2) - 0.1) * 2 + 0.7, -0.5, 0.5) + 0.5f; 
 
-		if (light.LightEnergy < 0.0005) {
-			light.Visible = false;
-		} else {
-			light.Visible = true;
+			if (light.LightEnergy < 0.0005) {
+				light.Visible = false;
+			} else {
+				light.Visible = true;
+			}
+
+			RotationDegrees = new Vector3(0, 0, degrees);
 		}
-
-		RotationDegrees = new Vector3(0, 0, degrees);
 	}
 }

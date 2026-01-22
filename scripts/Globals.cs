@@ -8,8 +8,8 @@ using Godot.NativeInterop;
 public partial class Globals : Node {
 	public static Globals Instance {get; private set;}
 
-	public static int seconds_per_hour = 15;
-	public static int ticks_per_second = 10;
+	public static int seconds_per_hour = 60;
+	public static int ticks_per_second = 60;
 
 	public static int ighours_to_ticks (float input) {
 		return (int) Math.Round(input * seconds_per_hour * ticks_per_second);
@@ -41,8 +41,7 @@ public partial class Globals : Node {
 
 	public override void _PhysicsProcess(double delta)
 	{
-		base._PhysicsProcess(delta);
-
+		// idfk why this works but it does, tho it makes me concerned once there's a ton of objects
 		GC.Collect(GC.MaxGeneration, GCCollectionMode.Default, blocking: false);
 	}
 }
