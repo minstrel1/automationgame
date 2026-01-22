@@ -100,6 +100,8 @@ public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IIn
 	{
 		base._PhysicsProcess(delta);
 
+		Profiler.mark_time_begin("crafter");
+
 		if (recipe_set) {
 			if (crafting) {
 				if (current_crafting_time < current_recipe.time_to_craft) {
@@ -163,6 +165,8 @@ public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IIn
 				check_input = false;
 			}
 		}
+
+		Profiler.mark_time_end("crafter");
 	}
 
 	public void on_input_inventory_changed (Inventory inventory) {

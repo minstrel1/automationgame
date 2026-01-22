@@ -23,6 +23,7 @@ Prototypes="*res://scripts/Prototypes.cs"
 WorldTime="*res://scripts/WorldTime.cs"
 LimboConsole="*res://addons/limbo_console/limbo_console.gd"
 FluidSystemManager="*res://scripts/FluidSystemManager.cs"
+Profiler="*res://scripts/Profiler.cs"
 
 [display]
 

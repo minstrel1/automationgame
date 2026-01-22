@@ -25,6 +25,10 @@ public partial class Player {
 	public Label max_drone_count_label;
 	public TextureProgressBar drone_bar;
 
+	public Label debug_profiler_label;
+
+	public bool show_debug_profiler_label = false;
+
 	public void ready_hud () {
 		player_hud = GetNode<Control>("PlayerHUD");
 		clock_label = GetNode<Label>("PlayerHUD/Control/Label");
@@ -33,6 +37,7 @@ public partial class Player {
 		building_hit_label = GetNode<Label>("PlayerHUD/Control/Label2");
 		fps_label = GetNode<Label>("PlayerHUD/Control/Label3");
 		voxel_data_label = GetNode<Label>("PlayerHUD/Control/Label4");
+		debug_profiler_label = GetNode<Label>("PlayerHUD/Control5/Label5");
 
 		interact_label_container = GetNode<PanelContainer>("PlayerHUD/Control3/PanelContainer");
 		interact_label = GetNode<Label>("PlayerHUD/Control3/PanelContainer/Label");
@@ -90,6 +95,20 @@ public partial class Player {
 		} else {
 			demolish_bar.Visible = false;
 		}
+
+		if (show_debug_profiler_label) {
+			string new_profiler_string = "Profiled times in microseconds\n";
+			foreach (string key in Profiler.last_frame_times.Keys) {
+				new_profiler_string += key + " : " + Profiler.last_frame_times[key].ToString() + "\n";
+			}
+
+			debug_profiler_label.Text = new_profiler_string;
+			debug_profiler_label.Visible = true;
+		} else {
+			debug_profiler_label.Visible = false;
+		}
+
+		
 
 	}
 }
