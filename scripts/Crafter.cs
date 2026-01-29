@@ -8,7 +8,7 @@ using Godot.NativeInterop;
 #if TOOLS
 [Tool]
 #endif
-public partial class Crafter : BuildingGridPlacable, IBuildingWithInventory, IInteractable {
+public partial class Crafter : GridBuildable, IBuildingWithInventory, IInteractable {
 
 	[ExportCategory("Crafter Properties")]
 	[Export]

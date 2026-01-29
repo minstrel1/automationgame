@@ -23,11 +23,7 @@ PlacableDirections = 1
 SupportDirections = 1
 rotate_support = true
 special_voxel_data = Array[Object]([SubResource("Resource_wu5b1")])
+internal_name = "chest"
 display_name = "Basic Chest"
 display_description = "A basic chest."
-building_category = 0
-building_cost = [{
-"amount": 3,
-"name": "test_item",
-"type": "item"
-}]
+category = "logistics"

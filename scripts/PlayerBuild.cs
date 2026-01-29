@@ -17,13 +17,13 @@ public partial class Player {
 	public BuildingGrid last_known_grid;
 	public int current_building_rotation = 0;
 
-	public Array<BuildingGridPlacable> demolish_targets = new Array<BuildingGridPlacable>();
+	public Array<GridEntity> demolish_targets = new Array<GridEntity>();
 	public int max_demolish_targets = 100;
 
 	public CsgSphere3D building_cursor;
 
 	public PackedScene current_building_scene = null; //GD.Load<PackedScene>("res://building_scenes/ExampleGrowingPlot.tscn");
-	public BuildingGridPlacable current_building_instance;
+	public GridBuildable current_building_instance;
 
 	public BuildingMode current_build_mode = BuildingMode.disabled;
 
@@ -36,7 +36,7 @@ public partial class Player {
 	}
 	
 	public void make_building_instance () {
-		current_building_instance = current_building_scene.Instantiate<BuildingGridPlacable>();
+		current_building_instance = current_building_scene.Instantiate<GridBuildable>();
 
 		current_building_instance.Position = Vector3.Zero;
 		current_building_instance.Visible = false;
@@ -45,7 +45,7 @@ public partial class Player {
 
 		AddChild(current_building_instance);
 
-		current_building_instance.set_collision(false);
+		//current_building_instance.set_collision(false);
 	}
 
 	public void clear_building_instance () {
@@ -57,7 +57,7 @@ public partial class Player {
 	}
 
 	public void clear_demolish_targets () {
-		foreach (BuildingGridPlacable target in demolish_targets) {
+		foreach (GridEntity target in demolish_targets) {
 			target.set_mesh_visibility(false);
 		}
 
@@ -152,7 +152,7 @@ public partial class Player {
 
 					if ((bool) test_result[0]) {
 						
-						BuildingGridPlacable new_instance = current_building_scene.Instantiate<BuildingGridPlacable>();
+						GridBuildable new_instance = current_building_scene.Instantiate<GridBuildable>();
 						
 						last_known_grid.place(new_instance, projected_pos, build_normal, current_building_rotation);
 
@@ -185,7 +185,7 @@ public partial class Player {
 					VoxelData result = last_known_grid.get_block(hit_pos);
 
 					if (result.placable_index != -1) {
-						BuildingGridPlacable placable = last_known_grid.placables[result.placable_index];
+						GridEntity placable = last_known_grid.entities[result.placable_index];
 						//GD.Print(placable);
 
 						if (mouse_clicked) {
@@ -211,7 +211,7 @@ public partial class Player {
 							grid.set_mesh_visibility(false);
 						}
 						
-						foreach (BuildingGridPlacable target in demolish_targets) {
+						foreach (GridEntity target in demolish_targets) {
 							target.mark_for_demolishing();
 						}
 

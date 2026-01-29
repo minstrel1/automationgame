@@ -8,7 +8,7 @@ using Godot.NativeInterop;
 #if TOOLS
 [Tool]
 #endif
-public partial class Valve : BuildingGridPlacable, IInteractable {
+public partial class Valve : GridBuildable, IInteractable {
 
 	[ExportCategory("Valve Properties")]
 	[Export]
@@ -61,11 +61,11 @@ public partial class Valve : BuildingGridPlacable, IInteractable {
 		return "Configure " + interact_name;
 	}
 
-    public override void release() {
+	public override void release() {
 		if (container != null) {
 			container.release();
 		}
 
-        base.release();
-    }
+		base.release();
+	}
 }

@@ -6,7 +6,7 @@ using Godot.NativeInterop;
 
 [GlobalClass]
 [Tool]
-public partial class Chest : BuildingGridPlacable, IBuildingWithInventory, IInteractable {
+public partial class Chest : GridBuildable, IBuildingWithInventory, IInteractable {
 	
 	public Inventory inventory;
 

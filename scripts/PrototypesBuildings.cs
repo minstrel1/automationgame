@@ -6,7 +6,7 @@ using Godot.NativeInterop;
 
 public partial class Prototypes : Node {
 
-	public static Dictionary buildings;
+	public static Dictionary<string, Dictionary> buildings;
 
 	public static Dictionary building_category_properties = new Dictionary{
 		{"logistics", new Dictionary {
@@ -42,9 +42,11 @@ public partial class Prototypes : Node {
 	public static string building_scene_directory = "res://building_scenes";
 
 	private static string[] desired_building_properties = {
+		"internal_name",
 		"display_name",
 		"display_description",
-		"building_category",
+		"category",
+		"sub_category",
 		"unlocked",
 		"display_icon",
 		"building_time",
@@ -52,12 +54,10 @@ public partial class Prototypes : Node {
 	};
 
 	public void create_building_dict () {
-		buildings = new Dictionary();
+		buildings = new Dictionary<string, Dictionary>();
 
-		string[] category_names = Enum.GetNames<BuildingCategory>();
-
-		foreach (string name in category_names) {
-			buildings[name] = new Godot.Collections.Array();
+		foreach (string name in thing_categories.Keys) {
+			buildings[name] = new Dictionary();
 		}
 
 		string[] building_res_names = ResourceLoader.ListDirectory(building_scene_directory);
@@ -68,7 +68,7 @@ public partial class Prototypes : Node {
 
 			result["res_path"] = building_scene_directory + "/" + building_res_name;
 
-			BuildingGridPlacable script_instance = ((BuildingGridPlacable)((CSharpScript) properties["script"]).New());
+			GridBuildable script_instance = ((GridBuildable)((CSharpScript) properties["script"]).New());
 			
 			foreach (string property in desired_building_properties) {
 				if (properties.ContainsKey(property)) {
@@ -78,9 +78,10 @@ public partial class Prototypes : Node {
 				}
 			}
 			
-			string category = Enum.GetName<BuildingCategory>((BuildingCategory) (int) result["building_category"]);
+			string category = (string) result["category"];
+			string internal_name = (string) result["internal_name"];
 
-			((Godot.Collections.Array) buildings[category]).Add(result);
+			buildings[category][internal_name] = result; 
 
 		}
 

@@ -55,7 +55,7 @@ public partial class SpecialVoxel : Node3D {
 	public BuildDirectionFlags support_directions = 0;
 
 	public Vector3 parent_center {get; set {field = value; on_property_changed();}} 
-	public BuildingGridPlacable parent;
+	public GridEntity parent;
 
 	public VoxelData placed_voxel_data;
 	public Vector3I placed_voxel_pos;

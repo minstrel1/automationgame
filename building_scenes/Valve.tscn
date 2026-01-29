@@ -33,9 +33,10 @@ grid_height = 1
 grid_length = 2
 grid_offset = Vector3(0, 0, 0.5)
 special_voxel_data = [SubResource("Resource_fli45"), SubResource("Resource_5c224")]
+internal_name = "valve"
 display_name = "Valve"
 display_description = "A valve."
-building_category = 0
+category = "logistics"
 
 [node name="CSGBox3D" type="CSGBox3D" parent="." node_paths=PackedStringArray("interaction_parent")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.5)

@@ -8,7 +8,7 @@ using Godot.NativeInterop;
 #if TOOLS
 [Tool]
 #endif
-public partial class FluidTank : BuildingGridPlacable, IInteractable {
+public partial class FluidTank : GridBuildable, IInteractable {
 
 	[ExportCategory("Tank Properties")]
 	[Export]

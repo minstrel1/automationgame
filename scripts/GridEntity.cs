@@ -4,6 +4,13 @@ using Godot;
 using Godot.Collections;
 using Godot.NativeInterop;
 
+public enum BuildingState {
+	placement,
+	pre_built,
+	built,
+	pre_remove,
+}
+
 [GlobalClass]
 [Tool]
 public partial class GridEntity : Entity {
@@ -58,6 +65,8 @@ public partial class GridEntity : Entity {
 	public BuildDirection default_direction = BuildDirection.Up;
 
 	[Export]
+	public bool deconstructable = true;
+	[Export]
 	public bool rotate_support = false;
 	[Export]
 	public bool rotatable = true;
@@ -83,6 +92,18 @@ public partial class GridEntity : Entity {
 	public bool chunk_updated_this_frame = false;
 
 	public Array<Vector3I> open_adjacent_cells = new Array<Vector3I>();
+
+	// DRONE VARIABLES
+
+	[ExportCategory("Demolish")]
+	[Export]
+	public bool demolishable = true;
+
+	[Export]
+	public float target_demolish_time = 5.0f;
+	public double current_demolish_time = 0.0f;
+
+	public Array<Drone> current_building_drones = new Array<Drone>();
 
 	// VISUALISER VARIABLES
 
@@ -140,6 +161,34 @@ public partial class GridEntity : Entity {
 		if (current_building_state == BuildingState.pre_remove) {
 			release();
 		}
+	}
+
+	public virtual void on_place (bool update = true) {
+		current_building_state = BuildingState.built;
+
+		calculate_open_adjacent_cells();
+
+		if (update) {
+			foreach (BuildingGridChunk chunk in occupied_chunks) {
+				chunk.on_chunk_changed();
+			}
+		}
+	}
+
+	public virtual void on_chunk_changed (BuildingGridChunk chunk) {
+		if (!chunk_updated_this_frame) {
+			foreach (SpecialVoxel voxel in special_voxels.Values) {
+				voxel.update_voxel_connections(true);
+			}
+
+			//chunk_updated_this_frame = true;
+
+			calculate_open_adjacent_cells();
+		}
+	}
+
+	public virtual void mark_for_demolishing () {
+		current_building_state = BuildingState.pre_remove;
 	}
 
 	public void adjust_box () {
@@ -517,7 +566,7 @@ public partial class GridEntity : Entity {
 			chunk.on_chunk_changed();
 		}
 
-		parent_grid.remove_placable(placed_index);
+		parent_grid.remove_entity(placed_index);
 
 		QueueFree();
 	}

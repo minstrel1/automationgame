@@ -55,9 +55,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 script = ExtResource("1_572ty")
 grid_offset = Vector3(0, 1, 0)
 special_voxel_data = [SubResource("Resource_ht6cn"), SubResource("Resource_wspvg"), SubResource("Resource_70aj5"), SubResource("Resource_r6qmw")]
+internal_name = "fluid_tank"
 display_name = "Fluid Tank"
 display_description = "A basic fluid tank."
-building_category = 0
+category = "logistics"
 
 [node name="CSGBox3D" type="CSGBox3D" parent="." node_paths=PackedStringArray("interaction_parent")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

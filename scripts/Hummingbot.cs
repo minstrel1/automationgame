@@ -13,9 +13,16 @@ public enum HummingbotStatus {
 	docking,
 }
 
+public enum HummingBotJobType {
+	none,
+	build,
+	demolish
+}
+
 public partial class Hummingbot : Drone {
 
 	public HummingbotStatus current_status = HummingbotStatus.perched;
+	public HummingBotJobType current_job_type = HummingBotJobType.build;
 
 	private double wake_time = 0.0f;
 	private double target_wake_time = 0.5f;
@@ -109,15 +116,21 @@ public partial class Hummingbot : Drone {
 
 				LookAt(current_target.GlobalPosition);
 
-				current_target.current_building_time += delta * building_speed;
+				if (current_job_type == HummingBotJobType.build && current_target is GridBuildable) {
+					GridBuildable building_target = (GridBuildable) current_target;
 
-				if (current_target.current_building_time > current_target.building_time) {
-					current_target.on_build();
+					building_target.current_building_time += delta * building_speed;
 
-					current_perch.gather_drone(this);
+					if (building_target.current_building_time > building_target.target_building_time) {
+						building_target.on_build();
 
-					current_status = HummingbotStatus.travelling_to_home;
+						current_perch.gather_drone(this);
+
+						current_status = HummingbotStatus.travelling_to_home;
+					}
 				}
+
+				
 
 				break;
 

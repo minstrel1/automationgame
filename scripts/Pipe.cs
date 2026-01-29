@@ -8,7 +8,7 @@ using Godot.NativeInterop;
 #if TOOLS
 [Tool]
 #endif
-public partial class Pipe : BuildingGridPlacable, IInteractable {
+public partial class Pipe : GridBuildable, IInteractable {
 
 	[ExportCategory("Pipe Properties")]
 	[Export]

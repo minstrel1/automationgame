@@ -39,9 +39,10 @@ max_water_per_second = 5.0
 grid_height = 5
 grid_offset = Vector3(0, 2, 0)
 special_voxel_data = Array[Object]([SubResource("Resource_gc728")])
+internal_name = "water_collector"
 display_name = "Water Collector"
 display_description = "A basic water collector"
-building_category = 2
+category = "production"
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)

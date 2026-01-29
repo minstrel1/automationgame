@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cniymdji1vax5"]
 
-[ext_resource type="Script" uid="uid://c7inyqfjp24lr" path="res://scripts/BuildingGridPlacable.cs" id="1_52ial"]
+[ext_resource type="Script" uid="uid://c3fcw6c4qq04y" path="res://scripts/GridBuildable.cs" id="1_52ial"]
 
 [node name="CSGBox3D" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
@@ -12,9 +12,10 @@ grid_offset = Vector3(0, 2, 0)
 PlacableDirections = 1
 SupportDirections = 1
 special_voxel_data = []
+internal_name = "pillar"
 display_name = "Pillar"
 display_description = "THE PILLAR IS RIGHT THERE ETHAN."
-building_category = 3
+category = "structures"
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)

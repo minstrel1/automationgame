@@ -8,7 +8,7 @@ using Godot.NativeInterop;
 #if TOOLS
 [Tool]
 #endif
-public partial class GrowingPlot : BuildingGridPlacable, IBuildingWithInventory, IInteractable {
+public partial class GrowingPlot : GridBuildable, IBuildingWithInventory, IInteractable {
 
 	[ExportCategory("Growing Plot Properties")]
 	[Export]

@@ -1,6 +1,6 @@
-using System;
-using Godot;
-using Godot.Collections;
+// using System;
+// using Godot;
+// using Godot.Collections;
 
 public enum BuildingCategory {
 	logistics,
@@ -12,663 +12,663 @@ public enum BuildingCategory {
 	developer
 }
 
-public enum BuildingState {
-	placement,
-	pre_built,
-	built,
-	pre_remove,
-}
+// public enum BuildingState {
+// 	placement,
+// 	pre_built,
+// 	built,
+// 	pre_remove,
+// }
 
-[GlobalClass]
-[Tool]
-public partial class BuildingGridPlacable : Node3D {
+// [GlobalClass]
+// [Tool]
+// public partial class BuildingGridPlacable : Node3D {
 	
-	[ExportCategory("Grid Properties")]
-	[Export]
-	public int grid_width {
-		get;
-		set {
-			field = value;
-			adjust_box();
-		}
-	} = 3;
-	[Export]
-	public int grid_height {
-		get;
-		set {
-			field = value;
-			adjust_box();
-		}
-	} = 3;
-	[Export]
-	public int grid_length {
-		get;
-		set{
-			field = value;
-			adjust_box();
-		} 
-	} = 3;
-	[Export]
-	public Vector3 grid_offset {
-		get;
-		set{
-			field = value;
-			adjust_box();
-		} 
-	} = new Vector3(0,0,0);
+// 	[ExportCategory("Grid Properties")]
+// 	[Export]
+// 	public int grid_width {
+// 		get;
+// 		set {
+// 			field = value;
+// 			adjust_box();
+// 		}
+// 	} = 3;
+// 	[Export]
+// 	public int grid_height {
+// 		get;
+// 		set {
+// 			field = value;
+// 			adjust_box();
+// 		}
+// 	} = 3;
+// 	[Export]
+// 	public int grid_length {
+// 		get;
+// 		set{
+// 			field = value;
+// 			adjust_box();
+// 		} 
+// 	} = 3;
+// 	[Export]
+// 	public Vector3 grid_offset {
+// 		get;
+// 		set{
+// 			field = value;
+// 			adjust_box();
+// 		} 
+// 	} = new Vector3(0,0,0);
 
-	public BuildingGrid parent_grid;
+// 	public BuildingGrid parent_grid;
 
-	[ExportCategory("Placable Properties")]
+// 	[ExportCategory("Placable Properties")]
 
-	[Export(PropertyHint.Layers2DPhysics)]
-	public int PlacableDirections {get; set;} = 1 << 4;
-	public BuildDirectionFlags placable_directions = BuildDirectionFlags.Up;
+// 	[Export(PropertyHint.Layers2DPhysics)]
+// 	public int PlacableDirections {get; set;} = 1 << 4;
+// 	public BuildDirectionFlags placable_directions = BuildDirectionFlags.Up;
 
-	[Export(PropertyHint.Layers2DPhysics)]
-	public int SupportDirections {get; set;} = 0;
-	public BuildDirectionFlags support_directions = 0;
+// 	[Export(PropertyHint.Layers2DPhysics)]
+// 	public int SupportDirections {get; set;} = 0;
+// 	public BuildDirectionFlags support_directions = 0;
 
-	[Export]
-	public BuildDirection default_direction = BuildDirection.Up;
+// 	[Export]
+// 	public BuildDirection default_direction = BuildDirection.Up;
 
-	[Export]
-	public bool rotate_support = false;
-	[Export]
-	public bool rotatable = true;
+// 	[Export]
+// 	public bool rotate_support = false;
+// 	[Export]
+// 	public bool rotatable = true;
 
-	[Export]
-	public Array<SpecialVoxelData> special_voxel_data {get; set {field = value; on_special_voxel_array_changed();}}
+// 	[Export]
+// 	public Array<SpecialVoxelData> special_voxel_data {get; set {field = value; on_special_voxel_array_changed();}}
 
-	[ExportToolButton("Add Special Voxel")]
-	public Callable add_voxel_button => Callable.From(add_special_voxel_data);
+// 	[ExportToolButton("Add Special Voxel")]
+// 	public Callable add_voxel_button => Callable.From(add_special_voxel_data);
 
-	[ExportCategory("Dict. Properties")]
+// 	[ExportCategory("Dict. Properties")]
 
-	[Export]
-	public string display_name = "Placable";
+// 	[Export]
+// 	public string display_name = "Placable";
 
-	[Export]
-	public string display_description = "A basic growing plot.";
+// 	[Export]
+// 	public string display_description = "A basic growing plot.";
 
-	[Export]
-	public BuildingCategory building_category = BuildingCategory.miscellaneous;
+// 	[Export]
+// 	public BuildingCategory building_category = BuildingCategory.miscellaneous;
 
-	[Export]
-	public bool unlocked = true;
+// 	[Export]
+// 	public bool unlocked = true;
 
-	[Export]
-	public Texture2D display_icon = GD.Load<Texture2D>("res://item_textures/test_item.png");
+// 	[Export]
+// 	public Texture2D display_icon = GD.Load<Texture2D>("res://item_textures/test_item.png");
 
-	[Export]
-	public float building_time = 5.0f;
+// 	[Export]
+// 	public float building_time = 5.0f;
 
-	[Export]
-	public Godot.Collections.Array building_cost = new Godot.Collections.Array{
-		new Dictionary{
-			{"type", "item"},
-			{"name", "test_item"},
-			{"amount", 5},
-		}
-	};
+// 	[Export]
+// 	public Godot.Collections.Array building_cost = new Godot.Collections.Array{
+// 		new Dictionary{
+// 			{"type", "item"},
+// 			{"name", "test_item"},
+// 			{"amount", 5},
+// 		}
+// 	};
 
-	private MeshInstance3D visualiser;
+// 	private MeshInstance3D visualiser;
 
-	private static int max_visualiser_faces = 512;
+// 	private static int max_visualiser_faces = 512;
 
-	private ArrayMesh visualiser_mesh;
-	private Vector3[] vertices = new Vector3[max_visualiser_faces * 4];
-	private Int32[] indices = new Int32[max_visualiser_faces * 6]; 
-	private Vector2[] uvs = new Vector2[max_visualiser_faces * 4];
+// 	private ArrayMesh visualiser_mesh;
+// 	private Vector3[] vertices = new Vector3[max_visualiser_faces * 4];
+// 	private Int32[] indices = new Int32[max_visualiser_faces * 6]; 
+// 	private Vector2[] uvs = new Vector2[max_visualiser_faces * 4];
 
-	private int face_count = 0;
-	private float h_tex_div = 1f / 14;
-	private float v_tex_div = 1f / 2;
+// 	private int face_count = 0;
+// 	private float h_tex_div = 1f / 14;
+// 	private float v_tex_div = 1f / 2;
 
-	private Array<MeshInstance3D> special_visualisers;
+// 	private Array<MeshInstance3D> special_visualisers;
 
-	public string packed_scene_path;
+// 	public string packed_scene_path;
 
-	public BuildingState current_building_state = BuildingState.pre_built;
+// 	public BuildingState current_building_state = BuildingState.pre_built;
 
-	public Array<BuildingGridChunk> occupied_chunks;
-	public Vector3I placed_corner_1;
-	public Vector3I placed_corner_2;
-	public int placed_index = -1;
+// 	public Array<BuildingGridChunk> occupied_chunks;
+// 	public Vector3I placed_corner_1;
+// 	public Vector3I placed_corner_2;
+// 	public int placed_index = -1;
 
-	public Dictionary<string, SpecialVoxel> special_voxels = new Dictionary<string, SpecialVoxel>();
+// 	public Dictionary<string, SpecialVoxel> special_voxels = new Dictionary<string, SpecialVoxel>();
 
-	public bool chunk_updated_this_frame = false;
+// 	public bool chunk_updated_this_frame = false;
 	
-	public double current_building_time = 0.0f;
-	public Array<Drone> current_building_drones = new Array<Drone>();
+// 	public double current_building_time = 0.0f;
+// 	public Array<Drone> current_building_drones = new Array<Drone>();
 
-	public Array<Vector3I> open_adjacent_cells = new Array<Vector3I>();
+// 	public Array<Vector3I> open_adjacent_cells = new Array<Vector3I>();
 
-	public override void _Ready() {
-		if (special_voxel_data != null) {
-			foreach (SpecialVoxelData thing in special_voxel_data) {
-				add_special_voxel_data(thing);
-				add_special_voxel(thing);
-			}	
-		}
+// 	public override void _Ready() {
+// 		if (special_voxel_data != null) {
+// 			foreach (SpecialVoxelData thing in special_voxel_data) {
+// 				add_special_voxel_data(thing);
+// 				add_special_voxel(thing);
+// 			}	
+// 		}
 
-		placable_directions = (BuildDirectionFlags) PlacableDirections;
-		support_directions = (BuildDirectionFlags) SupportDirections;
+// 		placable_directions = (BuildDirectionFlags) PlacableDirections;
+// 		support_directions = (BuildDirectionFlags) SupportDirections;
 
-		//GD.Print("placable init");
-		visualiser = new MeshInstance3D();
-		visualiser.Position = Vector3.Zero;
-		make_visualiser_mesh();
-		visualiser.CastShadow = GeometryInstance3D.ShadowCastingSetting.Off;
-		StandardMaterial3D material = GD.Load<StandardMaterial3D>("res://building_grid_placable_box.tres");
-		material = (StandardMaterial3D) material.Duplicate();
-		material.CullMode = BaseMaterial3D.CullModeEnum.Disabled;
-		visualiser.SetSurfaceOverrideMaterial(0, material);
+// 		//GD.Print("placable init");
+// 		visualiser = new MeshInstance3D();
+// 		visualiser.Position = Vector3.Zero;
+// 		make_visualiser_mesh();
+// 		visualiser.CastShadow = GeometryInstance3D.ShadowCastingSetting.Off;
+// 		StandardMaterial3D material = GD.Load<StandardMaterial3D>("res://building_grid_placable_box.tres");
+// 		material = (StandardMaterial3D) material.Duplicate();
+// 		material.CullMode = BaseMaterial3D.CullModeEnum.Disabled;
+// 		visualiser.SetSurfaceOverrideMaterial(0, material);
 
-		special_visualisers = new Array<MeshInstance3D>();
+// 		special_visualisers = new Array<MeshInstance3D>();
 
-		occupied_chunks = new Array<BuildingGridChunk>();
+// 		occupied_chunks = new Array<BuildingGridChunk>();
 		
-		AddChild(visualiser);
-		adjust_box();
-	}
+// 		AddChild(visualiser);
+// 		adjust_box();
+// 	}
 
-	public void adjust_box () {
-		if (visualiser != null) {
-			//(visualiser.Mesh as BoxMesh).Size = new Vector3(grid_width, grid_height, grid_length);
-			make_visualiser_mesh();
-			(visualiser.GetSurfaceOverrideMaterial(0) as StandardMaterial3D).Uv1Scale = new Vector3(1, 1, 1);
-			visualiser.Position = Vector3.Zero;
-		}
+// 	public void adjust_box () {
+// 		if (visualiser != null) {
+// 			//(visualiser.Mesh as BoxMesh).Size = new Vector3(grid_width, grid_height, grid_length);
+// 			make_visualiser_mesh();
+// 			(visualiser.GetSurfaceOverrideMaterial(0) as StandardMaterial3D).Uv1Scale = new Vector3(1, 1, 1);
+// 			visualiser.Position = Vector3.Zero;
+// 		}
 
-		if (special_voxel_data != null) {
-			foreach (SpecialVoxelData thing in special_voxel_data) {
-				thing.parent_center = grid_offset;
-			}
-		}
-	}
+// 		if (special_voxel_data != null) {
+// 			foreach (SpecialVoxelData thing in special_voxel_data) {
+// 				thing.parent_center = grid_offset;
+// 			}
+// 		}
+// 	}
 
-	public Vector3 get_spacing_offset () {
-		return new Vector3(
-			grid_width % 2 == 0 ? -0.5f : 0,
-			grid_height % 2 == 0 ? -0.5f : 0,
-			grid_length % 2 == 0 ? -0.5f : 0
-		);
-	}
+// 	public Vector3 get_spacing_offset () {
+// 		return new Vector3(
+// 			grid_width % 2 == 0 ? -0.5f : 0,
+// 			grid_height % 2 == 0 ? -0.5f : 0,
+// 			grid_length % 2 == 0 ? -0.5f : 0
+// 		);
+// 	}
 
-	public void make_visualiser_mesh () {
-		ArrayMesh new_mesh = new ArrayMesh();
+// 	public void make_visualiser_mesh () {
+// 		ArrayMesh new_mesh = new ArrayMesh();
 
-		vertices = new Vector3[max_visualiser_faces * 4];
-		indices = new Int32[max_visualiser_faces * 6]; 
-		uvs = new Vector2[max_visualiser_faces * 4];
+// 		vertices = new Vector3[max_visualiser_faces * 4];
+// 		indices = new Int32[max_visualiser_faces * 6]; 
+// 		uvs = new Vector2[max_visualiser_faces * 4];
 
-		face_count = 0;
+// 		face_count = 0;
 
-		make_box(grid_offset, new Vector3(grid_width, grid_height, grid_length));
+// 		make_box(grid_offset, new Vector3(grid_width, grid_height, grid_length));
 
-		if (special_voxel_data != null) {
-			foreach (SpecialVoxelData special_voxel in special_voxel_data) {
-				make_box(grid_offset + special_voxel.voxel_position + get_spacing_offset(), new Vector3(1, 1, 1), special_voxel.flag_directions, (int) special_voxel.voxel_flags);
-				//GD.Print((int) special_voxel.flag_directions);
-			}
-		}
+// 		if (special_voxel_data != null) {
+// 			foreach (SpecialVoxelData special_voxel in special_voxel_data) {
+// 				make_box(grid_offset + special_voxel.voxel_position + get_spacing_offset(), new Vector3(1, 1, 1), special_voxel.flag_directions, (int) special_voxel.voxel_flags);
+// 				//GD.Print((int) special_voxel.flag_directions);
+// 			}
+// 		}
 		
-		Godot.Collections.Array array = new Godot.Collections.Array();
-		array.Resize((int) Mesh.ArrayType.Max);
-		array[(int) Mesh.ArrayType.Vertex] = vertices;
-		array[(int) Mesh.ArrayType.Index] = indices;
-		array[(int) Mesh.ArrayType.TexUV] = uvs;
-
-		new_mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, array);
-
-		visualiser.Mesh = new_mesh;
-	}
-
-	private void make_box (Vector3 pos, Vector3 size, BuildDirectionFlags flags = BuildDirectionFlags.Any, int face = 0) {
-		Vector3 ltb = (new Vector3(0f, 1f, 0f) - new Vector3(0.5f, 0.5f, 0.5f)) * size;
-		Vector3 rtb = (new Vector3(1f, 1f, 0f) - new Vector3(0.5f, 0.5f, 0.5f)) * size;
-		Vector3 ltf = (new Vector3(0f, 1f, 1f) - new Vector3(0.5f, 0.5f, 0.5f)) * size;
-		Vector3 rtf = (new Vector3(1f, 1f, 1f) - new Vector3(0.5f, 0.5f, 0.5f)) * size;
-		Vector3 lbb = (new Vector3(0f, 0f, 0f) - new Vector3(0.5f, 0.5f, 0.5f)) * size;
-		Vector3 rbb = (new Vector3(1f, 0f, 0f) - new Vector3(0.5f, 0.5f, 0.5f)) * size;
-		Vector3 lbf = (new Vector3(0f, 0f, 1f) - new Vector3(0.5f, 0.5f, 0.5f)) * size;
-		Vector3 rbf = (new Vector3(1f, 0f, 1f) - new Vector3(0.5f, 0.5f, 0.5f)) * size;
-
-		if (flags == BuildDirectionFlags.Any || (((int) flags & 2) >> 1) == 1) {
-			vertices[face_count * 4 + 0 ] = pos + ltb;
-			vertices[face_count * 4 + 1 ] = pos + ltb + new Vector3(0, 0, 0.5f);
-			vertices[face_count * 4 + 2 ] = pos + ltb + new Vector3(0, -0.5f, 0.5f);
-			vertices[face_count * 4 + 3 ] = pos + ltb + new Vector3(0, -0.5f, 0);
-
-			add_uvs(face * 2);
-			add_tris();
-
-			vertices[face_count * 4 + 0 ] = pos + ltf + new Vector3(0, 0, -0.5f);
-			vertices[face_count * 4 + 1 ] = pos + ltf;
-			vertices[face_count * 4 + 2 ] = pos + ltf + new Vector3(0, -0.5f, 0);
-			vertices[face_count * 4 + 3 ] = pos + ltf + new Vector3(0, -0.5f, -0.5f);
-
-			add_uvs((face * 2) + 1);
-			add_tris();
-
-			vertices[face_count * 4 + 0 ] = pos + lbf + new Vector3(0, 0.5f, -0.5f);
-			vertices[face_count * 4 + 1 ] = pos + lbf + new Vector3(0, 0.5f, 0);
-			vertices[face_count * 4 + 2 ] = pos + lbf;
-			vertices[face_count * 4 + 3 ] = pos + lbf + new Vector3(0, 0, -0.5f);
-
-			add_uvs((face * 2) + 1, 1);
-			add_tris();
-
-			vertices[face_count * 4 + 0 ] = pos + lbb + new Vector3(0, 0.5f, 0);
-			vertices[face_count * 4 + 1 ] = pos + lbb + new Vector3(0, 0.5f, 0.5f);
-			vertices[face_count * 4 + 2 ] = pos + lbb + new Vector3(0, 0, 0.5f);
-			vertices[face_count * 4 + 3 ] = pos + lbb;
-
-			add_uvs(face * 2, 1);
-			add_tris();
-		}
-
-		if (flags == BuildDirectionFlags.Any || (((int) flags & 4) >> 2) == 1) {
-			vertices[face_count * 4 + 0 ] = pos + rtf;
-			vertices[face_count * 4 + 1 ] = pos + rtf + new Vector3(0, 0, -0.5f);
-			vertices[face_count * 4 + 2 ] = pos + rtf + new Vector3(0, -0.5f, -0.5f);
-			vertices[face_count * 4 + 3 ] = pos + rtf + new Vector3(0, -0.5f, 0);
-
-			add_uvs(face * 2);
-			add_tris();
-
-			vertices[face_count * 4 + 0 ] = pos + rtb + new Vector3(0, 0, 0.5f);
-			vertices[face_count * 4 + 1 ] = pos + rtb;
-			vertices[face_count * 4 + 2 ] = pos + rtb + new Vector3(0, -0.5f, 0);
-			vertices[face_count * 4 + 3 ] = pos + rtb + new Vector3(0, -0.5f, 0.5f);
-
-			add_uvs((face * 2) + 1);
-			add_tris();
-
-			vertices[face_count * 4 + 0 ] = pos + rbb + new Vector3(0, 0.5f, 0.5f);
-			vertices[face_count * 4 + 1 ] = pos + rbb + new Vector3(0, 0.5f, 0);
-			vertices[face_count * 4 + 2 ] = pos + rbb;
-			vertices[face_count * 4 + 3 ] = pos + rbb + new Vector3(0, 0, 0.5f);
-
-			add_uvs((face * 2) + 1, 1);
-			add_tris();
-
-			vertices[face_count * 4 + 0 ] = pos + rbf + new Vector3(0, 0.5f, 0);
-			vertices[face_count * 4 + 1 ] = pos + rbf + new Vector3(0, 0.5f, -0.5f);
-			vertices[face_count * 4 + 2 ] = pos + rbf + new Vector3(0, 0, -0.5f);
-			vertices[face_count * 4 + 3 ] = pos + rbf;
-
-			add_uvs(face * 2, 1);
-			add_tris();
-		}
-
-		if (flags == BuildDirectionFlags.Any || (((int) flags & 8) >> 3) == 1) {
-			vertices[face_count * 4 + 0 ] = pos + ltb;
-			vertices[face_count * 4 + 1 ] = pos + ltb + new Vector3(0.5f, 0, 0);
-			vertices[face_count * 4 + 2 ] = pos + ltb + new Vector3(0.5f, 0, 0.5f);
-			vertices[face_count * 4 + 3 ] = pos + ltb + new Vector3(0, 0, 0.5f);
-
-			add_uvs(face * 2);
-			add_tris();
-
-			vertices[face_count * 4 + 0 ] = pos + rtb + new Vector3(-0.5f, 0, 0);
-			vertices[face_count * 4 + 1 ] = pos + rtb;
-			vertices[face_count * 4 + 2 ] = pos + rtb + new Vector3(0, 0, 0.5f);
-			vertices[face_count * 4 + 3 ] = pos + rtb + new Vector3(-0.5f, 0, 0.5f);
-
-			add_uvs((face * 2) + 1);
-			add_tris();
-
-			vertices[face_count * 4 + 0 ] = pos + rtf + new Vector3(-0.5f, 0, -0.5f);
-			vertices[face_count * 4 + 1 ] = pos + rtf + new Vector3(0, 0, -0.5f);
-			vertices[face_count * 4 + 2 ] = pos + rtf;
-			vertices[face_count * 4 + 3 ] = pos + rtf + new Vector3(-0.5f, 0, 0);
-
-			add_uvs((face * 2) + 1, 1);
-			add_tris();
-
-			vertices[face_count * 4 + 0 ] = pos + ltf + new Vector3(0, 0, -0.5f);
-			vertices[face_count * 4 + 1 ] = pos + ltf + new Vector3(0.5f, 0, -0.5f);
-			vertices[face_count * 4 + 2 ] = pos + ltf + new Vector3(0.5f, 0, 0);
-			vertices[face_count * 4 + 3 ] = pos + ltf;
-
-			add_uvs(face * 2, 1);
-			add_tris();
-		}
-
-		if (flags == BuildDirectionFlags.Any || (((int) flags & 16) >> 4) == 1) {
-			vertices[face_count * 4 + 0 ] = pos + lbf;
-			vertices[face_count * 4 + 1 ] = pos + lbf + new Vector3(0.5f, 0, 0);
-			vertices[face_count * 4 + 2 ] = pos + lbf + new Vector3(0.5f, 0, -0.5f);
-			vertices[face_count * 4 + 3 ] = pos + lbf + new Vector3(0, 0, -0.5f);
-
-			add_uvs(face * 2);
-			add_tris();
-
-			vertices[face_count * 4 + 0 ] = pos + rbf + new Vector3(-0.5f, 0, 0);
-			vertices[face_count * 4 + 1 ] = pos + rbf;
-			vertices[face_count * 4 + 2 ] = pos + rbf + new Vector3(0, 0, -0.5f);
-			vertices[face_count * 4 + 3 ] = pos + rbf + new Vector3(-0.5f, 0, -0.5f);
-
-			add_uvs((face * 2) + 1);
-			add_tris();
-
-			vertices[face_count * 4 + 0 ] = pos + rbb + new Vector3(-0.5f, 0, 0.5f);
-			vertices[face_count * 4 + 1 ] = pos + rbb + new Vector3(0, 0, 0.5f);
-			vertices[face_count * 4 + 2 ] = pos + rbb;
-			vertices[face_count * 4 + 3 ] = pos + rbb + new Vector3(-0.5f, 0, 0);
-
-			add_uvs((face * 2) + 1, 1);
-			add_tris();
-
-			vertices[face_count * 4 + 0 ] = pos + lbb + new Vector3(0, 0, 0.5f);
-			vertices[face_count * 4 + 1 ] = pos + lbb + new Vector3(0.5f, 0, 0.5f);
-			vertices[face_count * 4 + 2 ] = pos + lbb + new Vector3(0.5f, 0, 0);
-			vertices[face_count * 4 + 3 ] = pos + lbb;
-
-			add_uvs(face * 2, 1);
-			add_tris();
-		}
-
-		if (flags == BuildDirectionFlags.Any || (((int) flags & 32) >> 5) == 1) {
-			vertices[face_count * 4 + 0 ] = pos + rtb;
-			vertices[face_count * 4 + 1 ] = pos + rtb + new Vector3(-0.5f, 0, 0);
-			vertices[face_count * 4 + 2 ] = pos + rtb + new Vector3(-0.5f, -0.5f, 0);
-			vertices[face_count * 4 + 3 ] = pos + rtb + new Vector3(0, -0.5f, 0);
-
-			add_uvs(face * 2);
-			add_tris();
-
-			vertices[face_count * 4 + 0 ] = pos + ltb + new Vector3(0.5f, 0, 0);
-			vertices[face_count * 4 + 1 ] = pos + ltb;
-			vertices[face_count * 4 + 2 ] = pos + ltb + new Vector3(0, -0.5f, 0);
-			vertices[face_count * 4 + 3 ] = pos + ltb + new Vector3(0.5f, -0.5f, 0);
-
-			add_uvs((face * 2) + 1);
-			add_tris();
-
-			vertices[face_count * 4 + 0 ] = pos + lbb + new Vector3(0.5f, 0.5f, 0);
-			vertices[face_count * 4 + 1 ] = pos + lbb + new Vector3(0, 0.5f, 0);
-			vertices[face_count * 4 + 2 ] = pos + lbb;
-			vertices[face_count * 4 + 3 ] = pos + lbb + new Vector3(0.5f, 0, 0);
-
-			add_uvs((face * 2) + 1, 1);
-			add_tris();
-
-			vertices[face_count * 4 + 0 ] = pos + rbb + new Vector3(0, 0.5f, 0);
-			vertices[face_count * 4 + 1 ] = pos + rbb + new Vector3(-0.5f, 0.5f, 0);
-			vertices[face_count * 4 + 2 ] = pos + rbb + new Vector3(-0.5f, 0, 0);
-			vertices[face_count * 4 + 3 ] = pos + rbb;
-
-			add_uvs(face * 2, 1);
-			add_tris();
-		}
-
-		if (flags == BuildDirectionFlags.Any || (((int) flags & 64) >> 6) == 1) {
-			vertices[face_count * 4 + 0 ] = pos + ltf;
-			vertices[face_count * 4 + 1 ] = pos + ltf + new Vector3(0.5f, 0, 0);
-			vertices[face_count * 4 + 2 ] = pos + ltf + new Vector3(0.5f, -0.5f, 0);
-			vertices[face_count * 4 + 3 ] = pos + ltf + new Vector3(0, -0.5f, 0);
-
-			add_uvs(face * 2);
-			add_tris();
-
-			vertices[face_count * 4 + 0 ] = pos + rtf + new Vector3(-0.5f, 0, 0);
-			vertices[face_count * 4 + 1 ] = pos + rtf;
-			vertices[face_count * 4 + 2 ] = pos + rtf + new Vector3(0, -0.5f, 0);
-			vertices[face_count * 4 + 3 ] = pos + rtf + new Vector3(-0.5f, -0.5f, 0);
-
-			add_uvs((face * 2) + 1);
-			add_tris();
-
-			vertices[face_count * 4 + 0 ] = pos + rbf + new Vector3(-0.5f, 0.5f, 0);
-			vertices[face_count * 4 + 1 ] = pos + rbf + new Vector3(0, 0.5f, 0);
-			vertices[face_count * 4 + 2 ] = pos + rbf;
-			vertices[face_count * 4 + 3 ] = pos + rbf + new Vector3(-0.5f, 0, 0);
-
-			add_uvs((face * 2) + 1, 1);
-			add_tris();
-
-			vertices[face_count * 4 + 0 ] = pos + lbf + new Vector3(0, 0.5f, 0);
-			vertices[face_count * 4 + 1 ] = pos + lbf + new Vector3(0.5f, 0.5f, 0);
-			vertices[face_count * 4 + 2 ] = pos + lbf + new Vector3(0.5f, 0, 0);
-			vertices[face_count * 4 + 3 ] = pos + lbf;
-
-			add_uvs(face * 2, 1);
-			add_tris();
-		}
-	}
-
-	public void add_uvs (int h_index = 0, int v_index = 0) {
-		uvs[face_count * 4 + 0] = new Vector2(h_tex_div * h_index, v_tex_div * v_index);
-		uvs[face_count * 4 + 1] = new Vector2(h_tex_div * h_index + h_tex_div, v_tex_div * v_index);
-		uvs[face_count * 4 + 2] = new Vector2(h_tex_div * h_index + h_tex_div, v_tex_div * v_index + v_tex_div);
-		uvs[face_count * 4 + 3] = new Vector2(h_tex_div * h_index, v_tex_div * v_index + v_tex_div);
-	}
-
-	public void add_tris () {
-		indices[face_count * 6 + 0] = face_count * 4 + 0;
-		indices[face_count * 6 + 1] = face_count * 4 + 1;
-		indices[face_count * 6 + 2] = face_count * 4 + 2;
-		indices[face_count * 6 + 3] = face_count * 4 + 0;
-		indices[face_count * 6 + 4] = face_count * 4 + 2;
-		indices[face_count * 6 + 5] = face_count * 4 + 3;
-
-		face_count += 1;
-	}
-
-	public void add_special_voxel_data () {
-		add_special_voxel_data(null);
-	}
-
-	public void add_special_voxel_data (SpecialVoxelData instance) {
-
-		SpecialVoxelData new_instance = instance;
-		if (instance == null) {
-			new_instance = new SpecialVoxelData();
-			special_voxel_data.Add(new_instance);
-		}
-
-		new_instance.update_flags();
-
-		new_instance.parent = this;
-
-		NotifyPropertyListChanged();
-	}
-
-	public void add_special_voxel (SpecialVoxelData data) {
-		SpecialVoxel new_instance;
-
-		if (data.voxel_flags == SpecialVoxelFlags.ItemInput || data.voxel_flags == SpecialVoxelFlags.ItemOutput || data.voxel_flags == SpecialVoxelFlags.ItemInputOutput) {
-			new_instance = new ItemSpecialVoxel();
-		} else if (data.voxel_flags == SpecialVoxelFlags.FluidInput || data.voxel_flags == SpecialVoxelFlags.FluidOutput || data.voxel_flags == SpecialVoxelFlags.FluidInputOutput) {
-			new_instance = new FluidSpecialVoxel();
-		} else {
-			new_instance = new SpecialVoxel();
-		}
-
-		new_instance.name = data.name;
-		new_instance.voxel_position = data.voxel_position;
-		new_instance.voxel_flags = data.voxel_flags;
-		new_instance.FlagDirections = data.FlagDirections;
-		new_instance.SupportDirections = data.SupportDirections;
-		new_instance.parent_center = data.parent_center;
-		new_instance.parent = data.parent;
-
-		new_instance.update_flags();
-
-		if (special_voxels.ContainsKey(data.name)) {
-			GD.PrintErr(Name + " has a duplicate SpecialVoxel name of " + data.name);
-		}
+// 		Godot.Collections.Array array = new Godot.Collections.Array();
+// 		array.Resize((int) Mesh.ArrayType.Max);
+// 		array[(int) Mesh.ArrayType.Vertex] = vertices;
+// 		array[(int) Mesh.ArrayType.Index] = indices;
+// 		array[(int) Mesh.ArrayType.TexUV] = uvs;
+
+// 		new_mesh.AddSurfaceFromArrays(Mesh.PrimitiveType.Triangles, array);
+
+// 		visualiser.Mesh = new_mesh;
+// 	}
+
+// 	private void make_box (Vector3 pos, Vector3 size, BuildDirectionFlags flags = BuildDirectionFlags.Any, int face = 0) {
+// 		Vector3 ltb = (new Vector3(0f, 1f, 0f) - new Vector3(0.5f, 0.5f, 0.5f)) * size;
+// 		Vector3 rtb = (new Vector3(1f, 1f, 0f) - new Vector3(0.5f, 0.5f, 0.5f)) * size;
+// 		Vector3 ltf = (new Vector3(0f, 1f, 1f) - new Vector3(0.5f, 0.5f, 0.5f)) * size;
+// 		Vector3 rtf = (new Vector3(1f, 1f, 1f) - new Vector3(0.5f, 0.5f, 0.5f)) * size;
+// 		Vector3 lbb = (new Vector3(0f, 0f, 0f) - new Vector3(0.5f, 0.5f, 0.5f)) * size;
+// 		Vector3 rbb = (new Vector3(1f, 0f, 0f) - new Vector3(0.5f, 0.5f, 0.5f)) * size;
+// 		Vector3 lbf = (new Vector3(0f, 0f, 1f) - new Vector3(0.5f, 0.5f, 0.5f)) * size;
+// 		Vector3 rbf = (new Vector3(1f, 0f, 1f) - new Vector3(0.5f, 0.5f, 0.5f)) * size;
+
+// 		if (flags == BuildDirectionFlags.Any || (((int) flags & 2) >> 1) == 1) {
+// 			vertices[face_count * 4 + 0 ] = pos + ltb;
+// 			vertices[face_count * 4 + 1 ] = pos + ltb + new Vector3(0, 0, 0.5f);
+// 			vertices[face_count * 4 + 2 ] = pos + ltb + new Vector3(0, -0.5f, 0.5f);
+// 			vertices[face_count * 4 + 3 ] = pos + ltb + new Vector3(0, -0.5f, 0);
+
+// 			add_uvs(face * 2);
+// 			add_tris();
+
+// 			vertices[face_count * 4 + 0 ] = pos + ltf + new Vector3(0, 0, -0.5f);
+// 			vertices[face_count * 4 + 1 ] = pos + ltf;
+// 			vertices[face_count * 4 + 2 ] = pos + ltf + new Vector3(0, -0.5f, 0);
+// 			vertices[face_count * 4 + 3 ] = pos + ltf + new Vector3(0, -0.5f, -0.5f);
+
+// 			add_uvs((face * 2) + 1);
+// 			add_tris();
+
+// 			vertices[face_count * 4 + 0 ] = pos + lbf + new Vector3(0, 0.5f, -0.5f);
+// 			vertices[face_count * 4 + 1 ] = pos + lbf + new Vector3(0, 0.5f, 0);
+// 			vertices[face_count * 4 + 2 ] = pos + lbf;
+// 			vertices[face_count * 4 + 3 ] = pos + lbf + new Vector3(0, 0, -0.5f);
+
+// 			add_uvs((face * 2) + 1, 1);
+// 			add_tris();
+
+// 			vertices[face_count * 4 + 0 ] = pos + lbb + new Vector3(0, 0.5f, 0);
+// 			vertices[face_count * 4 + 1 ] = pos + lbb + new Vector3(0, 0.5f, 0.5f);
+// 			vertices[face_count * 4 + 2 ] = pos + lbb + new Vector3(0, 0, 0.5f);
+// 			vertices[face_count * 4 + 3 ] = pos + lbb;
+
+// 			add_uvs(face * 2, 1);
+// 			add_tris();
+// 		}
+
+// 		if (flags == BuildDirectionFlags.Any || (((int) flags & 4) >> 2) == 1) {
+// 			vertices[face_count * 4 + 0 ] = pos + rtf;
+// 			vertices[face_count * 4 + 1 ] = pos + rtf + new Vector3(0, 0, -0.5f);
+// 			vertices[face_count * 4 + 2 ] = pos + rtf + new Vector3(0, -0.5f, -0.5f);
+// 			vertices[face_count * 4 + 3 ] = pos + rtf + new Vector3(0, -0.5f, 0);
+
+// 			add_uvs(face * 2);
+// 			add_tris();
+
+// 			vertices[face_count * 4 + 0 ] = pos + rtb + new Vector3(0, 0, 0.5f);
+// 			vertices[face_count * 4 + 1 ] = pos + rtb;
+// 			vertices[face_count * 4 + 2 ] = pos + rtb + new Vector3(0, -0.5f, 0);
+// 			vertices[face_count * 4 + 3 ] = pos + rtb + new Vector3(0, -0.5f, 0.5f);
+
+// 			add_uvs((face * 2) + 1);
+// 			add_tris();
+
+// 			vertices[face_count * 4 + 0 ] = pos + rbb + new Vector3(0, 0.5f, 0.5f);
+// 			vertices[face_count * 4 + 1 ] = pos + rbb + new Vector3(0, 0.5f, 0);
+// 			vertices[face_count * 4 + 2 ] = pos + rbb;
+// 			vertices[face_count * 4 + 3 ] = pos + rbb + new Vector3(0, 0, 0.5f);
+
+// 			add_uvs((face * 2) + 1, 1);
+// 			add_tris();
+
+// 			vertices[face_count * 4 + 0 ] = pos + rbf + new Vector3(0, 0.5f, 0);
+// 			vertices[face_count * 4 + 1 ] = pos + rbf + new Vector3(0, 0.5f, -0.5f);
+// 			vertices[face_count * 4 + 2 ] = pos + rbf + new Vector3(0, 0, -0.5f);
+// 			vertices[face_count * 4 + 3 ] = pos + rbf;
+
+// 			add_uvs(face * 2, 1);
+// 			add_tris();
+// 		}
+
+// 		if (flags == BuildDirectionFlags.Any || (((int) flags & 8) >> 3) == 1) {
+// 			vertices[face_count * 4 + 0 ] = pos + ltb;
+// 			vertices[face_count * 4 + 1 ] = pos + ltb + new Vector3(0.5f, 0, 0);
+// 			vertices[face_count * 4 + 2 ] = pos + ltb + new Vector3(0.5f, 0, 0.5f);
+// 			vertices[face_count * 4 + 3 ] = pos + ltb + new Vector3(0, 0, 0.5f);
+
+// 			add_uvs(face * 2);
+// 			add_tris();
+
+// 			vertices[face_count * 4 + 0 ] = pos + rtb + new Vector3(-0.5f, 0, 0);
+// 			vertices[face_count * 4 + 1 ] = pos + rtb;
+// 			vertices[face_count * 4 + 2 ] = pos + rtb + new Vector3(0, 0, 0.5f);
+// 			vertices[face_count * 4 + 3 ] = pos + rtb + new Vector3(-0.5f, 0, 0.5f);
+
+// 			add_uvs((face * 2) + 1);
+// 			add_tris();
+
+// 			vertices[face_count * 4 + 0 ] = pos + rtf + new Vector3(-0.5f, 0, -0.5f);
+// 			vertices[face_count * 4 + 1 ] = pos + rtf + new Vector3(0, 0, -0.5f);
+// 			vertices[face_count * 4 + 2 ] = pos + rtf;
+// 			vertices[face_count * 4 + 3 ] = pos + rtf + new Vector3(-0.5f, 0, 0);
+
+// 			add_uvs((face * 2) + 1, 1);
+// 			add_tris();
+
+// 			vertices[face_count * 4 + 0 ] = pos + ltf + new Vector3(0, 0, -0.5f);
+// 			vertices[face_count * 4 + 1 ] = pos + ltf + new Vector3(0.5f, 0, -0.5f);
+// 			vertices[face_count * 4 + 2 ] = pos + ltf + new Vector3(0.5f, 0, 0);
+// 			vertices[face_count * 4 + 3 ] = pos + ltf;
+
+// 			add_uvs(face * 2, 1);
+// 			add_tris();
+// 		}
+
+// 		if (flags == BuildDirectionFlags.Any || (((int) flags & 16) >> 4) == 1) {
+// 			vertices[face_count * 4 + 0 ] = pos + lbf;
+// 			vertices[face_count * 4 + 1 ] = pos + lbf + new Vector3(0.5f, 0, 0);
+// 			vertices[face_count * 4 + 2 ] = pos + lbf + new Vector3(0.5f, 0, -0.5f);
+// 			vertices[face_count * 4 + 3 ] = pos + lbf + new Vector3(0, 0, -0.5f);
+
+// 			add_uvs(face * 2);
+// 			add_tris();
+
+// 			vertices[face_count * 4 + 0 ] = pos + rbf + new Vector3(-0.5f, 0, 0);
+// 			vertices[face_count * 4 + 1 ] = pos + rbf;
+// 			vertices[face_count * 4 + 2 ] = pos + rbf + new Vector3(0, 0, -0.5f);
+// 			vertices[face_count * 4 + 3 ] = pos + rbf + new Vector3(-0.5f, 0, -0.5f);
+
+// 			add_uvs((face * 2) + 1);
+// 			add_tris();
+
+// 			vertices[face_count * 4 + 0 ] = pos + rbb + new Vector3(-0.5f, 0, 0.5f);
+// 			vertices[face_count * 4 + 1 ] = pos + rbb + new Vector3(0, 0, 0.5f);
+// 			vertices[face_count * 4 + 2 ] = pos + rbb;
+// 			vertices[face_count * 4 + 3 ] = pos + rbb + new Vector3(-0.5f, 0, 0);
+
+// 			add_uvs((face * 2) + 1, 1);
+// 			add_tris();
+
+// 			vertices[face_count * 4 + 0 ] = pos + lbb + new Vector3(0, 0, 0.5f);
+// 			vertices[face_count * 4 + 1 ] = pos + lbb + new Vector3(0.5f, 0, 0.5f);
+// 			vertices[face_count * 4 + 2 ] = pos + lbb + new Vector3(0.5f, 0, 0);
+// 			vertices[face_count * 4 + 3 ] = pos + lbb;
+
+// 			add_uvs(face * 2, 1);
+// 			add_tris();
+// 		}
+
+// 		if (flags == BuildDirectionFlags.Any || (((int) flags & 32) >> 5) == 1) {
+// 			vertices[face_count * 4 + 0 ] = pos + rtb;
+// 			vertices[face_count * 4 + 1 ] = pos + rtb + new Vector3(-0.5f, 0, 0);
+// 			vertices[face_count * 4 + 2 ] = pos + rtb + new Vector3(-0.5f, -0.5f, 0);
+// 			vertices[face_count * 4 + 3 ] = pos + rtb + new Vector3(0, -0.5f, 0);
+
+// 			add_uvs(face * 2);
+// 			add_tris();
+
+// 			vertices[face_count * 4 + 0 ] = pos + ltb + new Vector3(0.5f, 0, 0);
+// 			vertices[face_count * 4 + 1 ] = pos + ltb;
+// 			vertices[face_count * 4 + 2 ] = pos + ltb + new Vector3(0, -0.5f, 0);
+// 			vertices[face_count * 4 + 3 ] = pos + ltb + new Vector3(0.5f, -0.5f, 0);
+
+// 			add_uvs((face * 2) + 1);
+// 			add_tris();
+
+// 			vertices[face_count * 4 + 0 ] = pos + lbb + new Vector3(0.5f, 0.5f, 0);
+// 			vertices[face_count * 4 + 1 ] = pos + lbb + new Vector3(0, 0.5f, 0);
+// 			vertices[face_count * 4 + 2 ] = pos + lbb;
+// 			vertices[face_count * 4 + 3 ] = pos + lbb + new Vector3(0.5f, 0, 0);
+
+// 			add_uvs((face * 2) + 1, 1);
+// 			add_tris();
+
+// 			vertices[face_count * 4 + 0 ] = pos + rbb + new Vector3(0, 0.5f, 0);
+// 			vertices[face_count * 4 + 1 ] = pos + rbb + new Vector3(-0.5f, 0.5f, 0);
+// 			vertices[face_count * 4 + 2 ] = pos + rbb + new Vector3(-0.5f, 0, 0);
+// 			vertices[face_count * 4 + 3 ] = pos + rbb;
+
+// 			add_uvs(face * 2, 1);
+// 			add_tris();
+// 		}
+
+// 		if (flags == BuildDirectionFlags.Any || (((int) flags & 64) >> 6) == 1) {
+// 			vertices[face_count * 4 + 0 ] = pos + ltf;
+// 			vertices[face_count * 4 + 1 ] = pos + ltf + new Vector3(0.5f, 0, 0);
+// 			vertices[face_count * 4 + 2 ] = pos + ltf + new Vector3(0.5f, -0.5f, 0);
+// 			vertices[face_count * 4 + 3 ] = pos + ltf + new Vector3(0, -0.5f, 0);
+
+// 			add_uvs(face * 2);
+// 			add_tris();
+
+// 			vertices[face_count * 4 + 0 ] = pos + rtf + new Vector3(-0.5f, 0, 0);
+// 			vertices[face_count * 4 + 1 ] = pos + rtf;
+// 			vertices[face_count * 4 + 2 ] = pos + rtf + new Vector3(0, -0.5f, 0);
+// 			vertices[face_count * 4 + 3 ] = pos + rtf + new Vector3(-0.5f, -0.5f, 0);
+
+// 			add_uvs((face * 2) + 1);
+// 			add_tris();
+
+// 			vertices[face_count * 4 + 0 ] = pos + rbf + new Vector3(-0.5f, 0.5f, 0);
+// 			vertices[face_count * 4 + 1 ] = pos + rbf + new Vector3(0, 0.5f, 0);
+// 			vertices[face_count * 4 + 2 ] = pos + rbf;
+// 			vertices[face_count * 4 + 3 ] = pos + rbf + new Vector3(-0.5f, 0, 0);
+
+// 			add_uvs((face * 2) + 1, 1);
+// 			add_tris();
+
+// 			vertices[face_count * 4 + 0 ] = pos + lbf + new Vector3(0, 0.5f, 0);
+// 			vertices[face_count * 4 + 1 ] = pos + lbf + new Vector3(0.5f, 0.5f, 0);
+// 			vertices[face_count * 4 + 2 ] = pos + lbf + new Vector3(0.5f, 0, 0);
+// 			vertices[face_count * 4 + 3 ] = pos + lbf;
+
+// 			add_uvs(face * 2, 1);
+// 			add_tris();
+// 		}
+// 	}
+
+// 	public void add_uvs (int h_index = 0, int v_index = 0) {
+// 		uvs[face_count * 4 + 0] = new Vector2(h_tex_div * h_index, v_tex_div * v_index);
+// 		uvs[face_count * 4 + 1] = new Vector2(h_tex_div * h_index + h_tex_div, v_tex_div * v_index);
+// 		uvs[face_count * 4 + 2] = new Vector2(h_tex_div * h_index + h_tex_div, v_tex_div * v_index + v_tex_div);
+// 		uvs[face_count * 4 + 3] = new Vector2(h_tex_div * h_index, v_tex_div * v_index + v_tex_div);
+// 	}
+
+// 	public void add_tris () {
+// 		indices[face_count * 6 + 0] = face_count * 4 + 0;
+// 		indices[face_count * 6 + 1] = face_count * 4 + 1;
+// 		indices[face_count * 6 + 2] = face_count * 4 + 2;
+// 		indices[face_count * 6 + 3] = face_count * 4 + 0;
+// 		indices[face_count * 6 + 4] = face_count * 4 + 2;
+// 		indices[face_count * 6 + 5] = face_count * 4 + 3;
+
+// 		face_count += 1;
+// 	}
+
+// 	public void add_special_voxel_data () {
+// 		add_special_voxel_data(null);
+// 	}
+
+// 	public void add_special_voxel_data (SpecialVoxelData instance) {
+
+// 		SpecialVoxelData new_instance = instance;
+// 		if (instance == null) {
+// 			new_instance = new SpecialVoxelData();
+// 			special_voxel_data.Add(new_instance);
+// 		}
+
+// 		new_instance.update_flags();
+
+// 		new_instance.parent = this;
+
+// 		NotifyPropertyListChanged();
+// 	}
+
+// 	public void add_special_voxel (SpecialVoxelData data) {
+// 		SpecialVoxel new_instance;
+
+// 		if (data.voxel_flags == SpecialVoxelFlags.ItemInput || data.voxel_flags == SpecialVoxelFlags.ItemOutput || data.voxel_flags == SpecialVoxelFlags.ItemInputOutput) {
+// 			new_instance = new ItemSpecialVoxel();
+// 		} else if (data.voxel_flags == SpecialVoxelFlags.FluidInput || data.voxel_flags == SpecialVoxelFlags.FluidOutput || data.voxel_flags == SpecialVoxelFlags.FluidInputOutput) {
+// 			new_instance = new FluidSpecialVoxel();
+// 		} else {
+// 			new_instance = new SpecialVoxel();
+// 		}
+
+// 		new_instance.name = data.name;
+// 		new_instance.voxel_position = data.voxel_position;
+// 		new_instance.voxel_flags = data.voxel_flags;
+// 		new_instance.FlagDirections = data.FlagDirections;
+// 		new_instance.SupportDirections = data.SupportDirections;
+// 		new_instance.parent_center = data.parent_center;
+// 		new_instance.parent = data.parent;
+
+// 		new_instance.update_flags();
+
+// 		if (special_voxels.ContainsKey(data.name)) {
+// 			GD.PrintErr(Name + " has a duplicate SpecialVoxel name of " + data.name);
+// 		}
 		
-		special_voxels[data.name] = new_instance;
+// 		special_voxels[data.name] = new_instance;
 
-		AddChild(new_instance);
-	}
+// 		AddChild(new_instance);
+// 	}
 
-	public void on_special_voxel_array_changed () {
-		if (visualiser != null) {
-			make_visualiser_mesh();
-		}
-	}
+// 	public void on_special_voxel_array_changed () {
+// 		if (visualiser != null) {
+// 			make_visualiser_mesh();
+// 		}
+// 	}
 
-	public void set_mesh_visibility (bool value) {
-		if (visualiser != null && IsInstanceValid(visualiser)) {
-			visualiser.Visible = value;
-		} else {
-			GD.Print("visualiser is null");
-		}
-	}
+// 	public void set_mesh_visibility (bool value) {
+// 		if (visualiser != null && IsInstanceValid(visualiser)) {
+// 			visualiser.Visible = value;
+// 		} else {
+// 			GD.Print("visualiser is null");
+// 		}
+// 	}
 
-	public void clear_special_visualisers () {
-		foreach (MeshInstance3D mesh in special_visualisers) {
-			mesh.QueueFree();
-		}
+// 	public void clear_special_visualisers () {
+// 		foreach (MeshInstance3D mesh in special_visualisers) {
+// 			mesh.QueueFree();
+// 		}
 
-		special_visualisers.Clear();
-	}
+// 		special_visualisers.Clear();
+// 	}
 
-	public Vector3I get_box_from () {
-		int x = -(int)Math.Floor(grid_width / 2.0);
-		int y = 0;
-		int z = -(int)Math.Floor(grid_length / 2.0);
-		if (grid_width % 2 == 0) {
-			x += 1;
-		}
-		if (grid_length % 2 == 0) {
-			z += 1;
-		}
-		return new Vector3I(x, y, z);
-	}
+// 	public Vector3I get_box_from () {
+// 		int x = -(int)Math.Floor(grid_width / 2.0);
+// 		int y = 0;
+// 		int z = -(int)Math.Floor(grid_length / 2.0);
+// 		if (grid_width % 2 == 0) {
+// 			x += 1;
+// 		}
+// 		if (grid_length % 2 == 0) {
+// 			z += 1;
+// 		}
+// 		return new Vector3I(x, y, z);
+// 	}
 
-	public Vector3I get_box_to () {
-		int x = (int)Math.Floor(grid_width / 2.0);
-		int y = grid_height - 1;
-		int z = (int)Math.Floor(grid_length / 2.0);
-		return new Vector3I(x, y, z);
-	}
+// 	public Vector3I get_box_to () {
+// 		int x = (int)Math.Floor(grid_width / 2.0);
+// 		int y = grid_height - 1;
+// 		int z = (int)Math.Floor(grid_length / 2.0);
+// 		return new Vector3I(x, y, z);
+// 	}
 
-	public virtual void on_pre_build () {
-		current_building_state = BuildingState.pre_built;
+// 	public virtual void on_pre_build () {
+// 		current_building_state = BuildingState.pre_built;
 
-		calculate_open_adjacent_cells();
+// 		calculate_open_adjacent_cells();
 
-		foreach (BuildingGridChunk chunk in occupied_chunks) {
-			chunk.on_chunk_changed();
-		}
+// 		foreach (BuildingGridChunk chunk in occupied_chunks) {
+// 			chunk.on_chunk_changed();
+// 		}
 
-		AddToGroup("pre_built_entities");
-	}
+// 		AddToGroup("pre_built_entities");
+// 	}
 
-	public virtual void on_build () {
-		current_building_state = BuildingState.built;
+// 	public virtual void on_build () {
+// 		current_building_state = BuildingState.built;
 
-		RemoveFromGroup("pre_built_entities");
+// 		RemoveFromGroup("pre_built_entities");
 
-		foreach (string name in special_voxels.Keys) {
-			special_voxels[name].on_build();
-		}
+// 		foreach (string name in special_voxels.Keys) {
+// 			special_voxels[name].on_build();
+// 		}
 
-		foreach (BuildingGridChunk chunk in occupied_chunks) {
-			chunk.on_chunk_changed();
-		}
-	}
+// 		foreach (BuildingGridChunk chunk in occupied_chunks) {
+// 			chunk.on_chunk_changed();
+// 		}
+// 	}
 
-	public override void _Process(double delta)
-	{
-		base._Process(delta);
-	}
+// 	public override void _Process(double delta)
+// 	{
+// 		base._Process(delta);
+// 	}
 
-	public override void _PhysicsProcess(double delta)
-	{
-		base._PhysicsProcess(delta);
+// 	public override void _PhysicsProcess(double delta)
+// 	{
+// 		base._PhysicsProcess(delta);
 
-		chunk_updated_this_frame = false;
+// 		chunk_updated_this_frame = false;
 
-		foreach (string name in special_voxels.Keys) {
-			special_voxels[name].update();
-		}
+// 		foreach (string name in special_voxels.Keys) {
+// 			special_voxels[name].update();
+// 		}
 
-		if (current_building_state == BuildingState.pre_remove) {
-			release();
-		}
-	}
+// 		if (current_building_state == BuildingState.pre_remove) {
+// 			release();
+// 		}
+// 	}
 
-	public virtual void set_collision (bool value) {
+// 	public virtual void set_collision (bool value) {
 		
-	}
+// 	}
 
-	public virtual void on_chunk_changed (BuildingGridChunk chunk) {
-		//GD.Print(chunk + " changed");
+// 	public virtual void on_chunk_changed (BuildingGridChunk chunk) {
+// 		//GD.Print(chunk + " changed");
 
-		if (!chunk_updated_this_frame) {
-			foreach (SpecialVoxel voxel in special_voxels.Values) {
-				voxel.update_voxel_connections(true);
-			}
+// 		if (!chunk_updated_this_frame) {
+// 			foreach (SpecialVoxel voxel in special_voxels.Values) {
+// 				voxel.update_voxel_connections(true);
+// 			}
 
-			//chunk_updated_this_frame = true;
+// 			//chunk_updated_this_frame = true;
 
-			calculate_open_adjacent_cells();
-		}
-
-		
-	}
-
-	public virtual void mark_for_demolishing () {
-		current_building_state = BuildingState.pre_remove;
-	}
-
-	public virtual void release () {
-		//GD.Print("i'm releasing ughhhhh");
+// 			calculate_open_adjacent_cells();
+// 		}
 
 		
+// 	}
 
-		parent_grid.clear_area(placed_corner_1, placed_corner_2);
-		foreach (BuildingGridChunk chunk in occupied_chunks) {
-			chunk.on_chunk_changed_subscribers.Remove(this);
-			chunk.on_chunk_changed();
-		}
+// 	public virtual void mark_for_demolishing () {
+// 		current_building_state = BuildingState.pre_remove;
+// 	}
 
-		parent_grid.remove_placable(placed_index);
+// 	public virtual void release () {
+// 		//GD.Print("i'm releasing ughhhhh");
 
-		QueueFree();
-	}
+		
 
-	public virtual void calculate_open_adjacent_cells () {
-		open_adjacent_cells.Clear();
+// 		parent_grid.clear_area(placed_corner_1, placed_corner_2);
+// 		foreach (BuildingGridChunk chunk in occupied_chunks) {
+// 			chunk.on_chunk_changed_subscribers.Remove(this);
+// 			chunk.on_chunk_changed();
+// 		}
 
-		int x_edge_1 = Math.Min(placed_corner_1.X, placed_corner_2.X) - 1;
-		int x_edge_2 = Math.Max(placed_corner_1.X, placed_corner_2.X) + 1;
+// 		parent_grid.remove_placable(placed_index);
 
-		int y_edge_1 = Math.Min(placed_corner_1.Y, placed_corner_2.Y) - 1;
-		int y_edge_2 = Math.Max(placed_corner_1.Y, placed_corner_2.Y) + 1;
+// 		QueueFree();
+// 	}
 
-		int z_edge_1 = Math.Min(placed_corner_1.Z, placed_corner_2.Z) - 1;
-		int z_edge_2 = Math.Max(placed_corner_1.Z, placed_corner_2.Z) + 1;
+// 	public virtual void calculate_open_adjacent_cells () {
+// 		open_adjacent_cells.Clear();
 
-		for (int x = x_edge_1; x <= x_edge_2; x++) {
-			for (int y = y_edge_1; y <= y_edge_2; y++) {
-				for (int z = z_edge_1; z <= z_edge_2; z++) {
-					if (x == x_edge_1 || x == x_edge_2 || y == y_edge_1 || y == y_edge_2 || z == z_edge_1 || z == z_edge_2) {
-						//GD.Print(new Vector3I(x,y,z));
-						if (parent_grid.is_block_free(x,y,z)) {
+// 		int x_edge_1 = Math.Min(placed_corner_1.X, placed_corner_2.X) - 1;
+// 		int x_edge_2 = Math.Max(placed_corner_1.X, placed_corner_2.X) + 1;
+
+// 		int y_edge_1 = Math.Min(placed_corner_1.Y, placed_corner_2.Y) - 1;
+// 		int y_edge_2 = Math.Max(placed_corner_1.Y, placed_corner_2.Y) + 1;
+
+// 		int z_edge_1 = Math.Min(placed_corner_1.Z, placed_corner_2.Z) - 1;
+// 		int z_edge_2 = Math.Max(placed_corner_1.Z, placed_corner_2.Z) + 1;
+
+// 		for (int x = x_edge_1; x <= x_edge_2; x++) {
+// 			for (int y = y_edge_1; y <= y_edge_2; y++) {
+// 				for (int z = z_edge_1; z <= z_edge_2; z++) {
+// 					if (x == x_edge_1 || x == x_edge_2 || y == y_edge_1 || y == y_edge_2 || z == z_edge_1 || z == z_edge_2) {
+// 						//GD.Print(new Vector3I(x,y,z));
+// 						if (parent_grid.is_block_free(x,y,z)) {
 							
-							open_adjacent_cells.Add(new Vector3I(x,y,z));
-						}
-					}
-				}
-			}
-		}
-	}
+// 							open_adjacent_cells.Add(new Vector3I(x,y,z));
+// 						}
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
 
-	public virtual Vector3I get_open_adjacent_cell () {
-		if (open_adjacent_cells.Count > 0) {
-			return open_adjacent_cells.PickRandom();
-		}
+// 	public virtual Vector3I get_open_adjacent_cell () {
+// 		if (open_adjacent_cells.Count > 0) {
+// 			return open_adjacent_cells.PickRandom();
+// 		}
 
-		return new Vector3I(-1,-1,-1);
-	}
+// 		return new Vector3I(-1,-1,-1);
+// 	}
 
-}
+// }

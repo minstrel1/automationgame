@@ -119,7 +119,7 @@ public partial class CategoryList : GUI {
 		switch (mode) {
 			case CategoryListMode.Buildings:
 				if (current_category != "") {
-					foreach (Dictionary element_data in ((Godot.Collections.Array) building_data[current_category])) {
+					foreach (Dictionary element_data in ((Dictionary) building_data[current_category]).Values) {
 						if ((bool) element_data["unlocked"]) {
 							elements.Add(CategoryListElement.make(this, element_data, mode, element_container));
 						}
@@ -144,7 +144,7 @@ public partial class CategoryList : GUI {
 		switch (mode) {
 			case CategoryListMode.Buildings:
 				foreach (String category_name in building_data.Keys) {
-					if (((Godot.Collections.Array) building_data[category_name]).Count > 0) {
+					if (((Dictionary) building_data[category_name]).Keys.Count > 0) {
 						CategoryListTab.make(this, category_name, mode, tab_container);
 					}
 				}

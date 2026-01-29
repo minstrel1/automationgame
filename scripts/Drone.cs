@@ -4,8 +4,17 @@ using Godot;
 using Godot.Collections;
 using Godot.NativeInterop;
 
+public enum DroneStatus {
+    resting,
+    waking,
+    moving_to_target,
+    working,
+    returning,
+    docking,
+}
+
 public partial class Drone : CharacterBody3D {
-	public BuildingGridPlacable current_target;
+	public GridEntity current_target;
 
     public double max_flying_speed = 5.0f;
     public double flying_accel = 5.0f;

@@ -43,7 +43,7 @@ public partial class BuildingGridChunk : StaticBody3D {
 	public bool mesh_gen_this_frame = false;
 
 
-	public Godot.Collections.Array<BuildingGridPlacable> on_chunk_changed_subscribers = new Godot.Collections.Array<BuildingGridPlacable>();
+	public Godot.Collections.Array<GridEntity> on_chunk_changed_subscribers = new Godot.Collections.Array<GridEntity>();
 
 	public override void _Ready()
 	{
@@ -137,7 +137,7 @@ public partial class BuildingGridChunk : StaticBody3D {
 	}
 
 	public void emit () {
-		foreach (BuildingGridPlacable subscriber in on_chunk_changed_subscribers) {
+		foreach (GridEntity subscriber in on_chunk_changed_subscribers) {
 			subscriber.on_chunk_changed(this);
 		}
 		//EmitSignal(BuildingGridChunk.SignalName.OnChunkChanged, this);

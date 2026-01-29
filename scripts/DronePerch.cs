@@ -23,7 +23,7 @@ public partial class DronePerch : Node3D {
 
     public double range = 10.0f;
     
-    public Array<BuildingGridPlacable> placables_to_build = new Array<BuildingGridPlacable>();
+    public Array<GridEntity> targets = new Array<GridEntity>();
 
     public override void _Ready() {
         base._Ready();
@@ -42,13 +42,13 @@ public partial class DronePerch : Node3D {
 
         calculate_placables_in_range();
 
-		if (placables_to_build.Count != 0) {
+		if (targets.Count != 0) {
 			if (working_drones.Count < max_drone_count) {
-				foreach (BuildingGridPlacable placable in placables_to_build) {
+				foreach (GridEntity target in targets) {
 					if (round_robin) {
-						if (placable.current_building_drones.Count < max_drones_per_building) {
+						if (target.current_building_drones.Count < max_drones_per_building) {
 							GD.Print("allocatin drone");
-							allocate_drone(placable);
+							allocate_drone(target);
 						}
 					}
 				}
@@ -71,7 +71,7 @@ public partial class DronePerch : Node3D {
 		drone.GlobalPosition = GlobalPosition;
 	}
 
-	public void allocate_drone (BuildingGridPlacable target) {
+	public void allocate_drone (GridEntity target) {
 		if (working_drones.Count < max_drone_count) {
 			Drone selected_drone = null;
 
@@ -103,23 +103,23 @@ public partial class DronePerch : Node3D {
 	}
 
     public void calculate_placables_in_range () {
-        placables_to_build.Clear();
+        targets.Clear();
 
-        BuildingGridPlacable placable = null;
+        GridEntity target = null;
         foreach (Node node in GetTree().GetNodesInGroup("pre_built_entities")) {
-            if (node is BuildingGridPlacable) {
-                placable = (BuildingGridPlacable) node;
+            if (node is GridEntity) {
+                target = (GridEntity) node;
 
-				if (placable.GlobalPosition.DistanceSquaredTo(GlobalPosition) < (range * range)) {
-					placables_to_build.Add(placable);
+				if (target.GlobalPosition.DistanceSquaredTo(GlobalPosition) < (range * range)) {
+					targets.Add(target);
 				}
             }
         }
 
-		placables_to_build.OrderBy(thing => thing.GlobalPosition.DistanceTo(GlobalPosition));
+		targets.OrderBy(thing => thing.GlobalPosition.DistanceTo(GlobalPosition));
 
 		if (!closest_first) {
-			placables_to_build.Reverse();
+			targets.Reverse();
 		}
     }
 

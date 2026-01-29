@@ -95,10 +95,10 @@ public partial class BuildingGrid : StaticBody3D {
 
 	public BuildingGridChunk[][][] chunk_data = {};
 
-	static int max_placables = 2048;
+	static int max_entities = 2048;
 	// array of references to placables
-	public BuildingGridPlacable[] placables = new BuildingGridPlacable[max_placables];
-	public Stack<int> placable_indices = new Stack<int>();
+	public GridEntity[] entities = new GridEntity[max_entities];
+	public Stack<int> entity_indices = new Stack<int>();
 
 	public override void _Ready()
 	{
@@ -112,7 +112,7 @@ public partial class BuildingGrid : StaticBody3D {
 		grid_mesh.Position = Vector3.Zero;
 		AddChild(grid_mesh);
 
-		init_placable_indices();
+		init_entity_indices();
 
 		grids.Add(this);
 
@@ -140,26 +140,26 @@ public partial class BuildingGrid : StaticBody3D {
 		base._PhysicsProcess(delta);
 	}
 
-	public void init_placable_indices () {
-		for (int x = max_placables - 1; x >= 0; x--) {
-			placable_indices.Push(x);
+	public void init_entity_indices () {
+		for (int x = max_entities - 1; x >= 0; x--) {
+			entity_indices.Push(x);
 		}
 	}
 
 	public int get_free_index () {
-		return placable_indices.Count > 0 ? placable_indices.Pop() : -1;
+		return entity_indices.Count > 0 ? entity_indices.Pop() : -1;
 	}
 
 	public void return_index (int x) {
-		placable_indices.Push(x);
+		entity_indices.Push(x);
 	}
 
-	public void set_placable (int index, BuildingGridPlacable placable) {
-		placables[index] = placable;
+	public void set_entity (int index, GridEntity placable) {
+		entities[index] = placable;
 	}
 
-	public void remove_placable (int index) {
-		placables[index] = null;
+	public void remove_entity (int index) {
+		entities[index] = null;
 	}
 
 	public static Godot.Collections.Array get_grids () {
@@ -432,21 +432,21 @@ public partial class BuildingGrid : StaticBody3D {
 		return get_block(x, y, z).placable_index == -1;
 	}
 
-	public bool place (BuildingGridPlacable placable, Vector3I grid_pos, Vector3 normal, int rotation) {
+	public bool place (GridEntity entity, Vector3I grid_pos, Vector3 normal, int rotation, bool update_chunks = true) {
 
 		ulong total_start = Time.GetTicksUsec();
 
-		placable.Position = Tools.v3I_to_v3(grid_pos) + new Vector3(0.5f, 0.5f, 0.5f);
-		placable.Rotation = new Vector3(0, 0, 0);
+		entity.Position = Tools.v3I_to_v3(grid_pos) + new Vector3(0.5f, 0.5f, 0.5f);
+		entity.Rotation = new Vector3(0, 0, 0);
 
-		Tools.up_to_rot(placable, normal);
-		placable.Rotate(normal, (float) (rotation * (Math.PI / 2.0f)));
+		Tools.up_to_rot(entity, normal);
+		entity.Rotate(normal, (float) (rotation * (Math.PI / 2.0f)));
 
-		Vector3I corner_1 = Tools.apply_building_rotations(placable.get_box_from(), normal, rotation) + grid_pos; 
-		Vector3I corner_2 = Tools.apply_building_rotations(placable.get_box_to(), normal, rotation) + grid_pos;
+		Vector3I corner_1 = Tools.apply_building_rotations(entity.get_box_from(), normal, rotation) + grid_pos; 
+		Vector3I corner_2 = Tools.apply_building_rotations(entity.get_box_to(), normal, rotation) + grid_pos;
 
-		placable.placed_corner_1 = corner_1;
-		placable.placed_corner_2 = corner_2;
+		entity.placed_corner_1 = corner_1;
+		entity.placed_corner_2 = corner_2;
 
 		int index = get_free_index();
 
@@ -454,24 +454,24 @@ public partial class BuildingGrid : StaticBody3D {
 			return false;
 		}
 
-		placable.placed_index = index;
+		entity.placed_index = index;
 
-		AddChild(placable, true);
+		AddChild(entity, true);
 
-		GD.Print("placable support dirs " + placable.support_directions.ToString());
+		GD.Print("placable support dirs " + entity.support_directions.ToString());
 
 		VoxelData data = new VoxelData{
 			placable_index = index,
 			direction_built = Tools.normal_to_enum(normal), 
-			support_directions = placable.support_directions, 
+			support_directions = entity.support_directions, 
 			voxel_flags = SpecialVoxelFlags.None
 		};
 
 		Godot.Collections.Dictionary<BuildingGridChunk, bool> affected_chunks = set_area(corner_1, corner_2, data);
 
-		foreach (string name in placable.special_voxels.Keys) {
-			SpecialVoxel special_voxel = placable.special_voxels[name];
-			Vector3I pos_to_affect = Tools.apply_building_rotations(special_voxel.voxel_position + Tools.v3_to_v3I(placable.grid_offset + placable.get_spacing_offset()), normal, rotation) + grid_pos;
+		foreach (string name in entity.special_voxels.Keys) {
+			SpecialVoxel special_voxel = entity.special_voxels[name];
+			Vector3I pos_to_affect = Tools.apply_building_rotations(special_voxel.voxel_position + Tools.v3_to_v3I(entity.grid_offset + entity.get_spacing_offset()), normal, rotation) + grid_pos;
 
 			if (is_position_valid(pos_to_affect)) {
 				VoxelData special_data = new VoxelData{
@@ -496,10 +496,10 @@ public partial class BuildingGrid : StaticBody3D {
 			
 		}
 
-		placable.parent_grid = this;
-		set_placable(index, placable);
+		entity.parent_grid = this;
+		set_entity(index, entity);
 
-		placable.set_mesh_visibility(false);
+		entity.set_mesh_visibility(false);
 
 		ulong time = Time.GetTicksUsec() - total_start;
 		GD.Print("PLACE TIME:" + time.ToString());
@@ -507,12 +507,12 @@ public partial class BuildingGrid : StaticBody3D {
 		ulong chunk_start = Time.GetTicksUsec();
 
 		foreach (BuildingGridChunk chunk in affected_chunks.Keys) {
-			placable.occupied_chunks.Add(chunk);
-			chunk.on_chunk_changed_subscribers.Add(placable);
+			entity.occupied_chunks.Add(chunk);
+			chunk.on_chunk_changed_subscribers.Add(entity);
 			//chunk.on_chunk_changed();
 		}
 
-		placable.on_pre_build();
+		entity.on_place(update_chunks);
 
 		time = Time.GetTicksUsec() - chunk_start;
 		GD.Print("TOTAL CHUNK TIME:" + time.ToString());

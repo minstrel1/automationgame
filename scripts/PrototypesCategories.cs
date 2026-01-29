@@ -6,7 +6,7 @@ using Godot.NativeInterop;
 
 public partial class Prototypes : Node {
 
-	public static Dictionary building_categories = new Dictionary {
+	public static Dictionary<string, Dictionary> thing_categories = new Dictionary<string, Dictionary> {
 		{"logistics", new Dictionary {
 			{"display_name", "Logistics"},
 			{"icon_texture", "res://item_textures/test_item.png"}

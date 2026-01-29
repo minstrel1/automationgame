@@ -8,7 +8,7 @@ using Godot.NativeInterop;
 #if TOOLS
 [Tool]
 #endif
-public partial class WaterCollector : BuildingGridPlacable, IInteractable {
+public partial class WaterCollector : GridBuildable, IInteractable {
 
 	[ExportCategory("Water Collector Properties")]
 	[Export]
