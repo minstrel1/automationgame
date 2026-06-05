@@ -189,6 +189,8 @@ public partial class GridEntity : Entity {
 
 	public virtual void mark_for_demolishing () {
 		current_building_state = BuildingState.pre_remove;
+
+		AddToGroup("pre_remove_entities");
 	}
 
 	public void adjust_box () {

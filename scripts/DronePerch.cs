@@ -5,7 +5,7 @@ using Godot;
 using Godot.Collections;
 using Godot.NativeInterop;
 
-public partial class DronePerch : Node3D { 
+public partial class DronePerch : DroneHome { 
 
 	public bool closest_first = true;
 	public bool round_robin = true;
@@ -17,19 +17,17 @@ public partial class DronePerch : Node3D {
 
 	public string current_drone_path = "res://drone_scenes/hummingbot.tscn";
 
-	public Array<Drone> working_drones = new Array<Drone>();
-	public Array<Drone> available_drones = new Array<Drone>();
-	public int max_drone_count = 20;
+	public Array<Hummingbot> working_drones = new Array<Hummingbot>();
+	public Array<Hummingbot> available_drones = new Array<Hummingbot>();
+	public new int max_drone_count = 20;
 
     public double range = 10.0f;
     
     public Array<GridEntity> targets = new Array<GridEntity>();
+	public Array<HummingbotJobType> target_jobs = new Array<HummingbotJobType>();
 
     public override void _Ready() {
         base._Ready();
-
-		inventory = new Inventory(inventory_size);
-		inventory.set_filter(new ItemCategoryFilter("drone"), 0);
 
 		for (int i = 0; i < max_drone_count; i++) {
 			create_drone(current_drone_path);
@@ -44,11 +42,12 @@ public partial class DronePerch : Node3D {
 
 		if (targets.Count != 0) {
 			if (working_drones.Count < max_drone_count) {
-				foreach (GridEntity target in targets) {
+				for (int i = 0; i < targets.Count; i++) {
+					GridEntity target = targets[i];
 					if (round_robin) {
 						if (target.current_building_drones.Count < max_drones_per_building) {
 							GD.Print("allocatin drone");
-							allocate_drone(target);
+							allocate_drone(target, target_jobs[i]);
 						}
 					}
 				}
@@ -56,10 +55,10 @@ public partial class DronePerch : Node3D {
 		}
     }
 
-	public void create_drone (String path) {
+	public override void create_drone (String path) {
 		PackedScene drone_scene = GD.Load<PackedScene>(path);
 
-		Drone drone = drone_scene.Instantiate<Drone>();
+		Hummingbot drone = drone_scene.Instantiate<Hummingbot>();
 
 		available_drones.Add(drone);
 
@@ -71,11 +70,11 @@ public partial class DronePerch : Node3D {
 		drone.GlobalPosition = GlobalPosition;
 	}
 
-	public void allocate_drone (GridEntity target) {
+	public void allocate_drone (GridEntity target, HummingbotJobType job_type) {
 		if (working_drones.Count < max_drone_count) {
-			Drone selected_drone = null;
+			Hummingbot selected_drone = null;
 
-			foreach (Drone drone in available_drones) {
+			foreach (Hummingbot drone in available_drones) {
 				if (drone.current_target == null) {
 					selected_drone = drone;
 					break;
@@ -87,23 +86,26 @@ public partial class DronePerch : Node3D {
 			if (selected_drone != null) {
 				working_drones.Add(selected_drone);
 				selected_drone.current_target = target;
+				selected_drone.current_job_type = job_type;
 				target.current_building_drones.Add(selected_drone);
 			}
 		}
 	}
 
-	public void gather_drone (Drone drone) {
+	public void gather_drone (Hummingbot drone) {
 		if (working_drones.Contains(drone)) {
 			if (drone.current_target != null) {
 				drone.current_target.current_building_drones.Remove(drone);
 			}
 			drone.current_target = null;
+			drone.current_job_type = HummingbotJobType.none;
 			working_drones.Remove(drone);
 		}
 	}
 
     public void calculate_placables_in_range () {
         targets.Clear();
+		target_jobs.Clear();
 
         GridEntity target = null;
         foreach (Node node in GetTree().GetNodesInGroup("pre_built_entities")) {
@@ -111,10 +113,30 @@ public partial class DronePerch : Node3D {
                 target = (GridEntity) node;
 
 				if (target.GlobalPosition.DistanceSquaredTo(GlobalPosition) < (range * range)) {
-					targets.Add(target);
+					if (target.current_building_state == BuildingState.pre_remove) {
+						targets.Add(target);
+						target_jobs.Add(HummingbotJobType.entity_demolish);
+					}
+					
 				}
             }
         }
+
+		foreach (Node node in GetTree().GetNodesInGroup("pre_built_buildables")) {
+			if (node is GridBuildable) {
+				target = (GridBuildable) node;
+
+				if (target.GlobalPosition.DistanceSquaredTo(GlobalPosition) < (range * range)) {
+					if (target.current_building_state == BuildingState.pre_built) {
+						targets.Add(target);
+						target_jobs.Add(HummingbotJobType.buildable_build);
+					} else if (target.current_building_state == BuildingState.pre_remove) {
+						targets.Add(target);
+						target_jobs.Add(HummingbotJobType.buildable_demolish);
+					}
+				}
+			}
+		}
 
 		targets.OrderBy(thing => thing.GlobalPosition.DistanceTo(GlobalPosition));
 
@@ -123,7 +145,7 @@ public partial class DronePerch : Node3D {
 		}
     }
 
-    public void register_drone (Drone drone) {
+    public void register_drone (Hummingbot drone) {
         if (!working_drones.Contains(drone)) {
             working_drones.Add(drone);
             drone.current_perch = this;
