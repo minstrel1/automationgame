@@ -27,7 +27,7 @@ public partial class Player {
 
 	public Label debug_profiler_label;
 
-	public bool show_debug_profiler_label = false;
+	public bool show_debug_profiler_label = true;
 
 	public void ready_hud () {
 		player_hud = GetNode<Control>("PlayerHUD");

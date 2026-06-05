@@ -1,18 +1,23 @@
-[gd_scene load_steps=3 format=3 uid="uid://bid7gwg13u1dc"]
+[gd_scene format=3 uid="uid://bid7gwg13u1dc"]
 
 [ext_resource type="Script" uid="uid://bh7x52cfe24xn" path="res://scripts/Crafter.cs" id="1_uoii8"]
 [ext_resource type="Script" uid="uid://l7vn0rr5n8ew" path="res://scripts/InteractableDummy.cs" id="3_f60qr"]
 
-[node name="smelter" type="Node3D"]
+[node name="smelter" type="Node3D" unique_id=2002977373 node_paths=PackedStringArray("collider")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00644732, 0.510663, 0.00361347)
 script = ExtResource("1_uoii8")
+grid_width = 7
+grid_height = 5
+grid_length = 7
+grid_offset = Vector3(0, 2, 0)
 special_voxel_data = []
 internal_name = "smelter"
 display_name = "Smelter"
 display_description = "A basic smelter."
 category = "production"
+collider = NodePath("CSGBox3D")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="." node_paths=PackedStringArray("interaction_parent")]
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=444855653 node_paths=PackedStringArray("interaction_parent")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 use_collision = true
 size = Vector3(7, 5, 7)

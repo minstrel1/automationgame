@@ -1,18 +1,48 @@
-[gd_scene load_steps=3 format=3 uid="uid://b5x8is57lr5xs"]
+[gd_scene format=3 uid="uid://b5x8is57lr5xs"]
 
 [ext_resource type="Script" uid="uid://bh7x52cfe24xn" path="res://scripts/Crafter.cs" id="1_jhcfq"]
+[ext_resource type="Script" uid="uid://bg67704cqo5ma" path="res://scripts/SpecialVoxelData.cs" id="2_oxrh8"]
 [ext_resource type="Script" uid="uid://l7vn0rr5n8ew" path="res://scripts/InteractableDummy.cs" id="3_oxrh8"]
 
-[node name="Crafter" type="Node3D"]
+[sub_resource type="Resource" id="Resource_hxreb"]
+script = ExtResource("2_oxrh8")
+name = "output1"
+voxel_position = Vector3i(1, -1, -1)
+voxel_flags = 2
+FlagDirections = 32
+
+[sub_resource type="Resource" id="Resource_ux3w3"]
+script = ExtResource("2_oxrh8")
+name = "input1"
+voxel_position = Vector3i(1, -1, 1)
+voxel_flags = 1
+FlagDirections = 64
+
+[sub_resource type="Resource" id="Resource_g74s0"]
+script = ExtResource("2_oxrh8")
+name = "input2"
+voxel_position = Vector3i(-1, -1, 1)
+voxel_flags = 1
+FlagDirections = 64
+
+[sub_resource type="Resource" id="Resource_85wvh"]
+script = ExtResource("2_oxrh8")
+name = "output2"
+voxel_position = Vector3i(-1, -1, -1)
+voxel_flags = 2
+FlagDirections = 32
+
+[node name="Crafter" type="Node3D" unique_id=474352813 node_paths=PackedStringArray("collider")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0177665, 0.500001, 0.00634933)
 script = ExtResource("1_jhcfq")
-special_voxel_data = []
-internal_name = "crafter"
+grid_height = 4
+grid_offset = Vector3(0, 1.5, 0)
+special_voxel_data = [SubResource("Resource_hxreb"), SubResource("Resource_ux3w3"), SubResource("Resource_g74s0"), SubResource("Resource_85wvh")]
 display_name = "Crafter"
 display_description = "A basic crafting machine."
-category = "production"
+collider = NodePath("CSGBox3D")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="." node_paths=PackedStringArray("interaction_parent")]
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=742977906 node_paths=PackedStringArray("interaction_parent")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0011816, 1.49658, -0.00132275)
 use_collision = true
 size = Vector3(2.9, 3.9, 3)

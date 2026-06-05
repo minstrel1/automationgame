@@ -26,8 +26,10 @@ public partial class Profiler : Node {
 		measured_times["profiler"] = 0;
 		mark_time_begin("profiler");
 
-		previous_frame_timestamp = Time.GetTicksUsec();
-		CallDeferred(Profiler.MethodName.mark_frame_end);
+		//previous_frame_timestamp = Time.GetTicksUsec();
+		//CallDeferred(Profiler.MethodName.mark_frame_end);
+
+		ulong ticks = Godot.Time.GetTicksUsec();
 
 		mark_time_end("profiler");
 
@@ -47,8 +49,7 @@ public partial class Profiler : Node {
 			stopwatches[name] = new Stopwatch();
 		}
 
-		stopwatches[name].Reset();
-		stopwatches[name].Start();
+		stopwatches[name].Restart();
 	}
 
 	public static void mark_time_end (String name) {

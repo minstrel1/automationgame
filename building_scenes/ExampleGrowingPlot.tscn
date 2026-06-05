@@ -1,34 +1,60 @@
-[gd_scene load_steps=3 format=3 uid="uid://dv08dlncbff2q"]
+[gd_scene format=3 uid="uid://dv08dlncbff2q"]
 
 [ext_resource type="Script" uid="uid://brbd5ek3kaceh" path="res://scripts/GrowingPlot.cs" id="1_cv31k"]
+[ext_resource type="Script" uid="uid://bg67704cqo5ma" path="res://scripts/SpecialVoxelData.cs" id="2_gfcda"]
 [ext_resource type="Script" uid="uid://l7vn0rr5n8ew" path="res://scripts/InteractableDummy.cs" id="3_gfcda"]
 
-[node name="grow plot" type="Node3D"]
+[sub_resource type="Resource" id="Resource_qlxu3"]
+script = ExtResource("2_gfcda")
+name = "seed_input"
+voxel_position = Vector3i(1, -1, 2)
+voxel_flags = 1
+FlagDirections = 64
+
+[sub_resource type="Resource" id="Resource_183o3"]
+script = ExtResource("2_gfcda")
+name = "crop_output"
+voxel_position = Vector3i(0, -1, -2)
+voxel_flags = 2
+FlagDirections = 32
+
+[sub_resource type="Resource" id="Resource_fv6ty"]
+script = ExtResource("2_gfcda")
+name = "water_input"
+voxel_position = Vector3i(-1, -1, 2)
+voxel_flags = 4
+FlagDirections = 64
+
+[node name="grow plot" type="Node3D" unique_id=603027009]
 script = ExtResource("1_cv31k")
-special_voxel_data = []
+grid_width = 5
+grid_length = 5
+grid_offset = Vector3(0, 1, 0)
+PlacableDirections = 8
+special_voxel_data = [SubResource("Resource_qlxu3"), SubResource("Resource_183o3"), SubResource("Resource_fv6ty")]
 internal_name = "growing_plot"
 display_name = "Growing Plot"
 category = "agriculture"
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="." node_paths=PackedStringArray("interaction_parent")]
+[node name="CSGBox3D2" type="CSGBox3D" parent="." unique_id=1248227079 node_paths=PackedStringArray("interaction_parent")]
 use_collision = true
 size = Vector3(4.9, 1, 4.9)
 script = ExtResource("3_gfcda")
 interaction_parent = NodePath("..")
 
-[node name="grow area" type="CSGBox3D" parent="CSGBox3D2"]
+[node name="grow area" type="CSGBox3D" parent="CSGBox3D2" unique_id=395586937]
 transform = Transform3D(0.895, 0, 0, 0, 0.895, 0, 0, 0, 0.895, 0, 0.550344, 0)
 operation = 2
 size = Vector3(5, 0.591309, 5)
 
-[node name="CSGBox3D" type="CSGBox3D" parent="CSGBox3D2"]
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGBox3D2" unique_id=40053569]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 2.05)
 size = Vector3(0.9, 0.9, 0.9)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="CSGBox3D2"]
+[node name="CSGBox3D3" type="CSGBox3D" parent="CSGBox3D2" unique_id=704943846]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 2.05)
 size = Vector3(0.9, 0.9, 0.9)
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="CSGBox3D2"]
+[node name="CSGBox3D2" type="CSGBox3D" parent="CSGBox3D2" unique_id=1160714933]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.05)
 size = Vector3(0.9, 0.9, 0.9)
