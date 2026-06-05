@@ -96,8 +96,7 @@ public partial class Crafter : GridBuildable, IBuildingWithInventory, IInteracta
 		}
 	}
 
-	public override void _PhysicsProcess(double delta)
-	{
+	public override void _PhysicsProcess(double delta) {
 		base._PhysicsProcess(delta);
 
 		Profiler.mark_time_begin("crafter");

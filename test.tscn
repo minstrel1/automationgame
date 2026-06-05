@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=4 uid="uid://ibpbfdj0iv00"]
+[gd_scene format=4 uid="uid://ibpbfdj0iv00"]
 
 [ext_resource type="Shader" uid="uid://cv6181t7kmw6g" path="res://water_test.gdshader" id="1_45l4g"]
 [ext_resource type="Script" uid="uid://balvvjf5ljuew" path="res://scripts/Player.cs" id="1_ykrsh"]
@@ -221,452 +221,452 @@ buffer = PackedFloat32Array(-0.0452245, 0, 1.51206, 20.8372, 0, -1.51274, 0, -1.
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_vxl6d"]
 
-[node name="Node3D" type="Node3D"]
+[node name="Node3D" type="Node3D" unique_id=342583215]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13.0182, 0)
 
-[node name="Environment" type="Node3D" parent="."]
+[node name="Environment" type="Node3D" parent="." unique_id=805156666]
 
-[node name="CSGBox3D" type="CSGBox3D" parent="Environment"]
+[node name="CSGBox3D" type="CSGBox3D" parent="Environment" unique_id=279340203]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.83173, -31.3695, 127.714)
 visible = false
 use_collision = true
 size = Vector3(870.763, 28.73, 476.278)
 
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Environment/CSGBox3D"]
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Environment/CSGBox3D" unique_id=1894332997]
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -52.9089, -9.53674e-06, 0)
 radius = 243.079
 height = 1172.32
 
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Environment/CSGBox3D/CSGCylinder3D"]
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Environment/CSGBox3D/CSGCylinder3D" unique_id=1770921457]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.67029e-05, 716.765, 0)
 radius = 133.767
 height = 291.981
 
-[node name="CSGSphere3D" type="CSGSphere3D" parent="Environment/CSGBox3D/CSGCylinder3D"]
+[node name="CSGSphere3D" type="CSGSphere3D" parent="Environment/CSGBox3D/CSGCylinder3D" unique_id=1371660481]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.47955e-05, 579.856, 0)
 radius = 241.117
 
-[node name="CSGSphere3D2" type="CSGSphere3D" parent="Environment/CSGBox3D/CSGCylinder3D"]
+[node name="CSGSphere3D2" type="CSGSphere3D" parent="Environment/CSGBox3D/CSGCylinder3D" unique_id=1844739845]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8147e-05, 861.485, 0)
 radius = 128.823
 
-[node name="CSGSphere3D3" type="CSGSphere3D" parent="Environment/CSGBox3D/CSGCylinder3D"]
+[node name="CSGSphere3D3" type="CSGSphere3D" parent="Environment/CSGBox3D/CSGCylinder3D" unique_id=1122593423]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.90735e-05, -434.706, 0)
 radius = 241.117
 
-[node name="CSGBox3D" type="CSGBox3D" parent="Environment/CSGBox3D/CSGCylinder3D"]
+[node name="CSGBox3D" type="CSGBox3D" parent="Environment/CSGBox3D/CSGCylinder3D" unique_id=2094360827]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 131.438, 149.473, -17.006)
 operation = 2
 size = Vector3(235.037, 2116.94, 636.894)
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="Environment/CSGBox3D/CSGCylinder3D"]
+[node name="CSGBox3D2" type="CSGBox3D" parent="Environment/CSGBox3D/CSGCylinder3D" unique_id=158529992]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.848, 285.737, -381.34)
 size = Vector3(13.1918, 309.206, 493.357)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="Environment/CSGBox3D/CSGCylinder3D/CSGBox3D2"]
+[node name="CSGBox3D3" type="CSGBox3D" parent="Environment/CSGBox3D/CSGCylinder3D/CSGBox3D2" unique_id=1902432921]
 transform = Transform3D(1, -4.82923e-09, 1.99716e-08, -4.82923e-09, 0.88952, 0.456896, -1.99716e-08, -0.456896, 0.88952, -9.53674e-07, -121.793, -463.391)
 size = Vector3(13.1918, 287.282, 640.735)
 
-[node name="CSGBox3D5" type="CSGBox3D" parent="Environment/CSGBox3D/CSGCylinder3D/CSGBox3D2"]
+[node name="CSGBox3D5" type="CSGBox3D" parent="Environment/CSGBox3D/CSGCylinder3D/CSGBox3D2" unique_id=802201556]
 transform = Transform3D(1, -1.22792e-08, 3.0376e-08, -1.22792e-08, 0.719085, 0.694922, -3.0376e-08, -0.694922, 0.719085, -6.67572e-06, -258.275, -463.485)
 size = Vector3(13.1918, 287.282, 640.735)
 
-[node name="CSGBox3D6" type="CSGBox3D" parent="Environment/CSGBox3D/CSGCylinder3D/CSGBox3D2"]
+[node name="CSGBox3D6" type="CSGBox3D" parent="Environment/CSGBox3D/CSGCylinder3D/CSGBox3D2" unique_id=1831380199]
 transform = Transform3D(1, -3.5125e-09, 1.71678e-08, -3.5125e-09, 0.919643, 0.392754, -1.71678e-08, -0.392754, 0.919643, 0, -115.448, -217.126)
 size = Vector3(13.1918, 287.282, 640.735)
 
-[node name="CSGBox3D4" type="CSGBox3D" parent="Environment/CSGBox3D/CSGCylinder3D/CSGBox3D2"]
+[node name="CSGBox3D4" type="CSGBox3D" parent="Environment/CSGBox3D/CSGCylinder3D/CSGBox3D2" unique_id=1571600847]
 transform = Transform3D(0.951519, -0.0877511, 0.294806, 3.02609e-10, 0.958442, 0.285287, -0.307589, -0.271456, 0.911976, -143.979, -236.591, -9.06743)
 size = Vector3(13.1918, 227.106, 493.357)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="Environment/CSGBox3D/CSGCylinder3D"]
+[node name="CSGBox3D3" type="CSGBox3D" parent="Environment/CSGBox3D/CSGCylinder3D" unique_id=1824752942]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, -1, 4.848, 285.737, 381.34)
 size = Vector3(13.1918, 309.206, 493.357)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="Environment/CSGBox3D/CSGCylinder3D/CSGBox3D3"]
+[node name="CSGBox3D3" type="CSGBox3D" parent="Environment/CSGBox3D/CSGCylinder3D/CSGBox3D3" unique_id=1683559820]
 transform = Transform3D(1, -4.82923e-09, 1.99716e-08, -4.82923e-09, 0.88952, 0.456896, -1.99716e-08, -0.456896, 0.88952, -9.53674e-07, -121.793, -463.391)
 size = Vector3(13.1918, 287.282, 640.735)
 
-[node name="CSGBox3D5" type="CSGBox3D" parent="Environment/CSGBox3D/CSGCylinder3D/CSGBox3D3"]
+[node name="CSGBox3D5" type="CSGBox3D" parent="Environment/CSGBox3D/CSGCylinder3D/CSGBox3D3" unique_id=1185236281]
 transform = Transform3D(1, -1.22792e-08, 3.0376e-08, -1.22792e-08, 0.719085, 0.694922, -3.0376e-08, -0.694922, 0.719085, -6.67572e-06, -258.275, -463.485)
 size = Vector3(13.1918, 287.282, 640.735)
 
-[node name="CSGBox3D4" type="CSGBox3D" parent="Environment/CSGBox3D/CSGCylinder3D/CSGBox3D3"]
+[node name="CSGBox3D4" type="CSGBox3D" parent="Environment/CSGBox3D/CSGCylinder3D/CSGBox3D3" unique_id=54026322]
 transform = Transform3D(0.951594, -0.0878082, 0.294547, 0, 0.958323, 0.285688, -0.307357, -0.271859, 0.911934, -143.979, -236.591, -9.06743)
 size = Vector3(13.1918, 227.106, 493.357)
 
-[node name="CSGBox3D7" type="CSGBox3D" parent="Environment/CSGBox3D/CSGCylinder3D/CSGBox3D3"]
+[node name="CSGBox3D7" type="CSGBox3D" parent="Environment/CSGBox3D/CSGCylinder3D/CSGBox3D3" unique_id=484100373]
 transform = Transform3D(-1, 3.5125e-09, -1.71678e-08, 3.5125e-09, -0.919643, -0.392754, 1.71678e-08, 0.392754, -0.919643, 0, -115.448, -217.126)
 size = Vector3(13.1918, 287.282, 640.735)
 
-[node name="CSGMesh3D" type="CSGMesh3D" parent="Environment/CSGBox3D/CSGCylinder3D"]
+[node name="CSGMesh3D" type="CSGMesh3D" parent="Environment/CSGBox3D/CSGCylinder3D" unique_id=389712189]
 transform = Transform3D(1.91069e-15, -8.74228e-08, -1, 4.37114e-08, -1, 8.74228e-08, -1, -4.37114e-08, 1.91069e-15, 2.09146, -1122.82, 0)
 mesh = SubResource("PrismMesh_5tkv4")
 
-[node name="CSGMesh3D2" type="CSGMesh3D" parent="Environment/CSGBox3D/CSGCylinder3D"]
+[node name="CSGMesh3D2" type="CSGMesh3D" parent="Environment/CSGBox3D/CSGCylinder3D" unique_id=534058018]
 transform = Transform3D(1.70218e-08, -8.39723e-08, -1, 0.389413, -0.921063, 8.39723e-08, -0.921063, -0.389413, 1.70218e-08, 2.09154, -784.582, -264.509)
 mesh = SubResource("PrismMesh_0m0f1")
 
-[node name="CSGMesh3D3" type="CSGMesh3D" parent="Environment/CSGBox3D/CSGCylinder3D"]
+[node name="CSGMesh3D3" type="CSGMesh3D" parent="Environment/CSGBox3D/CSGCylinder3D" unique_id=423218187]
 transform = Transform3D(4.02663e-08, -1.70091e-08, -1, -0.389124, -0.921185, 0, -0.921185, 0.389124, -4.37114e-08, 2.092, -784.582, 264.509)
 mesh = SubResource("PrismMesh_0m0f1")
 
-[node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="Environment"]
+[node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="Environment" unique_id=1288678139]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.83173, -31.3695, 127.714)
 mesh = SubResource("ArrayMesh_5tkv4")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Environment"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Environment" unique_id=1583499040]
 transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, -462.012, 0)
 cast_shadow = 0
 mesh = SubResource("PlaneMesh_uty7l")
 surface_material_override/0 = SubResource("ShaderMaterial_4uo0j")
 
-[node name="Region" type="Node3D" parent="."]
+[node name="Region" type="Node3D" parent="." unique_id=1537675103]
 
-[node name="CSGBox3D" type="CSGBox3D" parent="Region"]
+[node name="CSGBox3D" type="CSGBox3D" parent="Region" unique_id=708289375]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00156629, -1.02747, 9.01918)
 visible = false
 use_collision = true
 size = Vector3(100, 1, 117.921)
 
-[node name="CSGBox3D7" type="CSGBox3D" parent="Region/CSGBox3D"]
+[node name="CSGBox3D7" type="CSGBox3D" parent="Region/CSGBox3D" unique_id=1864193351]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -52.6883, 0, 16.6131)
 use_collision = true
 size = Vector3(100, 1, 117.921)
 
-[node name="CSGBox3D6" type="CSGBox3D" parent="Region/CSGBox3D"]
+[node name="CSGBox3D6" type="CSGBox3D" parent="Region/CSGBox3D" unique_id=538438828]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.3664, 0, 9.52594)
 use_collision = true
 size = Vector3(100, 1, 117.737)
 
-[node name="CSGBox3D13" type="CSGBox3D" parent="Region/CSGBox3D"]
+[node name="CSGBox3D13" type="CSGBox3D" parent="Region/CSGBox3D" unique_id=1096392738]
 transform = Transform3D(0.887212, 0, -0.461362, 0, 1, 0, 0.461362, 0, 0.887212, 52.0336, -9.53674e-07, -43.7906)
 use_collision = true
 size = Vector3(19.4341, 1, 16.2155)
 
-[node name="CSGBox3D8" type="CSGBox3D" parent="Region/CSGBox3D"]
+[node name="CSGBox3D8" type="CSGBox3D" parent="Region/CSGBox3D" unique_id=785825676]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.4057, 7.62939e-06, 89.9132)
 use_collision = true
 size = Vector3(100, 1, 117.921)
 
-[node name="CSGBox3D9" type="CSGBox3D" parent="Region/CSGBox3D"]
+[node name="CSGBox3D9" type="CSGBox3D" parent="Region/CSGBox3D" unique_id=694476733]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -57.3863, 7.62939e-06, 93.3339)
 use_collision = true
 size = Vector3(100, 1, 117.921)
 
-[node name="CSGBox3D5" type="CSGBox3D" parent="Region/CSGBox3D"]
+[node name="CSGBox3D5" type="CSGBox3D" parent="Region/CSGBox3D" unique_id=710335469]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0745796, -7.66429, -102.486)
 use_collision = true
 size = Vector3(100.774, 1, 34.525)
 
-[node name="CSGBox3D11" type="CSGBox3D" parent="Region/CSGBox3D"]
+[node name="CSGBox3D11" type="CSGBox3D" parent="Region/CSGBox3D" unique_id=1324688899]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 82.7403, -7.66429, -79.374)
 use_collision = true
 size = Vector3(64.5053, 1, 75.5707)
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="Region/CSGBox3D"]
+[node name="CSGBox3D3" type="CSGBox3D" parent="Region/CSGBox3D" unique_id=745891107]
 transform = Transform3D(-4.37114e-08, 0, -1, 0.258819, 0.965926, -1.13133e-08, 0.965926, -0.258819, -4.2222e-08, 33.7349, -3.85245, -73.3194)
 use_collision = true
 size = Vector3(30.1053, 1, 23.1769)
 
-[node name="CSGBox3D12" type="CSGBox3D" parent="Region/CSGBox3D"]
+[node name="CSGBox3D12" type="CSGBox3D" parent="Region/CSGBox3D" unique_id=1278506194]
 transform = Transform3D(-0.407836, 0.109279, -0.906492, 0.258819, 0.965926, -1.13133e-08, 0.875604, -0.234617, -0.422223, 63.681, -3.88799, -63.0069)
 use_collision = true
 size = Vector3(30.1053, 1, 41.8481)
 
-[node name="CSGBox3D14" type="CSGBox3D" parent="Region/CSGBox3D"]
+[node name="CSGBox3D14" type="CSGBox3D" parent="Region/CSGBox3D" unique_id=1146008267]
 transform = Transform3D(-0.407836, 0.109279, -0.906492, 0.258819, 0.965926, -1.13133e-08, 0.875604, -0.234617, -0.422223, 64.6444, -5.32907, -68.4911)
 use_collision = true
 size = Vector3(18.9695, 1, 44.7327)
 
-[node name="CSGBox3D15" type="CSGBox3D" parent="Region/CSGBox3D"]
+[node name="CSGBox3D15" type="CSGBox3D" parent="Region/CSGBox3D" unique_id=2038022348]
 transform = Transform3D(-0.407836, 0.109279, -0.906492, 0.258819, 0.965926, -1.13133e-08, 0.875604, -0.234617, -0.422223, 48.4254, -6.39967, -80.4532)
 use_collision = true
 size = Vector3(10.6966, 1, 8.8255)
 
-[node name="CSGBox3D4" type="CSGBox3D" parent="Region/CSGBox3D"]
+[node name="CSGBox3D4" type="CSGBox3D" parent="Region/CSGBox3D" unique_id=343708844]
 transform = Transform3D(-4.37114e-08, 0, -1, 0.258819, 0.965926, -1.13133e-08, 0.965926, -0.258819, -4.2222e-08, -33.7314, -3.85253, -73.3192)
 use_collision = true
 size = Vector3(30.1053, 1, 23.1769)
 
-[node name="CSGBox3D10" type="CSGBox3D" parent="Region/CSGBox3D"]
+[node name="CSGBox3D10" type="CSGBox3D" parent="Region/CSGBox3D" unique_id=417433834]
 transform = Transform3D(0.965926, -0.258819, 1.48939e-09, 0.258819, 0.965926, -1.13133e-08, 1.48943e-09, 1.13133e-08, 1, -66.9928, -12.1704, -103.955)
 use_collision = true
 size = Vector3(34.9491, 1, 23.1769)
 
-[node name="CSGBakedMeshInstance3D4" type="MeshInstance3D" parent="Region"]
+[node name="CSGBakedMeshInstance3D4" type="MeshInstance3D" parent="Region" unique_id=913308070]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00156629, -1.02747, 9.01918)
 mesh = SubResource("ArrayMesh_a3se8")
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="Region"]
+[node name="CSGBox3D2" type="CSGBox3D" parent="Region" unique_id=615217527]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.86311, -63.6349)
 visible = false
 use_collision = true
 size = Vector3(46.0631, 8.65778, 28.1868)
 
-[node name="CSGBox3D6" type="CSGBox3D" parent="Region/CSGBox3D2"]
+[node name="CSGBox3D6" type="CSGBox3D" parent="Region/CSGBox3D2" unique_id=352034562]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.26126, -2.60965)
 operation = 2
 size = Vector3(30.1053, 15.2479, 27.6177)
 
-[node name="CSGBakedMeshInstance3D2" type="MeshInstance3D" parent="Region"]
+[node name="CSGBakedMeshInstance3D2" type="MeshInstance3D" parent="Region" unique_id=478922864]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4.86311, -63.6349)
 mesh = SubResource("ArrayMesh_b0q6j")
 
-[node name="CSGBox3D6" type="CSGBox3D" parent="Region"]
+[node name="CSGBox3D6" type="CSGBox3D" parent="Region" unique_id=1141219373]
 transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 90.5554, 4.736, -41.0181)
 use_collision = true
 size = Vector3(25.799, 33.0278, 24.7393)
 
-[node name="CSGBox3D7" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D7" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=1337621859]
 transform = Transform3D(0.969458, 0.0570251, -0.238535, 0, 0.972594, 0.232512, 0.245257, -0.225411, 0.942889, -2.72013, 4.81272, 19.4699)
 use_collision = true
 size = Vector3(25.799, 33.0278, 24.7393)
 
-[node name="CSGBox3D44" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D44" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=335113791]
 transform = Transform3D(0.969458, 0.0570251, -0.238535, -0.245013, 0.268594, -0.931572, 0.010946, 0.961565, 0.274362, -18.398, -5.30927, 31.8768)
 use_collision = true
 size = Vector3(15.8702, 17.4574, 9.89223)
 
-[node name="CSGBox3D45" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D45" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=25100437]
 transform = Transform3D(0.99114, 0.123571, 0.048715, 0.0739965, -0.20911, -0.975089, -0.110306, 0.970054, -0.216401, -19.3111, -3.77177, 47.1832)
 use_collision = true
 size = Vector3(15.8702, 17.4574, 9.89223)
 
-[node name="CSGBox3D47" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D47" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=1246340656]
 transform = Transform3D(0.991217, -0.110034, 0.0733667, 0.0618417, -0.104724, -0.992577, 0.1169, 0.988397, -0.0969992, -17.1512, -8.35955, 78.9917)
 use_collision = true
 size = Vector3(15.8702, 17.4574, 9.89223)
 
-[node name="CSGBox3D48" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D48" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=509735669]
 transform = Transform3D(0.946255, 0.32246, 0.0249344, 0.0618417, -0.104724, -0.992577, -0.317455, 0.940774, -0.119037, -14.8453, -7.12639, 100.006)
 use_collision = true
 size = Vector3(15.8702, 32.0705, 13.9188)
 
-[node name="CSGBox3D46" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D46" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=640855271]
 transform = Transform3D(0.986217, -0.165177, -0.00968272, 0.0235054, 0.197792, -0.979963, 0.163782, 0.966228, 0.198948, -17.9121, -1.09471, 63.1717)
 use_collision = true
 size = Vector3(15.8702, 17.4574, 22.9463)
 
-[node name="CSGBox3D40" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D40" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=2123522114]
 transform = Transform3D(0.969458, 0.0570251, -0.238535, -0.169805, 0.857845, -0.485046, 0.176966, 0.510736, 0.841327, -2.00052, 15.6381, -44.1981)
 use_collision = true
 size = Vector3(25.799, 58.2663, 24.7393)
 
-[node name="CSGBox3D43" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D43" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=1362762769]
 transform = Transform3D(0.969458, 0.0570251, -0.238535, -0.00403634, 0.976172, 0.216963, 0.245224, -0.209374, 0.946588, -2.00052, -4.60177, -61.901)
 use_collision = true
 size = Vector3(25.799, 58.2663, 24.7393)
 
-[node name="CSGBox3D42" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D42" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=1398985497]
 transform = Transform3D(0.853804, 0.520574, -0.00464731, -0.461114, 0.760367, 0.457402, 0.241645, -0.388389, 0.889248, -2.00052, 15.6381, 4.26232)
 use_collision = true
 size = Vector3(25.799, 58.2663, 24.7393)
 
-[node name="CSGBox3D41" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D41" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=542854775]
 transform = Transform3D(0.969458, 0.0570251, -0.238535, -0.231855, 0.530204, -0.815554, 0.0799652, 0.845951, 0.527232, -0.643333, 23.5975, -26.3328)
 use_collision = true
 size = Vector3(25.799, 58.2663, 24.7393)
 
-[node name="CSGBox3D8" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D8" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=1826997505]
 transform = Transform3D(0.883244, 0.126492, 0.45153, -0.206838, 0.969285, 0.133063, -0.42083, -0.210921, 0.882278, 1.6215, 7.17786, 40.6095)
 use_collision = true
 size = Vector3(25.799, 58.4158, 24.7393)
 
-[node name="CSGBox3D10" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D10" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=1619810536]
 transform = Transform3D(0.854005, 0.120968, -0.506006, -0.119501, 0.992199, 0.0355122, 0.506354, 0.0301407, 0.861799, -0.197281, -0.0833244, 60.9314)
 use_collision = true
 size = Vector3(25.799, 65.1047, 24.7393)
 
-[node name="CSGBox3D11" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D11" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=31051521]
 transform = Transform3D(0.968071, 0.183071, 0.171241, -0.168778, 0.981092, -0.0947215, -0.185344, 0.0627954, 0.980665, 4.56725, 13.683, 81.2339)
 use_collision = true
 size = Vector3(25.799, 58.4158, 24.7393)
 
-[node name="CSGBox3D12" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D12" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=241275491]
 transform = Transform3D(0.854005, 0.120968, -0.506006, -0.119501, 0.992199, 0.0355122, 0.506354, 0.0301407, 0.861799, 4.02805, 16.8176, 105.24)
 use_collision = true
 size = Vector3(25.799, 65.1047, 24.7393)
 
-[node name="CSGBox3D13" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D13" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=658719607]
 transform = Transform3D(0.94223, 0.201664, 0.26746, -0.248691, 0.95606, 0.155245, -0.2244, -0.212791, 0.950981, 6.67329, 16.9873, 122.108)
 use_collision = true
 size = Vector3(25.799, 75.5018, 24.7393)
 
-[node name="CSGBox3D20" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D20" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=538363023]
 transform = Transform3D(0.985513, 0.16635, -0.0330238, -0.168778, 0.981092, -0.0947215, 0.0166425, 0.0989231, 0.994956, 5.75931, 10.3346, 134.042)
 use_collision = true
 size = Vector3(25.799, 85.7836, 24.7393)
 
-[node name="CSGBox3D21" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D21" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=379321127]
 transform = Transform3D(0.73234, 0.112242, -0.671625, -0.119501, 0.992199, 0.0355122, 0.670371, 0.0542529, 0.74004, 0.923553, 12.1079, 157.975)
 use_collision = true
 size = Vector3(25.799, 94.9103, 24.7393)
 
-[node name="CSGBox3D22" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D22" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=563136137]
 transform = Transform3D(0.96821, 0.240934, 0.0672324, -0.248691, 0.95606, 0.155245, -0.0268743, -0.16703, 0.985586, -0.701553, 17.3981, 177.525)
 use_collision = true
 size = Vector3(25.799, 95.7221, 24.7393)
 
-[node name="CSGBox3D26" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D26" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=799869809]
 transform = Transform3D(-0.245257, 0.225411, -0.942889, 0, 0.972594, 0.232512, 0.969458, 0.0570251, -0.238535, 49.5496, 4.81272, 196.28)
 use_collision = true
 size = Vector3(25.799, 33.0278, 24.7393)
 
-[node name="CSGBox3D27" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D27" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=682417283]
 transform = Transform3D(0.42083, 0.210921, -0.882278, -0.206838, 0.969285, 0.133063, 0.883244, 0.126492, 0.45153, 28.41, 7.17786, 200.622)
 use_collision = true
 size = Vector3(25.799, 58.4158, 24.7393)
 
-[node name="CSGBox3D28" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D28" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=126735276]
 transform = Transform3D(-0.506354, -0.0301407, -0.861799, -0.119501, 0.992199, 0.0355122, 0.854005, 0.120968, -0.506006, 8.08815, -0.0833244, 198.803)
 use_collision = true
 size = Vector3(25.799, 65.1047, 24.7393)
 
-[node name="CSGBox3D39" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D39" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=929385386]
 transform = Transform3D(-0.506354, -0.0301407, -0.861799, -0.119501, 0.992199, 0.0355122, 0.854005, 0.120968, -0.506006, -203.404, -0.0833244, 198.803)
 use_collision = true
 size = Vector3(25.799, 65.1047, 24.7393)
 
-[node name="CSGBox3D29" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D29" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=1890967532]
 transform = Transform3D(0.185344, -0.0627954, -0.980665, -0.168778, 0.981092, -0.0947215, 0.968071, 0.183071, 0.171241, -12.2143, 13.683, 203.568)
 use_collision = true
 size = Vector3(25.799, 58.4158, 24.7393)
 
-[node name="CSGBox3D30" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D30" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=302504093]
 transform = Transform3D(-0.506354, -0.0301407, -0.861799, -0.119501, 0.992199, 0.0355122, 0.854005, 0.120968, -0.506006, -36.2203, 16.8176, 203.029)
 use_collision = true
 size = Vector3(25.799, 65.1047, 24.7393)
 
-[node name="CSGBox3D31" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D31" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=1929297218]
 transform = Transform3D(0.2244, 0.212791, -0.950981, -0.248691, 0.95606, 0.155245, 0.94223, 0.201664, 0.26746, -53.0885, 16.9873, 205.674)
 use_collision = true
 size = Vector3(25.799, 75.5018, 24.7393)
 
-[node name="CSGBox3D32" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D32" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=1255546592]
 transform = Transform3D(-0.0166426, -0.0989231, -0.994956, -0.168778, 0.981092, -0.0947215, 0.985513, 0.16635, -0.0330239, -65.0226, 10.3346, 204.76)
 use_collision = true
 size = Vector3(25.799, 85.7836, 24.7393)
 
-[node name="CSGBox3D33" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D33" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=1320922544]
 transform = Transform3D(-0.670371, -0.0542529, -0.74004, -0.119501, 0.992199, 0.0355122, 0.73234, 0.112242, -0.671625, -88.9555, 12.1079, 199.924)
 use_collision = true
 size = Vector3(25.799, 94.9103, 24.7393)
 
-[node name="CSGBox3D35" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D35" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=26618409]
 transform = Transform3D(0.506355, 0.0301407, 0.861798, 0.109755, 0.989008, -0.0990768, -0.855312, 0.144754, 0.497481, -175.811, 16.2551, 201.005)
 use_collision = true
 size = Vector3(25.799, 65.1047, 24.7393)
 
-[node name="CSGBox3D36" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D36" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=1019695858]
 transform = Transform3D(-0.2244, -0.212791, 0.950981, 0.00837781, 0.975411, 0.220235, -0.974461, 0.0573878, -0.2171, -158.942, 17.1158, 198.498)
 use_collision = true
 size = Vector3(25.799, 75.5018, 24.7393)
 
-[node name="CSGBox3D37" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D37" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=798555457]
 transform = Transform3D(0.0166426, 0.0989231, 0.994956, 0.0968722, 0.990253, -0.100076, -0.995158, 0.0980491, 0.00689751, -147.008, 10.4574, 197.627)
 use_collision = true
 size = Vector3(25.799, 85.7836, 24.7393)
 
-[node name="CSGBox3D38" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D38" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=496464451]
 transform = Transform3D(0.670371, 0.0542529, 0.74004, 0.0776957, 0.986709, -0.142718, -0.737947, 0.153172, 0.657246, -123.075, 10.8937, 202.759)
 use_collision = true
 size = Vector3(25.799, 94.9103, 24.7393)
 
-[node name="CSGBox3D34" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D34" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=278439328]
 transform = Transform3D(0.0268743, 0.16703, -0.985586, -0.248691, 0.95606, 0.155245, 0.96821, 0.240934, 0.0672324, -108.505, 17.3981, 198.299)
 use_collision = true
 size = Vector3(25.799, 95.7221, 24.7393)
 
-[node name="CSGBox3D23" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D23" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=1024979324]
 transform = Transform3D(0.989909, -0.141683, -0.00247132, 0.140724, 0.984957, -0.100283, 0.0166425, 0.098923, 0.994956, -215.437, 11.6274, 134.042)
 use_collision = true
 size = Vector3(25.799, 85.7836, 24.7393)
 
-[node name="CSGBox3D24" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D24" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=971459388]
 transform = Transform3D(0.733796, -0.196595, -0.650303, 0.110208, 0.978983, -0.171602, 0.670371, 0.0542529, 0.74004, -220.583, 11.8367, 157.975)
 use_collision = true
 size = Vector3(25.799, 94.9103, 24.7393)
 
-[node name="CSGBox3D25" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D25" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=1933649290]
 transform = Transform3D(0.997875, -0.0630169, 0.0165298, 0.0593476, 0.983936, 0.168369, -0.0268743, -0.16703, 0.985586, -223.749, 16.3764, 177.525)
 use_collision = true
 size = Vector3(25.799, 95.7221, 24.7393)
 
-[node name="CSGBox3D14" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D14" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=718562927]
 transform = Transform3D(-0.919999, -0.1805, 0.347882, -0.265308, 0.940155, -0.213822, -0.288469, -0.289012, -0.91283, -216.134, 12.2089, 125.507)
 use_collision = true
 size = Vector3(25.799, 73.4709, 24.7393)
 
-[node name="CSGBox3D15" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D15" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=872774131]
 transform = Transform3D(-0.910776, -0.246551, -0.33121, -0.112211, 0.919759, -0.3761, 0.397361, -0.305378, -0.86536, -218.129, 10.8034, 103.721)
 use_collision = true
 size = Vector3(25.799, 83.8182, 24.7393)
 
-[node name="CSGBox3D49" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D49" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=1319280175]
 transform = Transform3D(-1, 7.54033e-08, -4.42389e-08, 0, 0.506034, 0.862514, 8.74228e-08, 0.862514, -0.506034, -196.406, -5.41143, 126.745)
 use_collision = true
 size = Vector3(14.6632, 52.3205, 26.4005)
 
-[node name="CSGBox3D50" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D50" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=239042825]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -197.721, 3.87119, 168.382)
 use_collision = true
 size = Vector3(38.8427, 30.7125, 51.511)
 
-[node name="CSGBox3D51" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D51" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=2091977977]
 transform = Transform3D(0.617928, 0, 0.786234, 0, 1, 0, -0.786235, 0, 0.617928, -158.792, 3.87119, 182.881)
 use_collision = true
 size = Vector3(38.8427, 30.7125, 80.6746)
 
-[node name="CSGBox3D16" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D16" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=1658291714]
 transform = Transform3D(-0.75759, -0.20879, 0.618436, -0.475982, 0.825044, -0.304539, -0.446652, -0.52508, -0.724426, -215.874, 6.75843, 85.9626)
 use_collision = true
 size = Vector3(25.799, 65.1047, 24.7393)
 
-[node name="CSGBox3D17" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D17" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=386743654]
 transform = Transform3D(-0.964258, -0.26425, -0.0194367, -0.204949, 0.790335, -0.577378, 0.167934, -0.552759, -0.816245, -218.966, 8.21806, 61.2097)
 use_collision = true
 size = Vector3(25.799, 58.4158, 24.7393)
 
-[node name="CSGBox3D18" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D18" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=1788639979]
 transform = Transform3D(-0.75759, -0.20879, 0.618436, -0.475982, 0.825044, -0.304539, -0.446652, -0.52508, -0.724426, -215.297, -0.478508, 38.9092)
 use_collision = true
 size = Vector3(25.799, 65.1047, 24.7393)
 
-[node name="CSGBox3D19" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D19" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=12848148]
 transform = Transform3D(-0.936823, -0.319624, -0.142139, -0.251412, 0.89775, -0.361714, 0.243217, -0.303127, -0.92139, -215.506, -8.80858, 24.0052)
 use_collision = true
 size = Vector3(25.799, 75.5018, 24.7393)
 
-[node name="CSGBox3D9" type="CSGBox3D" parent="Region/CSGBox3D6"]
+[node name="CSGBox3D9" type="CSGBox3D" parent="Region/CSGBox3D6" unique_id=130814352]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -109.082, 15.232, 273.524)
 use_collision = true
 size = Vector3(118.116, 71.478, 129.911)
 
-[node name="CSGTorus3D" type="CSGTorus3D" parent="Region/CSGBox3D6/CSGBox3D9"]
+[node name="CSGTorus3D" type="CSGTorus3D" parent="Region/CSGBox3D6/CSGBox3D9" unique_id=1826863930]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 75.7017, 0)
 inner_radius = 15.2069
 outer_radius = 42.3692
 sides = 21
 
-[node name="CSGTorus3D2" type="CSGTorus3D" parent="Region/CSGBox3D6/CSGBox3D9"]
+[node name="CSGTorus3D2" type="CSGTorus3D" parent="Region/CSGBox3D6/CSGBox3D9" unique_id=2136586206]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 58.3954, 0)
 inner_radius = 15.2069
 outer_radius = 54.1421
 sides = 21
 
-[node name="CSGTorus3D3" type="CSGTorus3D" parent="Region/CSGBox3D6/CSGBox3D9"]
+[node name="CSGTorus3D3" type="CSGTorus3D" parent="Region/CSGBox3D6/CSGBox3D9" unique_id=592480292]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 41.5304, 0)
 inner_radius = 15.2069
 outer_radius = 68.016
 sides = 21
 
-[node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="Region"]
+[node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="Region" unique_id=1718224122]
 transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 90.5554, 4.736, -41.0181)
 visible = false
 mesh = SubResource("ArrayMesh_mhym6")
 
-[node name="GPUParticles3D" type="GPUParticles3D" parent="Region"]
+[node name="GPUParticles3D" type="GPUParticles3D" parent="Region" unique_id=1871797537]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.13824, 91.0285, 207.766)
 cast_shadow = 0
 amount = 200
@@ -675,54 +675,54 @@ visibility_aabb = AABB(-12.665, 2.175, -8.995, 1455, 678.695, 344.11)
 process_material = SubResource("ParticleProcessMaterial_uty7l")
 draw_pass_1 = SubResource("SphereMesh_45l4g")
 
-[node name="Decor" type="Node3D" parent="Region"]
+[node name="Decor" type="Node3D" parent="Region" unique_id=921302136]
 
-[node name="Badtree2" type="MeshInstance3D" parent="Region/Decor"]
+[node name="Badtree2" type="MeshInstance3D" parent="Region/Decor" unique_id=40339223]
 transform = Transform3D(0.857666, 0, -1.00997, 0, 1.325, 0, 1.00997, 0, 0.857666, 61.8731, -0.527468, -36.4882)
 mesh = ExtResource("17_uty7l")
 skeleton = NodePath("../../..")
 
-[node name="Badtree7" type="MeshInstance3D" parent="Region/Decor"]
+[node name="Badtree7" type="MeshInstance3D" parent="Region/Decor" unique_id=412125794]
 transform = Transform3D(0.848679, -0.191318, -0.999383, 0.123839, 1.31112, -0.14583, 1.00997, 0, 0.857666, 69.9198, 4.78976, -13.203)
 mesh = ExtResource("17_uty7l")
 skeleton = NodePath("../../..")
 
-[node name="Badtree8" type="MeshInstance3D" parent="Region/Decor"]
+[node name="Badtree8" type="MeshInstance3D" parent="Region/Decor" unique_id=482787853]
 transform = Transform3D(0.26064, 0.0412341, -1.78561, -0.0314812, 1.80434, 0.0370716, 1.78581, 0.0257899, 0.261264, 68.0698, 5.54781, 0.186788)
 mesh = ExtResource("17_uty7l")
 skeleton = NodePath("../../..")
 
-[node name="Badtree9" type="MeshInstance3D" parent="Region/Decor"]
+[node name="Badtree9" type="MeshInstance3D" parent="Region/Decor" unique_id=830791338]
 transform = Transform3D(1.50753, -0.193846, -0.0126907, 0.189892, 1.49142, -0.223612, 0.0409695, 0.220193, 1.50341, 70.0514, 13.7083, 17.0562)
 mesh = ExtResource("17_uty7l")
 skeleton = NodePath("../../..")
 
-[node name="Badtree10" type="MeshInstance3D" parent="Region/Decor"]
+[node name="Badtree10" type="MeshInstance3D" parent="Region/Decor" unique_id=1964438227]
 transform = Transform3D(0.481676, -0.395216, -1.38643, 0.229837, 1.46412, -0.337513, 1.42322, -0.102685, 0.523729, 70.0514, 1.44088, 33.1171)
 mesh = ExtResource("17_uty7l")
 skeleton = NodePath("../../..")
 
-[node name="Badtree3" type="MeshInstance3D" parent="Region/Decor"]
+[node name="Badtree3" type="MeshInstance3D" parent="Region/Decor" unique_id=634025778]
 transform = Transform3D(1.12788, 0, -0.561678, 0, 1.26, 0, 0.561678, 0, 1.12788, 19.2027, -0.52747, -54.067)
 mesh = ExtResource("17_uty7l")
 skeleton = NodePath("../../..")
 
-[node name="Badtree4" type="MeshInstance3D" parent="Region/Decor"]
+[node name="Badtree4" type="MeshInstance3D" parent="Region/Decor" unique_id=173568293]
 transform = Transform3D(1.09495, 0, 0.298846, 0, 1.135, 0, -0.298846, 0, 1.09495, 17.3365, -0.52747, -75.5723)
 mesh = ExtResource("17_uty7l")
 skeleton = NodePath("../../..")
 
-[node name="Badtree5" type="MeshInstance3D" parent="Region/Decor"]
+[node name="Badtree5" type="MeshInstance3D" parent="Region/Decor" unique_id=1827494578]
 transform = Transform3D(1.34108, 0, 0.589696, 0, 1.465, 0, -0.589696, 0, 1.34108, -20.3788, -0.527472, -64.8215)
 mesh = ExtResource("17_uty7l")
 skeleton = NodePath("../../..")
 
-[node name="Badtree6" type="MeshInstance3D" parent="Region/Decor"]
+[node name="Badtree6" type="MeshInstance3D" parent="Region/Decor" unique_id=453251586]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -46.9106, -0.52747, -46.8692)
 mesh = ExtResource("17_uty7l")
 skeleton = NodePath("../../..")
 
-[node name="Player" type="CharacterBody3D" parent="."]
+[node name="Player" type="CharacterBody3D" parent="." unique_id=1117132982]
 physics_interpolation_mode = 1
 transform = Transform3D(-1, 0, 1.50996e-07, 0, 1, 0, -1.50996e-07, 0, -1, 0, 1.01458, -32.7488)
 script = ExtResource("1_ykrsh")
@@ -730,37 +730,37 @@ sprint_speed = 15.0
 can_jump = true
 jump_height = 2.0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player" unique_id=708583489]
 shape = SubResource("CapsuleShape3D_mf4mk")
 
-[node name="DronePerch" type="Node3D" parent="Player/CollisionShape3D"]
+[node name="DronePerch" type="Node3D" parent="Player/CollisionShape3D" unique_id=2142044031]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.47173e-07, 0.345618, 0.974678)
 script = ExtResource("2_mhym6")
 
-[node name="Camera" type="Node3D" parent="Player"]
+[node name="Camera" type="Node3D" parent="Player" unique_id=1336079535]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.991825, 0)
 
-[node name="Camera3D" type="Camera3D" parent="Player/Camera"]
+[node name="Camera3D" type="Camera3D" parent="Player/Camera" unique_id=425768879]
 physics_interpolation_mode = 1
 fov = 100.0
 
-[node name="BuildingRaycaster" type="RayCast3D" parent="Player/Camera/Camera3D"]
+[node name="BuildingRaycaster" type="RayCast3D" parent="Player/Camera/Camera3D" unique_id=1719491538]
 target_position = Vector3(0, 0, -1)
 collision_mask = 2
 script = ExtResource("3_g14j6")
 interact_distance = 30.0
 
-[node name="InteractionRaycaster" type="RayCast3D" parent="Player/Camera/Camera3D"]
+[node name="InteractionRaycaster" type="RayCast3D" parent="Player/Camera/Camera3D" unique_id=1348861567]
 target_position = Vector3(0, 0, -1)
 script = ExtResource("3_g14j6")
 interact_distance = 5.0
 
-[node name="BuildingPickRaycaster" type="RayCast3D" parent="Player/Camera/Camera3D"]
+[node name="BuildingPickRaycaster" type="RayCast3D" parent="Player/Camera/Camera3D" unique_id=758001868]
 target_position = Vector3(0, 0, -1)
 script = ExtResource("3_g14j6")
 interact_distance = 30.0
 
-[node name="PlayerHUD" type="Control" parent="Player"]
+[node name="PlayerHUD" type="Control" parent="Player" unique_id=1831949978]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -769,14 +769,14 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Control" type="Control" parent="Player/PlayerHUD"]
+[node name="Control" type="Control" parent="Player/PlayerHUD" unique_id=1867150550]
 custom_minimum_size = Vector2(300, 200)
 anchors_preset = 0
 offset_right = 300.0
 offset_bottom = 200.0
 mouse_filter = 2
 
-[node name="Label" type="Label" parent="Player/PlayerHUD/Control"]
+[node name="Label" type="Label" parent="Player/PlayerHUD/Control" unique_id=1744795109]
 layout_mode = 0
 offset_left = 50.0
 offset_top = 50.0
@@ -785,7 +785,7 @@ offset_bottom = 92.0
 theme_override_font_sizes/font_size = 30
 text = "12:31"
 
-[node name="Label2" type="Label" parent="Player/PlayerHUD/Control"]
+[node name="Label2" type="Label" parent="Player/PlayerHUD/Control" unique_id=637339673]
 layout_mode = 0
 offset_left = 50.0
 offset_top = 95.0
@@ -794,7 +794,7 @@ offset_bottom = 137.0
 theme_override_font_sizes/font_size = 20
 text = "Hit Pos:"
 
-[node name="Label3" type="Label" parent="Player/PlayerHUD/Control"]
+[node name="Label3" type="Label" parent="Player/PlayerHUD/Control" unique_id=373622334]
 layout_mode = 0
 offset_left = 50.0
 offset_top = 126.0
@@ -803,7 +803,7 @@ offset_bottom = 168.0
 theme_override_font_sizes/font_size = 20
 text = "FPS:"
 
-[node name="Label4" type="Label" parent="Player/PlayerHUD/Control"]
+[node name="Label4" type="Label" parent="Player/PlayerHUD/Control" unique_id=1478254521]
 layout_mode = 0
 offset_left = 50.0
 offset_top = 155.0
@@ -812,7 +812,7 @@ offset_bottom = 197.0
 theme_override_font_sizes/font_size = 20
 text = "VoxelData"
 
-[node name="Control2" type="Control" parent="Player/PlayerHUD"]
+[node name="Control2" type="Control" parent="Player/PlayerHUD" unique_id=1129715824]
 custom_minimum_size = Vector2(200, 200)
 layout_mode = 1
 anchors_preset = 2
@@ -823,7 +823,7 @@ offset_right = 40.0
 grow_vertical = 0
 mouse_filter = 2
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Player/PlayerHUD/Control2"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Player/PlayerHUD/Control2" unique_id=483062891]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -846,7 +846,7 @@ texture_over = ExtResource("6_0m0f1")
 texture_progress = ExtResource("7_b0q6j")
 tint_progress = Color(0.18, 0.685667, 1, 1)
 
-[node name="Label" type="Label" parent="Player/PlayerHUD/Control2/TextureProgressBar"]
+[node name="Label" type="Label" parent="Player/PlayerHUD/Control2/TextureProgressBar" unique_id=1015509050]
 layout_mode = 0
 offset_left = 20.0
 offset_top = 36.0
@@ -856,7 +856,7 @@ theme_override_font_sizes/font_size = 24
 text = "06:00"
 horizontal_alignment = 1
 
-[node name="Label2" type="Label" parent="Player/PlayerHUD/Control2/TextureProgressBar"]
+[node name="Label2" type="Label" parent="Player/PlayerHUD/Control2/TextureProgressBar" unique_id=197271590]
 layout_mode = 0
 offset_left = 30.0
 offset_top = 21.0
@@ -866,7 +866,7 @@ theme_override_font_sizes/font_size = 16
 text = "O2"
 horizontal_alignment = 1
 
-[node name="Control3" type="Control" parent="Player/PlayerHUD"]
+[node name="Control3" type="Control" parent="Player/PlayerHUD" unique_id=1731574678]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -881,7 +881,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="PanelContainer" type="PanelContainer" parent="Player/PlayerHUD/Control3"]
+[node name="PanelContainer" type="PanelContainer" parent="Player/PlayerHUD/Control3" unique_id=1322387153]
 visible = false
 layout_mode = 1
 anchors_preset = 7
@@ -896,12 +896,12 @@ grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
 
-[node name="Label" type="Label" parent="Player/PlayerHUD/Control3/PanelContainer"]
+[node name="Label" type="Label" parent="Player/PlayerHUD/Control3/PanelContainer" unique_id=1947739503]
 layout_mode = 2
 text = "Press E to Dingaling"
 horizontal_alignment = 1
 
-[node name="PanelContainer2" type="PanelContainer" parent="Player/PlayerHUD/Control3"]
+[node name="PanelContainer2" type="PanelContainer" parent="Player/PlayerHUD/Control3" unique_id=973747203]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -915,12 +915,12 @@ grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
 
-[node name="Label" type="Label" parent="Player/PlayerHUD/Control3/PanelContainer2"]
+[node name="Label" type="Label" parent="Player/PlayerHUD/Control3/PanelContainer2" unique_id=287222275]
 layout_mode = 2
 text = "0 / 50"
 horizontal_alignment = 1
 
-[node name="PanelContainer3" type="Control" parent="Player/PlayerHUD/Control3"]
+[node name="PanelContainer3" type="Control" parent="Player/PlayerHUD/Control3" unique_id=1486647063]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -935,7 +935,7 @@ grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
 
-[node name="DemolishBar" type="ProgressBar" parent="Player/PlayerHUD/Control3/PanelContainer3"]
+[node name="DemolishBar" type="ProgressBar" parent="Player/PlayerHUD/Control3/PanelContainer3" unique_id=270584287]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -947,7 +947,7 @@ step = 0.001
 value = 0.49
 show_percentage = false
 
-[node name="Control4" type="Control" parent="Player/PlayerHUD"]
+[node name="Control4" type="Control" parent="Player/PlayerHUD" unique_id=2094279512]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -959,7 +959,7 @@ offset_right = 230.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="Control" type="Control" parent="Player/PlayerHUD/Control4"]
+[node name="Control" type="Control" parent="Player/PlayerHUD/Control4" unique_id=1405524539]
 custom_minimum_size = Vector2(60, 0)
 layout_mode = 1
 anchors_preset = 4
@@ -971,7 +971,7 @@ offset_right = -10.0
 offset_bottom = 10.0
 grow_vertical = 2
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="Player/PlayerHUD/Control4/Control"]
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Player/PlayerHUD/Control4/Control" unique_id=1684846280]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -997,7 +997,7 @@ texture_over = ExtResource("6_0m0f1")
 texture_progress = ExtResource("7_b0q6j")
 tint_progress = Color(0.751602, 0.889995, 1, 1)
 
-[node name="topLabel" type="Label" parent="Player/PlayerHUD/Control4/Control/TextureProgressBar"]
+[node name="topLabel" type="Label" parent="Player/PlayerHUD/Control4/Control/TextureProgressBar" unique_id=2141991559]
 layout_mode = 0
 offset_left = 1.0
 offset_top = 12.0
@@ -1007,7 +1007,7 @@ theme_override_font_sizes/font_size = 16
 text = "20"
 horizontal_alignment = 1
 
-[node name="bottomLabel" type="Label" parent="Player/PlayerHUD/Control4/Control/TextureProgressBar"]
+[node name="bottomLabel" type="Label" parent="Player/PlayerHUD/Control4/Control/TextureProgressBar" unique_id=1421715803]
 layout_mode = 0
 offset_left = 1.0
 offset_top = 36.0
@@ -1017,7 +1017,7 @@ theme_override_font_sizes/font_size = 16
 text = "20"
 horizontal_alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="Player/PlayerHUD/Control4/Control/TextureProgressBar"]
+[node name="HSeparator" type="HSeparator" parent="Player/PlayerHUD/Control4/Control/TextureProgressBar" unique_id=933519151]
 layout_mode = 0
 offset_left = 15.0
 offset_top = 34.0
@@ -1025,7 +1025,7 @@ offset_right = 55.0
 offset_bottom = 38.0
 theme_override_styles/separator = SubResource("StyleBoxLine_b0q6j")
 
-[node name="HotbarGrid" type="GridContainer" parent="Player/PlayerHUD/Control4"]
+[node name="HotbarGrid" type="GridContainer" parent="Player/PlayerHUD/Control4" unique_id=2064984331]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1039,18 +1039,18 @@ grow_horizontal = 2
 grow_vertical = 2
 columns = 10
 
-[node name="Control" type="Control" parent="Player/PlayerHUD/Control4/HotbarGrid"]
+[node name="Control" type="Control" parent="Player/PlayerHUD/Control4/HotbarGrid" unique_id=1708485106]
 custom_minimum_size = Vector2(42, 60)
 layout_mode = 2
 
-[node name="Background" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control"]
+[node name="Background" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control" unique_id=1846372787]
 texture_filter = 1
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("5_ehkex")
 
-[node name="ItemCount" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control/Background"]
+[node name="ItemCount" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control/Background" unique_id=438228035]
 z_index = 1
 layout_mode = 1
 anchors_preset = 3
@@ -1066,30 +1066,30 @@ text = "50"
 label_settings = SubResource("LabelSettings_b0q6j")
 horizontal_alignment = 2
 
-[node name="Label" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control/Background/ItemCount"]
+[node name="Label" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control/Background/ItemCount" unique_id=1365257833]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 
-[node name="ItemTexture" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control"]
+[node name="ItemTexture" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control" unique_id=223518973]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("6_xersf")
 expand_mode = 1
 
-[node name="Control2" type="Control" parent="Player/PlayerHUD/Control4/HotbarGrid"]
+[node name="Control2" type="Control" parent="Player/PlayerHUD/Control4/HotbarGrid" unique_id=412683280]
 custom_minimum_size = Vector2(42, 60)
 layout_mode = 2
 
-[node name="Background" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control2"]
+[node name="Background" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control2" unique_id=402575482]
 texture_filter = 1
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("5_ehkex")
 
-[node name="ItemCount" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control2/Background"]
+[node name="ItemCount" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control2/Background" unique_id=988551273]
 z_index = 1
 layout_mode = 1
 anchors_preset = 3
@@ -1105,30 +1105,30 @@ text = "50"
 label_settings = SubResource("LabelSettings_b0q6j")
 horizontal_alignment = 2
 
-[node name="Label" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control2/Background/ItemCount"]
+[node name="Label" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control2/Background/ItemCount" unique_id=88226426]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 
-[node name="ItemTexture" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control2"]
+[node name="ItemTexture" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control2" unique_id=712936427]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("6_xersf")
 expand_mode = 1
 
-[node name="Control3" type="Control" parent="Player/PlayerHUD/Control4/HotbarGrid"]
+[node name="Control3" type="Control" parent="Player/PlayerHUD/Control4/HotbarGrid" unique_id=2137443316]
 custom_minimum_size = Vector2(42, 60)
 layout_mode = 2
 
-[node name="Background" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control3"]
+[node name="Background" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control3" unique_id=1774595926]
 texture_filter = 1
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("5_ehkex")
 
-[node name="ItemCount" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control3/Background"]
+[node name="ItemCount" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control3/Background" unique_id=472776201]
 z_index = 1
 layout_mode = 1
 anchors_preset = 3
@@ -1144,30 +1144,30 @@ text = "50"
 label_settings = SubResource("LabelSettings_b0q6j")
 horizontal_alignment = 2
 
-[node name="Label" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control3/Background/ItemCount"]
+[node name="Label" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control3/Background/ItemCount" unique_id=1610900572]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 
-[node name="ItemTexture" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control3"]
+[node name="ItemTexture" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control3" unique_id=1093811350]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("6_xersf")
 expand_mode = 1
 
-[node name="Control4" type="Control" parent="Player/PlayerHUD/Control4/HotbarGrid"]
+[node name="Control4" type="Control" parent="Player/PlayerHUD/Control4/HotbarGrid" unique_id=774617459]
 custom_minimum_size = Vector2(42, 60)
 layout_mode = 2
 
-[node name="Background" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control4"]
+[node name="Background" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control4" unique_id=336662249]
 texture_filter = 1
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("5_ehkex")
 
-[node name="ItemCount" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control4/Background"]
+[node name="ItemCount" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control4/Background" unique_id=2136516729]
 z_index = 1
 layout_mode = 1
 anchors_preset = 3
@@ -1183,30 +1183,30 @@ text = "50"
 label_settings = SubResource("LabelSettings_b0q6j")
 horizontal_alignment = 2
 
-[node name="Label" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control4/Background/ItemCount"]
+[node name="Label" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control4/Background/ItemCount" unique_id=1245892171]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 
-[node name="ItemTexture" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control4"]
+[node name="ItemTexture" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control4" unique_id=1289933404]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("6_xersf")
 expand_mode = 1
 
-[node name="Control5" type="Control" parent="Player/PlayerHUD/Control4/HotbarGrid"]
+[node name="Control5" type="Control" parent="Player/PlayerHUD/Control4/HotbarGrid" unique_id=1172848657]
 custom_minimum_size = Vector2(42, 60)
 layout_mode = 2
 
-[node name="Background" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control5"]
+[node name="Background" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control5" unique_id=1158617765]
 texture_filter = 1
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("5_ehkex")
 
-[node name="ItemCount" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control5/Background"]
+[node name="ItemCount" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control5/Background" unique_id=641791952]
 z_index = 1
 layout_mode = 1
 anchors_preset = 3
@@ -1222,30 +1222,30 @@ text = "50"
 label_settings = SubResource("LabelSettings_b0q6j")
 horizontal_alignment = 2
 
-[node name="Label" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control5/Background/ItemCount"]
+[node name="Label" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control5/Background/ItemCount" unique_id=1053126225]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 
-[node name="ItemTexture" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control5"]
+[node name="ItemTexture" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control5" unique_id=2126160912]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("6_xersf")
 expand_mode = 1
 
-[node name="Control6" type="Control" parent="Player/PlayerHUD/Control4/HotbarGrid"]
+[node name="Control6" type="Control" parent="Player/PlayerHUD/Control4/HotbarGrid" unique_id=1907294504]
 custom_minimum_size = Vector2(42, 60)
 layout_mode = 2
 
-[node name="Background" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control6"]
+[node name="Background" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control6" unique_id=495999676]
 texture_filter = 1
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("5_ehkex")
 
-[node name="ItemCount" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control6/Background"]
+[node name="ItemCount" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control6/Background" unique_id=2109101474]
 z_index = 1
 layout_mode = 1
 anchors_preset = 3
@@ -1261,30 +1261,30 @@ text = "50"
 label_settings = SubResource("LabelSettings_b0q6j")
 horizontal_alignment = 2
 
-[node name="Label" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control6/Background/ItemCount"]
+[node name="Label" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control6/Background/ItemCount" unique_id=399058972]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 
-[node name="ItemTexture" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control6"]
+[node name="ItemTexture" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control6" unique_id=507037522]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("6_xersf")
 expand_mode = 1
 
-[node name="Control7" type="Control" parent="Player/PlayerHUD/Control4/HotbarGrid"]
+[node name="Control7" type="Control" parent="Player/PlayerHUD/Control4/HotbarGrid" unique_id=1892779034]
 custom_minimum_size = Vector2(42, 60)
 layout_mode = 2
 
-[node name="Background" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control7"]
+[node name="Background" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control7" unique_id=1215723572]
 texture_filter = 1
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("5_ehkex")
 
-[node name="ItemCount" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control7/Background"]
+[node name="ItemCount" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control7/Background" unique_id=74615185]
 z_index = 1
 layout_mode = 1
 anchors_preset = 3
@@ -1300,30 +1300,30 @@ text = "50"
 label_settings = SubResource("LabelSettings_b0q6j")
 horizontal_alignment = 2
 
-[node name="Label" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control7/Background/ItemCount"]
+[node name="Label" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control7/Background/ItemCount" unique_id=921752489]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 
-[node name="ItemTexture" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control7"]
+[node name="ItemTexture" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control7" unique_id=1047814773]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("6_xersf")
 expand_mode = 1
 
-[node name="Control8" type="Control" parent="Player/PlayerHUD/Control4/HotbarGrid"]
+[node name="Control8" type="Control" parent="Player/PlayerHUD/Control4/HotbarGrid" unique_id=516331122]
 custom_minimum_size = Vector2(42, 60)
 layout_mode = 2
 
-[node name="Background" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control8"]
+[node name="Background" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control8" unique_id=678602587]
 texture_filter = 1
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("5_ehkex")
 
-[node name="ItemCount" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control8/Background"]
+[node name="ItemCount" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control8/Background" unique_id=1947835597]
 z_index = 1
 layout_mode = 1
 anchors_preset = 3
@@ -1339,30 +1339,30 @@ text = "50"
 label_settings = SubResource("LabelSettings_b0q6j")
 horizontal_alignment = 2
 
-[node name="Label" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control8/Background/ItemCount"]
+[node name="Label" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control8/Background/ItemCount" unique_id=1214363119]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 
-[node name="ItemTexture" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control8"]
+[node name="ItemTexture" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control8" unique_id=1345489499]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("6_xersf")
 expand_mode = 1
 
-[node name="Control9" type="Control" parent="Player/PlayerHUD/Control4/HotbarGrid"]
+[node name="Control9" type="Control" parent="Player/PlayerHUD/Control4/HotbarGrid" unique_id=1346501763]
 custom_minimum_size = Vector2(42, 60)
 layout_mode = 2
 
-[node name="Background" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control9"]
+[node name="Background" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control9" unique_id=1065398265]
 texture_filter = 1
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("5_ehkex")
 
-[node name="ItemCount" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control9/Background"]
+[node name="ItemCount" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control9/Background" unique_id=1559353107]
 z_index = 1
 layout_mode = 1
 anchors_preset = 3
@@ -1378,30 +1378,30 @@ text = "50"
 label_settings = SubResource("LabelSettings_b0q6j")
 horizontal_alignment = 2
 
-[node name="Label" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control9/Background/ItemCount"]
+[node name="Label" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control9/Background/ItemCount" unique_id=1837856939]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 
-[node name="ItemTexture" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control9"]
+[node name="ItemTexture" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control9" unique_id=240975234]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("6_xersf")
 expand_mode = 1
 
-[node name="Control10" type="Control" parent="Player/PlayerHUD/Control4/HotbarGrid"]
+[node name="Control10" type="Control" parent="Player/PlayerHUD/Control4/HotbarGrid" unique_id=1683407646]
 custom_minimum_size = Vector2(42, 60)
 layout_mode = 2
 
-[node name="Background" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control10"]
+[node name="Background" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control10" unique_id=501206240]
 texture_filter = 1
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("5_ehkex")
 
-[node name="ItemCount" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control10/Background"]
+[node name="ItemCount" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control10/Background" unique_id=1397354341]
 z_index = 1
 layout_mode = 1
 anchors_preset = 3
@@ -1417,19 +1417,19 @@ text = "50"
 label_settings = SubResource("LabelSettings_b0q6j")
 horizontal_alignment = 2
 
-[node name="Label" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control10/Background/ItemCount"]
+[node name="Label" type="Label" parent="Player/PlayerHUD/Control4/HotbarGrid/Control10/Background/ItemCount" unique_id=799198219]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 23.0
 
-[node name="ItemTexture" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control10"]
+[node name="ItemTexture" type="TextureRect" parent="Player/PlayerHUD/Control4/HotbarGrid/Control10" unique_id=1438918850]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("6_xersf")
 expand_mode = 1
 
-[node name="Control5" type="Control" parent="Player/PlayerHUD"]
+[node name="Control5" type="Control" parent="Player/PlayerHUD" unique_id=856911072]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -1438,7 +1438,7 @@ offset_left = -40.0
 offset_bottom = 40.0
 grow_horizontal = 0
 
-[node name="Label5" type="Label" parent="Player/PlayerHUD/Control5"]
+[node name="Label5" type="Label" parent="Player/PlayerHUD/Control5" unique_id=2115991146]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -1453,7 +1453,7 @@ fuck
 fuck"
 horizontal_alignment = 2
 
-[node name="PlayerGUI" type="Control" parent="Player"]
+[node name="PlayerGUI" type="Control" parent="Player" unique_id=427138863]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -1463,7 +1463,7 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("4_vbegm")
 
-[node name="HandItemRepresentation" type="Control" parent="Player"]
+[node name="HandItemRepresentation" type="Control" parent="Player" unique_id=1159836651]
 visible = false
 layout_mode = 3
 anchors_preset = 0
@@ -1473,7 +1473,7 @@ scale = Vector2(2, 2)
 mouse_filter = 2
 script = ExtResource("5_xersf")
 
-[node name="Background" type="TextureRect" parent="Player/HandItemRepresentation"]
+[node name="Background" type="TextureRect" parent="Player/HandItemRepresentation" unique_id=1840928179]
 texture_filter = 1
 layout_mode = 0
 offset_right = 40.0
@@ -1481,7 +1481,7 @@ offset_bottom = 40.0
 mouse_filter = 2
 texture = ExtResource("5_ehkex")
 
-[node name="ItemTexture" type="TextureRect" parent="Player/HandItemRepresentation"]
+[node name="ItemTexture" type="TextureRect" parent="Player/HandItemRepresentation" unique_id=633955158]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -1498,7 +1498,7 @@ mouse_filter = 2
 texture = ExtResource("6_xersf")
 expand_mode = 1
 
-[node name="ItemCount" type="Label" parent="Player/HandItemRepresentation"]
+[node name="ItemCount" type="Label" parent="Player/HandItemRepresentation" unique_id=417164954]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
@@ -1513,19 +1513,19 @@ text = "50"
 label_settings = SubResource("LabelSettings_00tp4")
 horizontal_alignment = 2
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1170522730]
 environment = SubResource("Environment_8uh7m")
 
-[node name="DaylightManager" type="Node3D" parent="."]
+[node name="DaylightManager" type="Node3D" parent="." unique_id=969965358]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20.8424, 8.50293)
 script = ExtResource("13_4uo0j")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="DaylightManager"]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="DaylightManager" unique_id=903582307]
 transform = Transform3D(0.882997, -0.356386, 0.30546, 0, 0.650774, 0.759271, -0.469379, -0.670434, 0.574631, 0, 0, 0)
 shadow_enabled = true
 directional_shadow_max_distance = 250.0
 
-[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="DaylightManager"]
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="DaylightManager" unique_id=1438528448]
 transform = Transform3D(0.882948, 0.356456, -0.30552, 0, -0.650774, -0.759271, -0.469472, 0.670397, -0.574599, 0, 0, 0)
 light_color = Color(1.1792e-06, 0.279938, 0.436973, 1)
 light_energy = 0.213
@@ -1533,14 +1533,12 @@ shadow_enabled = true
 directional_shadow_max_distance = 250.0
 sky_mode = 1
 
-[node name="Node3D" type="Node3D" parent="."]
+[node name="Node3D" type="Node3D" parent="." unique_id=1602118831]
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Node3D"]
-libraries = {
-&"": SubResource("AnimationLibrary_6uqi0")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Node3D" unique_id=8398638]
+libraries/ = SubResource("AnimationLibrary_6uqi0")
 
-[node name="BuildingGrid" type="StaticBody3D" parent="."]
+[node name="BuildingGrid" type="StaticBody3D" parent="." unique_id=1766914352]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -71.7698, -0.524486, -30.3703)
 collision_layer = 2
 collision_mask = 0
@@ -1551,38 +1549,38 @@ grid_width = 128
 grid_height = 64
 grid_length = 112
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=562326982]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -46.7814)
 visible = false
 mesh = SubResource("BoxMesh_b0q6j")
 surface_material_override/0 = ExtResource("12_0m0f1")
 
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=699673195]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.54828, 0)
 visible = false
 omni_range = 27.4347
 
-[node name="moped" parent="." instance=ExtResource("14_b0q6j")]
+[node name="moped" parent="." unique_id=1667809571 instance=ExtResource("14_b0q6j")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -0.568125, -42)
 visible = false
 
-[node name="oddflower" parent="." instance=ExtResource("16_a3se8")]
+[node name="oddflower" parent="." unique_id=1803077475 instance=ExtResource("16_a3se8")]
 transform = Transform3D(0.45, 0, 0, 0, 0.45, 0, 0, 0, 0.45, -14.0605, -0.527465, -39.5107)
 
-[node name="MultiMeshInstance3D" type="MultiMeshInstance3D" parent="."]
+[node name="MultiMeshInstance3D" type="MultiMeshInstance3D" parent="." unique_id=30553202]
 visible = false
 multimesh = SubResource("MultiMesh_uty7l")
 
-[node name="Badtree" type="MeshInstance3D" parent="."]
+[node name="Badtree" type="MeshInstance3D" parent="." unique_id=1125666373]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.616, -0.527468, -32.0935)
 mesh = ExtResource("17_uty7l")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=580427917]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.78594, 8.50293)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1375182759]
 shape = SubResource("BoxShape3D_4uo0j")
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="StaticBody3D"]
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="StaticBody3D" unique_id=1163627001]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.79685, 0, 0)
 shape = SubResource("SphereShape3D_vxl6d")

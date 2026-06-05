@@ -38,6 +38,9 @@ public partial class Entity : Node3D {
 	[Export]
 	public StaticBody3D collider;
 
+	[Export]
+	public MeshInstance3D mesh;
+
 	public Array<Inventory> display_inventories;
 	public Array<FluidContainer> display_fluid_containers;
 

@@ -33,13 +33,13 @@ public partial class GridBuildable : GridEntity {
 			}
 		}
 
-		AddToGroup("pre_built_entities");
+		AddToGroup("pre_built_buildables");
 	}
 
 	public virtual void on_build () {
 		current_building_state = BuildingState.built;
 
-		RemoveFromGroup("pre_built_entities");
+		RemoveFromGroup("pre_built_buildables");
 
 		foreach (string name in special_voxels.Keys) {
 			special_voxels[name].on_build();
@@ -49,4 +49,11 @@ public partial class GridBuildable : GridEntity {
 			chunk.on_chunk_changed();
 		}
 	}
+
+	public override void mark_for_demolishing() {
+		current_building_state = BuildingState.pre_remove;
+
+		AddToGroup("pre_remove_buildables");
+	}
+
 }
